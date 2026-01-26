@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الوحدات المتاحة | BARAH</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body style="background-color: var(--primary-dark);">
+
+    <header id="navbar">
+        <div class="container header-content">
+            <div class="logo"><img src="logo.png" alt="شعار شركة براح" class="logo-img"></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="services.html">خدماتنا</a></li>
+                    <li><a href="properties.html" class="active">الوحدات</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="https://wa.me/201000000000?text=عرض وحدة" target="_blank" class="btn-list-unit"><i class="fas fa-plus"></i> اعرض وحدتك</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="properties-section" id="properties" style="padding-top: 140px; min-height: 100vh;">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>أحدث <span class="gold-text">الوحدات</span></h2>
+                <p id="filterStatus">تصفح أفضل الفرص العقارية في العبور</p>
+            </div>
+
+            <div class="search-bar-container" data-aos="flip-up">
+                <div class="search-form">
+                    <div class="search-group"><label>المنطقة</label><select id="searchDistrict"><option value="all">كل المناطق</option><option value="الحي الأول">الحي الأول</option><option value="الحي الثاني">الحي الثاني</option><option value="الحي الثالث">الحي الثالث</option><option value="الحي التاسع">الحي التاسع</option><option value="العبور الجديدة">العبور الجديدة</option></select></div>
+                    <div class="search-group"><label>النوع</label><select id="searchType"><option value="all">الكل</option><option value="sale">بيع</option><option value="rent">إيجار</option></select></div>
+                    <div class="search-group"><label>أقل سعر</label><input type="number" id="minPrice" placeholder="0"></div>
+                    <div class="search-group"><label>أقصى سعر</label><input type="number" id="maxPrice" placeholder="0"></div>
+                    <button class="search-btn" id="searchBtn">بحث</button>
+                </div>
+                <button id="resetBtn" class="reset-filter-btn">إلغاء الفلاتر</button>
+            </div>
+            
+            <div class="properties-grid" id="propertiesGrid"></div>
+            <div class="pagination-container" id="paginationControls" style="display: none;">
+                <button class="page-btn" id="prevBtn"><i class="fas fa-chevron-right"></i></button>
+                <span class="page-info" id="pageIndicator">صفحة 1</span>
+                <button class="page-btn" id="nextBtn"><i class="fas fa-chevron-left"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <div class="floating-contact">
+        <a href="tel:+201000000000" class="contact-btn phone-btn"><i class="fas fa-phone"></i></a>
+        <a href="#" class="contact-btn whatsapp-btn"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <footer id="footer-contact"><div class="container footer-content"><p>جميع الحقوق محفوظة لشركة BARAH © 2026</p></div></footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        AOS.init({ once: true, offset: 100 });
+        const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:bdfd6fa4d09b409aa8d896" };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+        let allProperties = [], currentProperties = [], currentPage = 1; const itemsPerPage = 16;
+        async function fetchProperties() {
+            const grid = document.getElementById('propertiesGrid'); grid.innerHTML = '<p style="color:#d4af37; text-align:center; grid-column:span 4;">جاري تحميل الوحدات...</p>';
+            try { const q = query(collection(db, "properties"), orderBy("createdAt", "desc")); const querySnapshot = await getDocs(q); allProperties = []; querySnapshot.forEach((doc) => { allProperties.push({ id: doc.id, ...doc.data() }); }); applyFilters(); } catch (error) { grid.innerHTML = '<p style="color:red; text-align:center;">حدث خطأ في الاتصال بالبيانات.</p>'; }
+        }
+        function renderPage() {
+            const grid = document.getElementById('propertiesGrid'); const pagination = document.getElementById('paginationControls');
+            const start = (currentPage - 1) * itemsPerPage; const end = start + itemsPerPage; const pageItems = currentProperties.slice(start, end);
+            grid.innerHTML = '';
+            if (currentProperties.length === 0) { grid.innerHTML = '<p style="color:#aaa; text-align:center; grid-column:span 4; font-size:1.2rem; padding:50px;">لا توجد وحدات تطابق بحثك.</p>'; pagination.style.display = 'none'; return; }
+            if (currentProperties.length > itemsPerPage) { pagination.style.display = 'flex'; document.getElementById('pageIndicator').innerText = `صفحة ${currentPage} من ${Math.ceil(currentProperties.length / itemsPerPage)}`; document.getElementById('prevBtn').onclick = () => changePage(-1); document.getElementById('nextBtn').onclick = () => changePage(1); document.getElementById('prevBtn').disabled = (currentPage === 1); document.getElementById('nextBtn').disabled = (end >= currentProperties.length); } else { pagination.style.display = 'none'; }
+            pageItems.forEach((prop, index) => {
+                let badgeClass = (prop.type === 'rent') ? 'badge badge-rent' : 'badge badge-sale'; let badgeText = (prop.type === 'rent') ? 'للإيجار' : 'للبيع';
+                let imagesHTML = ''; let controlsHTML = '';
+                if (prop.images && prop.images.length > 1) { controlsHTML = `<a class="prev-slide" onclick="window.moveSlide(-1, '${prop.id}')">❮</a><a class="next-slide" onclick="window.moveSlide(1, '${prop.id}')">❯</a>`; }
+                if (prop.images && prop.images.length > 0) { prop.images.forEach((imgSrc, i) => { let activeClass = (i === 0) ? 'active' : ''; imagesHTML += `<img class="slider-img ${activeClass}" src="${imgSrc}" alt="عقار">`; }); } else { imagesHTML = `<img class="slider-img active" src="logo.png" alt="لا توجد صورة">`; }
+                let extraButtons = ''; if (prop.youtubeLink && prop.youtubeLink.trim() !== "") { extraButtons += `<a href="${prop.youtubeLink}" target="_blank" class="youtube-full-btn"><i class="fab fa-youtube"></i> شاهد الفيديو الكامل</a>`; }
+                grid.innerHTML += `<div class="property-card" id="card-${prop.id}" data-aos="fade-up" data-aos-delay="${index * 100}"><div class="card-image"><span class="${badgeClass}">${badgeText}</span>${imagesHTML} ${controlsHTML}<div class="price-tag">${Number(prop.price).toLocaleString()} ج.م</div></div><div class="card-content"><h3>${prop.title}</h3><div class="card-specs"><span><i class="fas fa-map-marker-alt"></i> ${prop.district}</span><span>${prop.specs}</span></div>${extraButtons}<a href="https://wa.me/${prop.phone}?text=استفسار عن عقار: ${prop.title}" target="_blank" class="whatsapp-action-btn"><i class="fab fa-whatsapp"></i> تواصل واتساب</a></div></div>`;
+            });
+        }
+        function changePage(d) { currentPage += d; renderPage(); document.getElementById('properties').scrollIntoView({behavior: 'smooth'}); }
+        function applyFilters() {
+            const searchDistrict = document.getElementById('searchDistrict').value; const searchType = document.getElementById('searchType').value;
+            const minPrice = Number(document.getElementById('minPrice').value) || 0; const maxPrice = Number(document.getElementById('maxPrice').value) || Infinity;
+            currentProperties = allProperties.filter(p => { const districtMatch = (searchDistrict === 'all') ? true : (p.district === searchDistrict); const typeMatch = (searchType === 'all') ? true : (p.type === searchType); const priceMatch = (Number(p.price) >= minPrice && Number(p.price) <= maxPrice); return districtMatch && typeMatch && priceMatch; });
+            currentPage = 1; renderPage(); document.getElementById('resetBtn').style.display = 'inline-block';
+        }
+        window.moveSlide = function(n, cardId) { let card = document.getElementById('card-' + cardId); let slides = card.getElementsByClassName("slider-img"); let currentIndex = 0; for (let i = 0; i < slides.length; i++) { if (slides[i].classList.contains('active')) { currentIndex = i; slides[i].classList.remove('active'); break; } } let newIndex = currentIndex + n; if (newIndex >= slides.length) newIndex = 0; if (newIndex < 0) newIndex = slides.length - 1; slides[newIndex].classList.add('active'); };
+        document.getElementById('searchBtn').addEventListener('click', applyFilters);
+        document.getElementById('resetBtn').addEventListener('click', () => { document.getElementById('searchDistrict').value = 'all'; document.getElementById('searchType').value = 'all'; document.getElementById('minPrice').value = ''; document.getElementById('maxPrice').value = ''; applyFilters(); document.getElementById('resetBtn').style.display = 'none'; });
+        fetchProperties();
+    </script>
+</body>
+</html>

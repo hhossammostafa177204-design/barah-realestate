@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo.png" type="image/png">
+    <title>روابط براح العقارية | BARAH Links</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Almarai', sans-serif; }
+        body { background-color: #0f172a; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
+        .card-container { width: 100%; max-width: 400px; animation: fadeIn 0.8s ease-out; }
+        .logo-area { margin-bottom: 30px; }
+        .logo-img { width: 110px; height: auto; margin-bottom: 15px; }
+        h1 { color: #d4af37; font-size: 1.4rem; margin-bottom: 5px; }
+        p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px; }
+        .link-btn { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; padding: 16px; margin-bottom: 15px; text-decoration: none; font-size: 1rem; font-weight: bold; border-radius: 50px; transition: 0.3s; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .link-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .link-btn i { font-size: 1.3rem; }
+        .website-btn { background-color: #d4af37; color: #0f172a; } .website-btn:hover { background-color: #f1c40f; }
+        .fb-btn { background-color: #1877F2; color: white; } .fb-btn:hover { background-color: #166fe5; }
+        .wa-btn { background-color: #25D366; color: white; } .wa-btn:hover { background-color: #20bd5a; }
+        .yt-btn { background-color: #FF0000; color: white; } .yt-btn:hover { background-color: #cc0000; }
+        footer { margin-top: 30px; color: #555; font-size: 0.8rem; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="logo-area">
+            <img src="logo.png" alt="BARAH Logo" class="logo-img">
+            <h1>BARAH Real Estate</h1>
+            <p>مستقبل السكن في مدينة العبور</p>
+        </div>
+        <a href="index.html" class="link-btn website-btn"><i class="fas fa-globe"></i> زيارة موقعنا الرسمي</a>
+        <a href="https://www.facebook.com/YourPageName" target="_blank" class="link-btn fb-btn"><i class="fab fa-facebook-f"></i> صفحتنا على فيسبوك</a>
+        <a href="https://www.youtube.com/@YourChannel" target="_blank" class="link-btn yt-btn"><i class="fab fa-youtube"></i> قناتنا على يوتيوب</a>
+        <a href="https://wa.me/201000000000" target="_blank" class="link-btn wa-btn"><i class="fab fa-whatsapp"></i> تواصل معنا واتساب</a>
+        <footer>&copy; 2026 BARAH Group</footer>
+    </div>
+</body>
+</html>
