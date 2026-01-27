@@ -4,18 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدماتنا | BARAH</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <link rel="icon" href="logo.png">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
 </head>
-<body style="background-color: var(--primary-dark);">
-
-    <header id="navbar">
+<body>
+    <header>
         <div class="container header-content">
-            <div class="logo"><img src="logo.png" alt="شعار شركة براح" class="logo-img"></div>
+            <div class="logo"><img src="logo.png" class="logo-img"></div>
             <nav>
                 <ul>
                     <li><a href="index.html">الرئيسية</a></li>
@@ -23,36 +19,64 @@
                     <li><a href="properties.html">الوحدات</a></li>
                 </ul>
             </nav>
-            <div class="header-actions">
-                </div>
         </div>
     </header>
 
-    <section class="services-section" style="padding-top: 140px; min-height: 80vh;">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2>خدمات <span class="gold-text">متميزة</span></h2>
-                <p>كل ما تحتاجه في عالم العقارات</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
-                    <i class="fas fa-home service-icon"></i><h3>بيع وشراء</h3>
-                    <p>نوفر لك أفضل الوحدات السكنية والتجارية بأفضل الأسعار في السوق.</p>
-                </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-hand-holding-usd service-icon"></i><h3>استشارات عقارية</h3>
-                    <p>فريقنا يساعدك في اتخاذ القرار الاستثماري الصحيح لضمان أعلى عائد.</p>
-                </div>
-                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
-                    <i class="fas fa-file-contract service-icon"></i><h3>توثيق قانوني</h3>
-                    <p>نضمن لك سلامة جميع الأوراق القانونية وإجراءات التعاقد.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="container" style="padding-top:150px; text-align:center; padding-bottom: 50px;">
+        <h1 style="font-size:3rem; margin-bottom:10px;">خدمات <span style="color:var(--gold)">براح</span></h1>
+        <p style="color:#ddd; margin-bottom:60px; font-size: 1.2rem;">حلول عقارية ذكية توفر عليك الوقت والمجهود</p>
 
-    <footer id="footer-contact"><div class="container footer-content"><p>جميع الحقوق محفوظة لشركة BARAH © 2026</p></div></footer>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ once: true, offset: 100 });</script>
+        <div class="grid-system">
+            
+            <div class="prop-card" style="padding:40px 30px; text-align:center; align-items: center;">
+                <div style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-headset" style="font-size:2.5rem; color:var(--gold);"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">دعم متواصل 24/7</h3>
+                <p style="color:#ccc;">فريقنا متاح دائماً للرد على استفساراتك هاتفياً وعبر الواتساب طوال أيام الأسبوع، حتى في الإجازات.</p>
+            </div>
+
+            <div class="prop-card" style="padding:40px 30px; text-align:center; align-items: center;">
+                <div style="width: 80px; height: 80px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-bullhorn" style="font-size:2.5rem; color:var(--accent-blue);"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">بيع وحدتك معنا</h3>
+                <p style="color:#ccc;">نصور وحدتك باحترافية (فيديو 4K) ونطلق حملات إعلانية مستهدفة لضمان بيعها بأعلى سعر في أسرع وقت.</p>
+            </div>
+
+            <div class="prop-card" style="padding:40px 30px; text-align:center; align-items: center;">
+                <div style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-key" style="font-size:2.5rem; color:var(--gold);"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">إدارة الأملاك</h3>
+                <p style="color:#ccc;">للمستثمرين: نقوم بتأجير وحدتك، تحصيل الإيجار، ومتابعة الصيانة نيابة عنك، لتستمتع بعائدك وأنت مرتاح.</p>
+            </div>
+
+            <div class="prop-card" style="padding:40px 30px; text-align:center; align-items: center;">
+                <div style="width: 80px; height: 80px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-file-contract" style="font-size:2.5rem; color:var(--accent-blue);"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">فحص قانوني شامل</h3>
+                <p style="color:#ccc;">لا نبيع "السمك في الماء". نراجع تسلسل الملكية وتراخيص البناء في الجهاز والشهر العقاري لضمان أمانك.</p>
+            </div>
+
+            <div class="prop-card" style="padding:40px 30px; text-align:center; align-items: center;">
+                <div style="width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-search-location" style="font-size:2.5rem; color:var(--gold);"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">خدمة "طلبك عندنا"</h3>
+                <p style="color:#ccc;">مش لاقي شقة أحلامك؟ اترك لنا المواصفات والميزانية، وفريقنا سيبحث لك خصيصاً عن أفضل الفرص المتاحة.</p>
+            </div>
+
+            <div class="prop-card" style="padding:40px 30px; text-align:center; align-items: center;">
+                <div style="width: 80px; height: 80px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fas fa-paint-roller" style="font-size:2.5rem; color:var(--accent-blue);"></i>
+                </div>
+                <h3 style="margin-bottom: 15px;">تشطيبات وديكور</h3>
+                <p style="color:#ccc;">من الطوب للمفتاح. قسمنا الهندسي ينفذ لك أرقى التصميمات بأفضل الخامات والأسعار، مع الالتزام بمواعيد التسليم.</p>
+            </div>
+
+        </div>
+    </div>
 </body>
 </html>

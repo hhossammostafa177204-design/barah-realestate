@@ -3,26 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الرئيسية | BARAH</title>
-    <link rel="icon" href="logo.png" type="image/png">
+    <title>براح العقارية | BARAH Real Estate</title>
+    <link rel="icon" href="logo.png">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#d4af37">
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('sw.js');
-            });
-        }
-    </script>
 </head>
 <body>
-    <header id="navbar">
+    
+    <header>
         <div class="container header-content">
-            <div class="logo"><img src="logo.png" alt="شعار شركة براح" class="logo-img"></div>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="logo.png" class="logo-img" alt="BARAH Logo">
+                </a>
+            </div>
+            
             <nav>
                 <ul>
                     <li><a href="index.html" class="active">الرئيسية</a></li>
@@ -30,61 +25,33 @@
                     <li><a href="properties.html">الوحدات</a></li>
                 </ul>
             </nav>
-            <div class="header-actions">
-                </div>
         </div>
     </header>
 
     <section class="hero">
         <div class="hero-overlay"></div>
-        <div class="container hero-text" data-aos="fade-up" data-aos-duration="1500">
-            <span class="badge-hero">الآن في مدينة العبور</span>
-            <h1>استثمر في <br> <span class="typing-text"></span></h1>
-            <p>نقدم لك تجربة سكنية استثنائية. دعنا نساعدك في العثور على بيت أحلامك.</p>
-            <div class="hero-actions">
-                <a href="properties.html" class="btn-primary">تصفح الوحدات <i class="fas fa-arrow-left"></i></a>
-                <button class="btn-secondary" onclick="openVideo()"><i class="fas fa-play"></i> فيديو تعريفي</button>
+        
+        <div class="container hero-content">
+            <h1>الآن في مدينة العبور <br><span style="color:var(--gold)">استثمر في استثمار آمن</span></h1>
+            <p>نقدم لك تجربة سكنية استثنائية. دعنا نساعدك في العثور على بيت أحلامك بأفضل الأسعار وأرقى التشطيبات.</p>
+            
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <a href="properties.html" class="btn-primary">
+                    تصفح الوحدات <i class="fas fa-arrow-left"></i>
+                </a>
+                <a href="services.html" class="btn-secondary">
+                    <i class="fas fa-concierge-bell"></i> خدماتنا
+                </a>
             </div>
         </div>
     </section>
 
-    <section class="stats-bar">
-        <div class="container stats-container">
-            <div class="stat-item" data-aos="zoom-in"><h3>+150</h3><p>وحدة مباعة</p></div>
-            <div class="stat-item" data-aos="zoom-in"><h3>+500</h3><p>عميل سعيد</p></div>
-            <div class="stat-item" data-aos="zoom-in"><h3>+10</h3><p>سنوات خبرة</p></div>
+    <footer style="position: absolute; bottom: 0; width: 100%;">
+        <div class="container">
+            <p>جميع الحقوق محفوظة لشركة BARAH © 2026</p>
         </div>
-    </section>
+    </footer>
 
-    <footer id="footer-contact"><div class="container footer-content"><p>جميع الحقوق محفوظة لشركة BARAH © 2026</p></div></footer>
-
-    <div id="videoModal" class="video-modal" onclick="closeVideo()">
-        <div class="video-content" onclick="event.stopPropagation()">
-            <span class="close-video" onclick="closeVideo()">&times;</span>
-            <div id="player"></div>
-        </div>
-    </div>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ once: true, offset: 100 });
-        const texts = ["مستقبل عائلتك", "بيت الأحلام", "استثمار آمن"];
-        let count = 0; let index = 0; let currentText = ""; let letter = "";
-        (function type() {
-            if(count === texts.length) count = 0;
-            currentText = texts[count];
-            letter = currentText.slice(0, ++index);
-            document.querySelector('.typing-text').textContent = letter;
-            if(letter.length === currentText.length) { count++; index = 0; setTimeout(type, 2000); } else { setTimeout(type, 100); }
-        })();
-
-        var tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0]; firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        var player; const videoID = "ivPnBh2j5uQ"; 
-        function onYouTubeIframeAPIReady() { player = new YT.Player('player', { height: '100%', width: '100%', videoId: videoID, playerVars: { 'autoplay': 0, 'rel': 0, 'controls': 1 }, events: { 'onStateChange': onPlayerStateChange } }); }
-        function onPlayerStateChange(event) { if (event.data === YT.PlayerState.ENDED) { closeVideo(); } }
-        function openVideo() { document.getElementById('videoModal').style.display = 'flex'; if (player && player.playVideo) player.playVideo(); }
-        function closeVideo() { document.getElementById('videoModal').style.display = 'none'; if (player && player.stopVideo) player.stopVideo(); }
-    </script>
+    <script src="main.js"></script>
 </body>
 </html>
