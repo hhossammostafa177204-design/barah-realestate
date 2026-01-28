@@ -191,17 +191,15 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    
     <script src="main.js"></script>
     
     <script>
-        // كود الدخول والـ Preview البسيط
         function checkAccess() {
             const code = document.getElementById('accessCode').value;
             if(code === "Aa10203040") {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                // تحميل قائمة الحذف بمجرد الدخول
+                // تحميل قائمة الحذف تلقائياً
                 if(typeof loadManageList === 'function') loadManageList();
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
