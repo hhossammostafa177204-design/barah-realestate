@@ -3,54 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>براح العقارية | BARAH Real Estate</title>
-    <link rel="icon" href="logo.png">
+    <title>براح العقارية | BARAH</title>
+    <link rel="icon" href="tree.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero { height: 100vh; display: flex; align-items: center; text-align: right; }
+        .hero h1 { font-size: 4rem; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+    </style>
 </head>
 <body>
-    
     <header>
         <div class="container header-content">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="logo.png" class="logo-img" alt="BARAH Logo">
-                </a>
-            </div>
-            
-            <nav>
-                <ul>
-                    <li><a href="index.html" class="active">الرئيسية</a></li>
-                    <li><a href="services.html">خدماتنا</a></li>
-                    <li><a href="properties.html">الوحدات</a></li>
-                </ul>
-            </nav>
+            <div class="logo"><a href="index.html"><img src="logo.png" class="logo-img"></a></div>
+            <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+            <nav><ul id="navMenu">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="services.html">خدماتنا</a></li>
+                <li><a href="properties.html">الوحدات</a></li>
+            </ul></nav>
         </div>
     </header>
 
     <section class="hero">
-        <div class="hero-overlay"></div>
-        
-        <div class="container hero-content">
-            <h1>الآن في مدينة العبور <br><span style="color:var(--gold)">استثمر في استثمار آمن</span></h1>
-            <p>نقدم لك تجربة سكنية استثنائية. دعنا نساعدك في العثور على بيت أحلامك بأفضل الأسعار وأرقى التشطيبات.</p>
-            
-            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                <a href="properties.html" class="btn-primary">
-                    تصفح الوحدات <i class="fas fa-arrow-left"></i>
-                </a>
-                <a href="services.html" class="btn-secondary">
-                    <i class="fas fa-concierge-bell"></i> خدماتنا
-                </a>
+        <div class="container">
+            <h1>استثمارك الآمن <br><span style="color:var(--gold)">في مدينة العبور</span></h1>
+            <p style="font-size:1.2rem; color:#ddd; margin-bottom:30px;">بيت أحلامك بانتظارك بأرقى الأحياء وأفضل الأسعار.</p>
+            <div class="btn-group">
+                <a href="properties.html" class="btn-primary">تصفح الوحدات <i class="fas fa-arrow-left"></i></a>
+                <a href="services.html" class="btn-secondary">خدماتنا</a>
             </div>
         </div>
     </section>
-
-    <footer style="position: absolute; bottom: 0; width: 100%;">
-        <div class="container">
-            <p>جميع الحقوق محفوظة لشركة BARAH © 2026</p>
-        </div>
-    </footer>
 
     <script src="main.js"></script>
 </body>

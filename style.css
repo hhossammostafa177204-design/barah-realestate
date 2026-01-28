@@ -1,251 +1,99 @@
-/* --- 1. Global Variables & Reset --- */
+/* --- 1. Global Settings --- */
 :root {
     --bg-dark: #0f172a;
-    --card-bg: rgba(30, 41, 59, 0.6);
-    /* الذهبي الملكي (تدرج لوني) */
+    --card-bg: rgba(30, 41, 59, 0.4); 
     --gold: #d4af37;
-    --gold-dark: #a67c00; 
     --text-main: #ffffff;
-    --text-muted: #cbd5e1;
-    --accent-blue: #3b82f6; /* لون أزرق فاتح للأزرار الثانوية */
-    --blue-light: #60a5fa;
-}
-
-/* أنيميشن النبض للوجو */
-@keyframes pulse-gold {
-    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4)); }
-    50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.8)); }
-    100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4)); }
+    --accent-blue: #3b82f6;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Almarai', sans-serif; scroll-behavior: smooth; }
 
-/* الخلفية الثابتة الفخمة */
+/* 🔥 أنيميشن حركة الخلفية (Breathing Background) 🔥 */
+@keyframes bg-breathe {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); } 
+    100% { transform: scale(1); } 
+}
+
 body { 
     background-color: var(--bg-dark);
-    background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1920&auto=format&fit=crop');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    color: var(--text-main); 
-    line-height: 1.7; 
-    overflow-x: hidden; 
-    font-size: 16px; 
+    color: var(--text-main); line-height: 1.7; overflow-x: hidden; font-size: 16px; 
+}
+
+/* عنصر الخلفية المتحرك */
+body::before {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background-image: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.3)), url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1920&auto=format&fit=crop');
+    background-size: cover; background-position: center;
+    animation: bg-breathe 25s infinite ease-in-out;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.4s ease; }
 ul { list-style: none; }
 .container { width: 90%; max-width: 1280px; margin: 0 auto; }
-h1, h2, h3, h4 { font-weight: 800; line-height: 1.3; letter-spacing: -0.5px; }
 
-/* --- 2. Header & Navigation --- */
+/* --- Header & Mobile Menu --- */
 header {
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-    padding: 10px 0;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 0;
+    background: rgba(15, 23, 42, 0.8); 
+    backdrop-filter: blur(15px); border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 .header-content { display: flex; justify-content: space-between; align-items: center; }
+
+/* 🔥 تعديل اللوجو ليكون ذهبي صريح (Vivid Gold) 🔥 */
 .logo-img { 
-    height: 85px; 
-    width: auto; 
-    object-fit: contain;
-    cursor: pointer;
-    animation: pulse-gold 3s infinite ease-in-out; 
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    height: 90px; width: auto; object-fit: contain;
+    /* الفلتر ده بيحول الأسود لذهبي معدني قوي */
+    filter: invert(75%) sepia(50%) saturate(600%) hue-rotate(0deg) brightness(1.1) contrast(100%);
+    transition: 0.3s;
 }
-.logo-img:hover {
-    animation: none; 
-    transform: scale(1.15) rotate(2deg); 
-    filter: drop-shadow(0 0 40px rgba(212, 175, 55, 1)); 
-}
-nav ul { display: flex; gap: 15px; }
+.logo-img:hover { transform: scale(1.05); filter: invert(75%) sepia(50%) saturate(800%) hue-rotate(0deg) brightness(1.2); }
+
+.menu-toggle { display: none; font-size: 1.8rem; color: var(--gold); cursor: pointer; padding: 10px; }
+
+nav ul { display: flex; gap: 20px; }
 nav a {
     font-size: 1rem; font-weight: 600; color: var(--text-main);
-    padding: 10px 20px;
-    border-radius: 30px;
-    transition: all 0.4s ease;
-    border: 1px solid transparent;
+    padding: 8px 20px; border-radius: 30px; transition: 0.4s; border: 1px solid transparent;
 }
 nav a:hover, nav a.active {
-    background: rgba(212, 175, 55, 0.15);
-    color: var(--gold);
-    border-color: rgba(212, 175, 55, 0.3);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-    transform: translateY(-2px);
+    background: rgba(212, 175, 55, 0.2); color: var(--gold); border-color: rgba(212, 175, 55, 0.3);
 }
 
-/* --- 3. UI Components (الأزرار الملونة الجذابة) --- */
+/* --- Buttons --- */
+.btn-primary, .btn-secondary, .search-btn {
+    padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-align: center;
+}
+.btn-primary { background: linear-gradient(135deg, #d4af37 0%, #a67c00 100%); color: #fff; border: none; }
+.btn-secondary { background: rgba(15, 23, 42, 0.5); border: 2px solid var(--gold); color: #fff; }
+.search-btn { background: var(--accent-blue); color: #fff; border: none; width: 100%; }
 
-/* الزر الأساسي (ذهبي ملكي متدرج وجذاب) */
-.btn-primary {
-    background: linear-gradient(135deg, #d4af37 0%, #a67c00 100%);
-    color: #fff; 
-    padding: 14px 35px; border-radius: 50px;
-    font-weight: 800; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5); /* ظل ذهبي */
-    transition: all 0.3s ease;
-}
-.btn-primary:hover { 
-    background: linear-gradient(135deg, #ebd67d 0%, #d4af37 100%);
-    transform: translateY(-3px) scale(1.05); 
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.7);
-}
-
-/* الزر الثانوي (أزرق فاتح متدرج جذاب) */
-.btn-secondary {
-    background: linear-gradient(135deg, var(--blue-light) 0%, var(--accent-blue) 100%);
-    color: #fff; 
-    padding: 12px 30px; border-radius: 50px;
-    font-weight: 700; font-size: 0.95rem;
-    border: none; cursor: pointer;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); /* ظل أزرق */
-    transition: all 0.3s ease;
-}
-.btn-secondary:hover { 
-    background: linear-gradient(135deg, #93c5fd 0%, var(--accent-blue) 100%);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.6);
-}
-
-/* أزرار البحث والفلاتر (تصميم جذاب) */
-.search-btn, .filter-btn {
-    padding: 10px 20px; border-radius: 30px;
-    font-weight: 600; font-size: 0.95rem;
-    border: none; cursor: pointer; transition: all 0.3s ease;
-}
-.search-btn {
-    background: linear-gradient(135deg, var(--blue-light) 0%, var(--accent-blue) 100%);
-    color: white; box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
-}
-.filter-btn {
-    background: transparent; border: 2px solid var(--gold); color: var(--gold);
-}
-.search-btn:hover, .filter-btn:hover {
-    transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-.filter-btn:hover { background: var(--gold); color: #000; }
-
-
-input, select, textarea {
-    background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1);
-    color: white; padding: 15px 20px; border-radius: 12px; width: 100%; outline: none;
-    transition: 0.3s; font-size: 1rem;
-    backdrop-filter: blur(5px);
-}
-input:focus, select:focus { 
-    border-color: var(--gold); 
-    background: rgba(15, 23, 42, 0.8); 
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
-}
-
-/* --- 4. Hero Section --- */
-.hero {
-    height: 100vh; position: relative; display: flex; align-items: center;
-}
-.hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, #0f172a 10%, rgba(15, 23, 42, 0.4) 100%);
-    z-index: 1;
-}
-.hero-content { position: relative; z-index: 2; max-width: 750px; padding-top: 80px; }
-.hero h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 25px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.hero p { font-size: 1.3rem; color: var(--text-muted); margin-bottom: 50px; max-width: 600px; }
-
-/* --- 5. Filters Bar --- */
-.search-container {
-    background: rgba(20, 30, 46, 0.75);
-    backdrop-filter: blur(15px);
-    padding: 40px; border-radius: 20px;
-    margin-top: -80px; position: relative; z-index: 10;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.3); 
-    border: 1px solid rgba(255,255,255,0.05);
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
-.filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; align-items: end; }
-.label { display: block; margin-bottom: 12px; color: var(--gold); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.5px; }
-
-/* --- 6. Property Cards --- */
-.grid-system {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 40px;
-    padding: 60px 0;
-}
+/* --- Cards & Inputs --- */
+.grid-system { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 40px 0; }
 .prop-card {
-    background: rgba(30, 41, 59, 0.5);
-    backdrop-filter: blur(8px);
-    border-radius: 20px; overflow: hidden;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    border: 1px solid rgba(255,255,255,0.05);
-    display: flex; flex-direction: column;
+    background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px;
+    overflow: hidden; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.4s;
 }
-.prop-card:hover { 
-    transform: translateY(-10px) scale(1.01); 
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
-    border-color: var(--gold); 
-}
-.card-img-wrapper { position: relative; height: 260px; overflow: hidden; }
-.card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
-.prop-card:hover .card-img-wrapper img { transform: scale(1.1); }
-.badge { 
-    position: absolute; top: 15px; right: 15px; 
-    padding: 8px 16px; border-radius: 8px; 
-    font-size: 0.85rem; font-weight: 800; z-index: 2; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.badge.sale { background: linear-gradient(135deg, #d4af37, #b48a20); color: black; }
-.badge.rent { background: var(--accent-blue); color: white; }
-.card-price {
-    position: absolute; bottom: 15px; left: 15px; 
-    background: rgba(15, 23, 42, 0.9);
-    color: var(--gold); padding: 10px 20px; border-radius: 12px; 
-    font-weight: 800; font-size: 1.15rem;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-}
-.card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
-.card-title { font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; line-height: 1.4; color: #fff; }
-.card-features { display: flex; gap: 20px; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
-.card-features i { color: var(--gold); margin-left: 5px; }
+.prop-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+input, select { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 12px; width: 100%; outline: none; }
 
-/* --- 7. Details Page --- */
-.details-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 50px; padding-top: 150px; padding-bottom: 80px; }
-.gallery-wrapper { border-radius: 20px; overflow: hidden; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-.main-img { width: 100%; height: 550px; object-fit: cover; }
-.thumbs-row { display: flex; gap: 15px; margin-top: 20px; overflow-x: auto; padding-bottom: 10px; }
-.thumb { width: 120px; height: 90px; border-radius: 12px; cursor: pointer; opacity: 0.6; transition: 0.3s; object-fit: cover; border: 2px solid transparent; }
-.thumb:hover, .thumb.active { opacity: 1; border-color: var(--gold); transform: scale(1.05); }
-
-.prop-info h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; }
-.prop-price-large { font-size: 2rem; color: var(--gold); font-weight: 800; margin-bottom: 30px; display: block; text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-.prop-desc-text { color: var(--text-muted); line-height: 2; font-size: 1.1rem; margin-bottom: 40px; }
-
-.sidebar-box {
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
-    padding: 40px; border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.08); position: sticky; top: 110px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-}
-
-/* --- Footer --- */
-footer {
-    background: rgba(15, 23, 42, 0.8);
-    padding: 20px 0;
-    text-align: center;
-    color: var(--text-muted);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-footer p { font-size: 0.9rem; }
-
-/* --- Mobile --- */
+/* --- MOBILE RESPONSIVE --- */
 @media (max-width: 768px) {
-    .hero h1 { font-size: 2.8rem; }
-    .details-layout { grid-template-columns: 1fr; }
-    nav ul { gap: 10px; }
-    nav a { padding: 8px 12px; font-size: 0.9rem; }
-    .logo-img { height: 70px; }
-    .search-container { margin-top: 30px; padding: 25px; }
+    .menu-toggle { display: block; } 
+    nav ul {
+        position: fixed; top: 110px; left: -100%; width: 90%; margin-left: 5%;
+        flex-direction: column; background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(20px); padding: 30px; border-radius: 20px;
+        border: 1px solid var(--gold); transition: 0.4s; text-align: center; gap: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    nav ul.active { left: 0; }
+    .logo-img { height: 75px; } 
+    .hero h1 { font-size: 2.5rem !important; }
+    .hero .btn-group { flex-direction: column; width: 100%; }
+    .btn-primary, .btn-secondary { width: 100%; margin-bottom: 10px; }
+    .grid-system { grid-template-columns: 1fr; }
+    .filter-grid { grid-template-columns: 1fr; }
 }
