@@ -3,39 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>براح العقارية | BARAH</title>
-    <link rel="icon" href="tree.png">
+    <title>براح العقارية | BARAH Real Estate</title>
+    <link rel="icon" href="logo.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .hero { height: 100vh; display: flex; align-items: center; text-align: right; }
-        .hero h1 { font-size: 4rem; text-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-    </style>
 </head>
 <body>
+    
     <header>
         <div class="container header-content">
-            <div class="logo"><a href="index.html"><img src="logo.png" class="logo-img"></a></div>
-            <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-            <nav><ul id="navMenu">
-                <li><a href="index.html" class="active">الرئيسية</a></li>
-                <li><a href="services.html">خدماتنا</a></li>
-                <li><a href="properties.html">الوحدات</a></li>
-            </ul></nav>
+            <div class="logo">
+                <a href="index.html"><img src="logo.png" class="logo-img" alt="BARAH Logo"></a>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="services.html">خدماتنا</a></li>
+                    <li><a href="properties.html">الوحدات</a></li>
+                    <li id="authSection"></li>
+                </ul>
+            </nav>
+
+            <div class="user-menu" id="userMenu">
+                <p id="userName">أهلاً بك</p>
+                <button onclick="logoutUser()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> خروج
+                </button>
+            </div>
         </div>
     </header>
 
-    <section class="hero">
-        <div class="container">
-            <h1>استثمارك الآمن <br><span style="color:var(--gold)">في مدينة العبور</span></h1>
-            <p style="font-size:1.2rem; color:#ddd; margin-bottom:30px;">بيت أحلامك بانتظارك بأرقى الأحياء وأفضل الأسعار.</p>
-            <div class="btn-group">
+    <div class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1>استثمر في <br><span style="color:var(--gold)">مدينة العبور</span></h1>
+            <p>سواء كنت تبحث عن سكن راقي أو استثمار آمن، نحن نوفر لك أفضل الخيارات.</p>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                 <a href="properties.html" class="btn-primary">تصفح الوحدات <i class="fas fa-arrow-left"></i></a>
                 <a href="services.html" class="btn-secondary">خدماتنا</a>
             </div>
         </div>
-    </section>
+    </div>
 
-    <script src="main.js"></script>
+    <div class="container" style="padding: 60px 0;">
+        <div style="text-align:center; margin-bottom:40px;">
+            <h2 style="font-size:2rem; margin-bottom:10px;">أحدث <span style="color:var(--gold)">العروض</span></h2>
+            <div style="height:3px; width:60px; background:var(--gold); margin:0 auto;"></div>
+        </div>
+
+        <div id="properties-grid" class="grid-system">
+            <p style="text-align:center; width:100%; color:#aaa;">جاري التحميل...</p>
+        </div>
+
+        <div style="text-align:center; margin-top:40px;">
+            <a href="properties.html" class="btn-secondary">عرض كل الوحدات</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>جميع الحقوق محفوظة لشركة BARAH © 2026</p>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <i class="fas fa-times close-modal" onclick="closeLoginModal()"></i>
+            <h2 style="color:var(--gold); margin-bottom:10px;">أهلاً بك في BARAH</h2>
+            <p style="color:#aaa; margin-bottom:30px;">سجل دخولك للوصول إلى كافة المميزات</p>
+            
+            <button onclick="loginWithGoogle()" class="auth-btn google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+                تسجيل الدخول بجوجل
+            </button>
+            
+            <p style="font-size:0.8rem; color:#666; margin-top:20px;">
+                بتسجيل الدخول أنت توافق على شروط الاستخدام
+            </p>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
 </body>
 </html>

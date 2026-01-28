@@ -1,99 +1,150 @@
-/* --- 1. Global Settings --- */
+/* --- 1. Global Variables & Reset --- */
 :root {
     --bg-dark: #0f172a;
-    --card-bg: rgba(30, 41, 59, 0.4); 
+    --card-bg: rgba(30, 41, 59, 0.6);
     --gold: #d4af37;
+    --gold-dark: #a67c00; 
     --text-main: #ffffff;
+    --text-muted: #cbd5e1;
     --accent-blue: #3b82f6;
+    --blue-light: #60a5fa;
+}
+
+@keyframes pulse-gold {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.8)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4)); }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Almarai', sans-serif; scroll-behavior: smooth; }
 
-/* 🔥 أنيميشن حركة الخلفية (Breathing Background) 🔥 */
-@keyframes bg-breathe {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.08); } 
-    100% { transform: scale(1); } 
-}
-
 body { 
     background-color: var(--bg-dark);
+    background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1920&auto=format&fit=crop');
+    background-size: cover; background-position: center; background-attachment: fixed;
     color: var(--text-main); line-height: 1.7; overflow-x: hidden; font-size: 16px; 
-}
-
-/* عنصر الخلفية المتحرك */
-body::before {
-    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-    background-image: linear-gradient(rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.3)), url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1920&auto=format&fit=crop');
-    background-size: cover; background-position: center;
-    animation: bg-breathe 25s infinite ease-in-out;
 }
 
 a { text-decoration: none; color: inherit; transition: 0.4s ease; }
 ul { list-style: none; }
 .container { width: 90%; max-width: 1280px; margin: 0 auto; }
+h1, h2, h3, h4 { font-weight: 800; line-height: 1.3; letter-spacing: -0.5px; }
 
-/* --- Header & Mobile Menu --- */
+/* --- Header --- */
 header {
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 0;
-    background: rgba(15, 23, 42, 0.8); 
-    backdrop-filter: blur(15px); border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+    padding: 10px 0; background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
-.header-content { display: flex; justify-content: space-between; align-items: center; }
-
-/* 🔥 تعديل اللوجو ليكون ذهبي صريح (Vivid Gold) 🔥 */
+.header-content { display: flex; justify-content: space-between; align-items: center; position: relative; }
 .logo-img { 
-    height: 90px; width: auto; object-fit: contain;
-    /* الفلتر ده بيحول الأسود لذهبي معدني قوي */
-    filter: invert(75%) sepia(50%) saturate(600%) hue-rotate(0deg) brightness(1.1) contrast(100%);
-    transition: 0.3s;
+    height: 85px; width: auto; object-fit: contain; cursor: pointer;
+    animation: pulse-gold 3s infinite ease-in-out; transition: all 0.5s;
 }
-.logo-img:hover { transform: scale(1.05); filter: invert(75%) sepia(50%) saturate(800%) hue-rotate(0deg) brightness(1.2); }
-
-.menu-toggle { display: none; font-size: 1.8rem; color: var(--gold); cursor: pointer; padding: 10px; }
-
-nav ul { display: flex; gap: 20px; }
+.logo-img:hover { animation: none; transform: scale(1.15) rotate(2deg); filter: drop-shadow(0 0 40px rgba(212, 175, 55, 1)); }
+nav ul { display: flex; gap: 15px; align-items: center; }
 nav a {
     font-size: 1rem; font-weight: 600; color: var(--text-main);
-    padding: 8px 20px; border-radius: 30px; transition: 0.4s; border: 1px solid transparent;
+    padding: 10px 20px; border-radius: 30px; border: 1px solid transparent; transition: all 0.4s ease;
 }
 nav a:hover, nav a.active {
-    background: rgba(212, 175, 55, 0.2); color: var(--gold); border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.15); color: var(--gold);
+    border-color: rgba(212, 175, 55, 0.3); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); transform: translateY(-2px);
 }
 
-/* --- Buttons --- */
-.btn-primary, .btn-secondary, .search-btn {
-    padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s;
-    display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-align: center;
+/* --- Hero Section --- */
+.hero {
+    height: 100vh; position: relative; display: flex; align-items: center;
+    background-image: url('https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=2070');
+    background-size: cover; background-position: center;
 }
-.btn-primary { background: linear-gradient(135deg, #d4af37 0%, #a67c00 100%); color: #fff; border: none; }
-.btn-secondary { background: rgba(15, 23, 42, 0.5); border: 2px solid var(--gold); color: #fff; }
-.search-btn { background: var(--accent-blue); color: #fff; border: none; width: 100%; }
+.hero.inner-page { height: 50vh; min-height: 400px; margin-bottom: 0; }
+.hero-overlay {
+    position: absolute; inset: 0;
+    /* التفتيح اللي طلبته */
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.25) 100%);
+    z-index: 1;
+}
+.hero-content { position: relative; z-index: 2; max-width: 750px; padding-top: 80px; }
+.hero h1 { font-size: 4rem; line-height: 1.1; margin-bottom: 25px; text-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+.hero p { 
+    font-size: 1.3rem; color: #e2e8f0; margin-bottom: 50px; max-width: 600px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8); background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px;
+}
 
-/* --- Cards & Inputs --- */
-.grid-system { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; padding: 40px 0; }
+/* --- UI Components --- */
+.btn-primary {
+    background: linear-gradient(135deg, #d4af37 0%, #a67c00 100%); color: #fff; 
+    padding: 14px 35px; border-radius: 50px; font-weight: 800; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5); transition: 0.3s;
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.7); }
+.btn-secondary {
+    background: linear-gradient(135deg, var(--blue-light) 0%, var(--accent-blue) 100%); color: #fff; 
+    padding: 12px 30px; border-radius: 50px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); transition: 0.3s;
+}
+.btn-secondary:hover { transform: translateY(-3px); }
+
+/* --- Filters & Cards --- */
+.search-container {
+    background: rgba(20, 30, 46, 0.85); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px;
+    margin-top: -80px; position: relative; z-index: 10; box-shadow: 0 30px 60px rgba(0,0,0,0.4); 
+    border: 1px solid rgba(255,255,255,0.1); border-top: 2px solid var(--gold);
+}
+.filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; align-items: end; }
+.label { display: block; margin-bottom: 12px; color: var(--gold); font-weight: 700; font-size: 0.9rem; }
+input, select {
+    background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px 20px; border-radius: 12px; width: 100%; outline: none; transition: 0.3s;
+}
+.search-btn {
+    padding: 10px 20px; border-radius: 30px; font-weight: 600; border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--blue-light) 0%, var(--accent-blue) 100%); color: white; width: 100%;
+}
+
+.grid-system { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 40px; padding: 60px 0; }
 .prop-card {
-    background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 20px;
-    overflow: hidden; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.4s;
+    background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); border-radius: 20px; overflow: hidden;
+    transition: 0.4s; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;
 }
-.prop-card:hover { transform: translateY(-5px); border-color: var(--gold); }
-input, select { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 12px; width: 100%; outline: none; }
+.prop-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+.card-img-wrapper { position: relative; height: 260px; }
+.card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+.prop-card:hover img { transform: scale(1.1); }
+.badge { position: absolute; top: 15px; right: 15px; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; z-index: 2; }
+.badge.sale { background: linear-gradient(135deg, #d4af37, #b48a20); color: black; }
+.badge.rent { background: var(--accent-blue); color: white; }
+.card-price { position: absolute; bottom: 15px; left: 15px; background: rgba(15, 23, 42, 0.9); color: var(--gold); padding: 10px 20px; border-radius: 12px; font-weight: 800; border: 1px solid var(--gold); }
+.card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-title { font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; color: #fff; }
+.card-features { display: flex; gap: 20px; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
 
-/* --- MOBILE RESPONSIVE --- */
-@media (max-width: 768px) {
-    .menu-toggle { display: block; } 
-    nav ul {
-        position: fixed; top: 110px; left: -100%; width: 90%; margin-left: 5%;
-        flex-direction: column; background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(20px); padding: 30px; border-radius: 20px;
-        border: 1px solid var(--gold); transition: 0.4s; text-align: center; gap: 15px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    }
-    nav ul.active { left: 0; }
-    .logo-img { height: 75px; } 
-    .hero h1 { font-size: 2.5rem !important; }
-    .hero .btn-group { flex-direction: column; width: 100%; }
-    .btn-primary, .btn-secondary { width: 100%; margin-bottom: 10px; }
-    .grid-system { grid-template-columns: 1fr; }
-    .filter-grid { grid-template-columns: 1fr; }
+/* --- Auth (Login) Styles --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95);
+    z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px);
 }
+.modal-box {
+    background: #1e293b; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center;
+    border: 1px solid var(--gold); box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); position: relative; animation: slideUp 0.4s ease;
+}
+@keyframes slideUp { from {transform: translateY(50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+.close-modal { position: absolute; top: 15px; left: 15px; color: #aaa; cursor: pointer; font-size: 1.2rem; }
+.auth-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; margin-bottom: 15px;
+    border-radius: 10px; border: none; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s;
+}
+.google-btn { background: white; color: #333; }
+.google-btn:hover { background: #f1f1f1; }
+
+.user-menu {
+    position: absolute; top: 80px; left: 5%; background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+    width: 200px; display: none; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; z-index: 1001;
+}
+.user-menu.active { display: flex; }
+.user-menu p { padding: 15px; border-bottom: 1px solid #334155; font-size: 0.9rem; margin: 0; color: #ccc; }
+.logout-btn { background: transparent; color: #ef4444; border: none; padding: 15px; cursor: pointer; text-align: right; width: 100%; font-weight: bold; }
+.logout-btn:hover { background: rgba(239, 68, 68, 0.1); }
+
+footer { background: rgba(15, 23, 42, 0.9); padding: 20px 0; text-align: center; color: var(--text-muted); margin-top: 50px; }
+@media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } nav ul { gap: 10px; } nav a { padding: 8px 12px; font-size: 0.9rem; } .search-container { margin-top: 30px; padding: 25px; } }

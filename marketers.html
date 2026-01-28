@@ -3,184 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الموظفين | BARAH Admin</title>
-    <link rel="icon" href="tree.png">
+    <title>لوحة المسوقين | BARAH Admin</title>
+    <link rel="icon" href="logo.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: white; min-height: 100vh; }
+        .admin-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .form-box { background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 15px; border: 1px solid var(--gold); }
+        input, select { margin-bottom: 15px; background: #1e293b; color: white; border: 1px solid #334155; width: 100%; padding: 12px; border-radius: 8px; outline: none; }
+        input:focus, select:focus { border-color: var(--gold); }
+        label { color: var(--gold); font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem; }
+        .ad-item { background: #1e293b; padding: 15px; margin-bottom: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
+        .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media (max-width: 500px) { .grid-row { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo"><a href="index.html"><img src="logo.png" class="logo-img"></a></div>
-            <h3 style="color:var(--gold);">بوابة الموظفين</h3>
-        </div>
-    </header>
 
-    <div id="loginScreen" class="container">
-        <div class="login-box">
-            <i class="fas fa-user-shield" style="font-size: 4rem; color: var(--gold); margin-bottom: 20px;"></i>
-            <h2 style="margin-bottom: 30px;">تسجيل الدخول</h2>
-            <input type="password" id="accessCode" placeholder="أدخل كود الموظف" style="text-align: center; font-size: 1.2rem;">
-            <button onclick="checkAccess()" class="btn-primary" style="width: 100%; margin-top: 20px;">دخول النظام</button>
-            <p id="errorMsg" style="color: #ef4444; margin-top: 15px; display: none;">الكود غير صحيح!</p>
+    <div id="loginOverlay" style="position:fixed; inset:0; background:#0f172a; z-index:9999; display:flex; justify-content:center; align-items:center;">
+        <div style="text-align:center; background:#1e293b; padding:40px; border-radius:15px; border:1px solid var(--gold); width: 90%; max-width: 400px;">
+            <img src="logo.png" style="width: 80px; margin-bottom: 20px;">
+            <h2 style="color:var(--gold); margin-bottom:20px;">بوابة الموظفين</h2>
+            <input type="password" id="passInput" placeholder="كود الدخول (1234)" style="text-align:center;">
+            <button onclick="checkPass()" class="btn-primary" style="width:100%;">دخول</button>
         </div>
     </div>
 
-    <div id="dashboard" class="container dashboard">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
-            <h1>أهلاً بك يا <span style="color:var(--gold)">بطل</span> 👋</h1>
-            <button onclick="location.reload()" class="btn-secondary" style="border-color: #ef4444; color: #ef4444;">خروج</button>
-        </div>
+    <div class="admin-container">
+        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; border-bottom: 1px solid #334155; padding-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="logo.png" style="width: 40px;">
+                <h2 style="color:var(--gold); margin:0;">لوحة التحكم</h2>
+            </div>
+            <a href="index.html" target="_blank" class="btn-secondary" style="font-size: 0.9rem;">معاينة الموقع <i class="fas fa-external-link-alt"></i></a>
+        </header>
 
-        <div class="prop-card" style="padding: 40px; margin-bottom: 50px;">
-            <h3 style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-                <i class="fas fa-plus-circle"></i> إضافة وحدة جديدة
-            </h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="grid-column: span 2;">
-                    <label style="color:var(--gold)">عنوان الإعلان</label>
-                    <input type="text" id="pTitle" placeholder="مثال: شقة 150م بحري في الحي التاسع">
+        <div class="form-box">
+            <h3 style="margin-bottom:20px; text-align: center;"><i class="fas fa-plus-circle"></i> إضافة عقار جديد</h3>
+            <form id="propertyForm">
+                
+                <label>عنوان الإعلان</label>
+                <input type="text" id="p-title" placeholder="مثال: شقة للبيع بفيو مفتوح" required>
+
+                <div class="grid-row">
+                    <div>
+                        <label>السعر (جنية)</label>
+                        <input type="number" id="p-price" placeholder="مثال: 2500000" required>
+                    </div>
+                    <div>
+                        <label>نوع العرض</label>
+                        <select id="p-type">
+                            <option value="sale">تمليك (بيع)</option>
+                            <option value="rent">إيجار</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label style="color:var(--gold)">السعر (جنيه)</label>
-                    <input type="number" id="pPrice" placeholder="مثال: 2500000">
-                </div>
-                <div>
-                    <label style="color:var(--gold)">رقم الموظف (واتساب)</label>
-                    <input type="number" id="pPhone" placeholder="مثال: 2010xxxxxx">
-                </div>
-                <div>
-                    <label style="color:var(--gold)">المنطقة</label>
-                    <select id="pArea">
-                        <option value="">اختر المنطقة...</option>
+
+                <label>المنطقة</label>
+                <select id="p-district">
+                    <optgroup label="الأحياء السكنية">
                         <option value="الحي الأول">الحي الأول</option>
                         <option value="الحي الثاني">الحي الثاني</option>
                         <option value="الحي الثالث">الحي الثالث</option>
                         <option value="الحي الرابع">الحي الرابع</option>
-                        <option value="الحي الخامس">الحي الخامس</option>
-                        <option value="الحي السادس">الحي السادس</option>
+                        <option value="الحي الخامس">الحي الخامس (فيلات)</option>
+                        <option value="الحي السادس">الحي السادس (فيلات)</option>
                         <option value="الحي السابع">الحي السابع</option>
                         <option value="الحي الثامن">الحي الثامن</option>
                         <option value="الحي التاسع">الحي التاسع</option>
+                    </optgroup>
+                    <optgroup label="مناطق مميزة">
                         <option value="الحي الترفيهي">الحي الترفيهي</option>
-                        <option value="بيت الوطن">بيت الوطن</option>
                         <option value="جولف سيتي">جولف سيتي</option>
-                        <option value="العبور الجديدة">العبور الجديدة</option>
+                        <option value="جمعية عرابي">جمعية عرابي</option>
                         <option value="المنطقة الصناعية">المنطقة الصناعية</option>
-                        <option value="إسكان عائلي">إسكان عائلي</option>
-                        <option value="جنة">مشروع جنة</option>
-                        <option value="دار مصر">دار مصر</option>
+                    </optgroup>
+                    <optgroup label="المشاريع والمدن الجديدة">
+                        <option value="العبور الجديدة">العبور الجديدة</option>
                         <option value="سكن مصر">سكن مصر</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label style="color:var(--gold)">رابط فيديو اليوتيوب (اختياري)</label>
-                    <input type="url" id="pVideo" placeholder="https://youtu.be/...">
-                </div>
+                        <option value="دار مصر">دار مصر</option>
+                        <option value="جنة">مشروع جنة</option>
+                        <option value="إسكان عائلي">إسكان عائلي</option>
+                        <option value="إسكان الشباب">إسكان الشباب</option>
+                    </optgroup>
+                </select>
 
-                <div>
-                    <label style="color:var(--gold)">نوع العقار</label>
-                    <select id="pType">
-                        <option value="apartment">شقة سكنية</option>
-                        <option value="villa">فيلا / دوبلكس</option>
-                        <option value="store">محل تجاري</option>
-                        <option value="office">مكتب إداري</option>
-                        <option value="land">أرض</option>
-                        <option value="warehouse">مخزن</option>
-                        <option value="building">عمارة كاملة</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="color:var(--gold)">نوع العرض</label>
-                    <select id="pOffer">
-                        <option value="sale">بيع (تمليك)</option>
-                        <option value="rent">إيجار</option>
-                    </select>
-                </div>
-
-                <div style="grid-column: span 2;">
-                    <label style="color:var(--gold)">المميزات والتجهيزات</label>
-                    <div class="features-grid">
-                        <label><input type="checkbox" name="feature" value="متشطبة سوبر لوكس" class="feature-checkbox"><span class="feature-label">تشطيب سوبر لوكس</span></label>
-                        <label><input type="checkbox" name="feature" value="نصف تشطيب" class="feature-checkbox"><span class="feature-label">نصف تشطيب</span></label>
-                        <label><input type="checkbox" name="feature" value="يوجد أسانسير" class="feature-checkbox"><span class="feature-label">يوجد أسانسير</span></label>
-                        <label><input type="checkbox" name="feature" value="غاز طبيعي" class="feature-checkbox"><span class="feature-label">غاز طبيعي</span></label>
-                        <label><input type="checkbox" name="feature" value="عداد كهرباء" class="feature-checkbox"><span class="feature-label">عداد كهرباء</span></label>
-                        <label><input type="checkbox" name="feature" value="عداد مياه" class="feature-checkbox"><span class="feature-label">عداد مياه</span></label>
-                        <label><input type="checkbox" name="feature" value="تليفون أرضي" class="feature-checkbox"><span class="feature-label">تليفون أرضي</span></label>
-                        <label><input type="checkbox" name="feature" value="حصة في الأرض" class="feature-checkbox"><span class="feature-label">حصة في الأرض</span></label>
-                        <label><input type="checkbox" name="feature" value="جراج / باركينج" class="feature-checkbox"><span class="feature-label">جراج خاص</span></label>
-                        <label><input type="checkbox" name="feature" value="أمن وحراسة" class="feature-checkbox"><span class="feature-label">أمن وحراسة</span></label>
-                        <label><input type="checkbox" name="feature" value="واجهة بحري" class="feature-checkbox"><span class="feature-label">واجهة بحري</span></label>
-                        <label><input type="checkbox" name="feature" value="يوجد تصالح" class="feature-checkbox"><span class="feature-label">يوجد تصالح</span></label>
+                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed #444;">
+                    <label style="color: #fff; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">تفاصيل الوحدة:</label>
+                    <div class="grid-row">
+                        <div><label>المساحة (م²)</label><input type="number" id="p-area" placeholder="150" required></div>
+                        <div>
+                            <label>نوع التشطيب</label>
+                            <select id="p-finishing">
+                                <option value="بدون تشطيب">طوب أحمر</option>
+                                <option value="نصف تشطيب">نصف تشطيب</option>
+                                <option value="تشطيب كامل">تشطيب كامل</option>
+                                <option value="سوبر لوكس">سوبر لوكس</option>
+                                <option value="الترا سوبر لوكس">الترا سوبر لوكس</option>
+                                <option value="مفروش">مفروش</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <div><label>عدد الغرف</label><input type="number" id="p-rooms" placeholder="3" required></div>
+                        <div><label>عدد الحمامات</label><input type="number" id="p-bathrooms" placeholder="2" required></div>
                     </div>
                 </div>
 
-                <div style="grid-column: span 2;">
-                    <label style="color:var(--gold)">الوصف التفصيلي</label>
-                    <textarea id="pDesc" rows="4" placeholder="اكتب كل التفاصيل الإضافية هنا..."></textarea>
-                </div>
+                <label>رقم واتساب (+20)</label>
+                <input type="number" id="p-phone" placeholder="10xxxxxxxx" required>
 
-                <div style="grid-column: span 2; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
-                    <label style="display: block; margin-bottom: 15px; color:var(--gold); font-size:1.1rem;">
-                        <i class="fas fa-images"></i> صور الوحدة (مطلوب صورة واحدة على الأقل)
-                    </label>
-                    <div class="file-upload-wrapper">
-                        <input type="file" id="imgFile1" accept="image/*" onchange="previewImage(this, 'label1')">
-                        <label for="imgFile1" id="label1" class="upload-label"><i class="fas fa-cloud-upload-alt"></i> اختر الصورة الرئيسية</label>
-                    </div>
-                    <div class="file-upload-wrapper">
-                        <input type="file" id="imgFile2" accept="image/*" onchange="previewImage(this, 'label2')">
-                        <label for="imgFile2" id="label2" class="upload-label"><i class="fas fa-cloud-upload-alt"></i> اختر صورة إضافية 2</label>
-                    </div>
-                    <div class="file-upload-wrapper">
-                        <input type="file" id="imgFile3" accept="image/*" onchange="previewImage(this, 'label3')">
-                        <label for="imgFile3" id="label3" class="upload-label"><i class="fas fa-cloud-upload-alt"></i> اختر صورة إضافية 3</label>
-                    </div>
+                <label>صورة العقار</label>
+                <div style="border: 2px dashed #334155; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer;" onclick="document.getElementById('imageFile').click()">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--gold); margin-bottom: 10px;"></i>
+                    <p style="color: #aaa; margin: 0;">اضغط هنا لاختيار صورة</p>
+                    <input type="file" id="imageFile" accept="image/*" style="display: none;">
                 </div>
-            </div>
+                <p id="fileName" style="text-align: center; color: var(--gold); margin-top: 5px; font-size: 0.8rem;"></p>
+                <p id="uploadStatus" style="margin-top: 10px; font-size: 0.9rem; text-align: center; color: #aaa;"></p>
 
-            <button onclick="addProperty()" id="publishBtn" class="btn-primary" style="width: 100%; margin-top: 30px; justify-content: center; font-size: 1.2rem;">
-                نشر الإعلان فوراً 🚀
-            </button>
-            <p id="uploadStatus" style="text-align:center; margin-top:10px; color:#aaa; display:none;">جاري رفع الصور... يرجى الانتظار</p>
+                <button type="submit" class="btn-primary" style="width:100%; margin-top:15px; font-size: 1.1rem;">نشر الإعلان <i class="fas fa-paper-plane"></i></button>
+            </form>
         </div>
 
-        <div class="prop-card" style="padding: 40px; border-color: #ef4444;">
-            <h3 style="margin-bottom: 20px; color: #ef4444; border-bottom: 1px solid rgba(239, 68, 68, 0.3); padding-bottom: 15px;">
-                <i class="fas fa-trash-alt"></i> حذف الإعلانات (المباعة)
-            </h3>
-            <p style="color:#aaa; margin-bottom:20px;">اضغط على "حذف" لإزالة الإعلان نهائياً من الموقع.</p>
-            <div id="manageList">
-                <p style="text-align:center; color:#ccc;">جاري تحميل الإعلانات...</p>
-            </div>
+        <div style="margin-top:50px;">
+            <h3 style="border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 20px;">الإعلانات المنشورة</h3>
+            <div id="adsList"><p style="text-align: center; color: #aaa;">جاري تحميل القائمة...</p></div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
-    <script src="main.js"></script>
-    
-    <script>
-        function checkAccess() {
-            const code = document.getElementById('accessCode').value;
-            if(code === "Aa10203040") {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                if(typeof loadManageList === 'function') loadManageList();
-            } else {
-                document.getElementById('errorMsg').style.display = 'block';
-            }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
+            authDomain: "barah-realestate-c7095.firebaseapp.com",
+            projectId: "barah-realestate-c7095",
+            storageBucket: "barah-realestate-c7095.firebasestorage.app",
+            messagingSenderId: "491079034147",
+            appId: "1:491079034147:web:bdfd6fa4d09b409aa8d896"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.checkPass = function() {
+            if(document.getElementById('passInput').value === "1234") {
+                document.getElementById('loginOverlay').style.display = 'none';
+                loadAds();
+            } else { alert("الباسورد غلط"); }
+        };
+
+        document.getElementById('imageFile').addEventListener('change', function(e) {
+            if(e.target.files[0]) document.getElementById('fileName').innerText = "تم اختيار: " + e.target.files[0].name;
+        });
+
+        async function uploadToImgBB(file) {
+            const formData = new FormData();
+            formData.append("image", file);
+            const apiKey = "f2f33c5aa9d3e304f8752aa2a80bd29b"; 
+            try {
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, { method: "POST", body: formData });
+                const data = await res.json();
+                if(data.success) return data.data.url;
+                else throw new Error("فشل الرفع");
+            } catch (error) { return null; }
         }
-        function previewImage(input, labelId) {
-            if (input.files && input.files[0]) {
-                document.getElementById(labelId).innerHTML = `<i class="fas fa-check" style="color:#2ecc71"></i> تم اختيار: ${input.files[0].name}`;
-                document.getElementById(labelId).style.color = "#fff";
-                document.getElementById(labelId).parentElement.style.borderColor = "#2ecc71";
+
+        document.getElementById('propertyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.querySelector('button[type="submit"]');
+            const status = document.getElementById('uploadStatus');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+            const area = document.getElementById('p-area').value;
+            const rooms = document.getElementById('p-rooms').value;
+            const finishing = document.getElementById('p-finishing').value;
+            const specsString = `${area} م² | ${rooms} غرف | ${finishing}`;
+
+            let imageUrl = 'logo.png';
+            const fileInput = document.getElementById('imageFile');
+            if(fileInput.files.length > 0) {
+                status.innerText = "جاري رفع الصورة...";
+                const url = await uploadToImgBB(fileInput.files[0]);
+                if(url) { imageUrl = url; status.innerText = "تم الرفع ✅"; }
+                else { status.innerText = "فشل رفع الصورة ❌"; }
             }
+
+            const data = {
+                title: document.getElementById('p-title').value,
+                price: Number(document.getElementById('p-price').value),
+                type: document.getElementById('p-type').value,
+                district: document.getElementById('p-district').value,
+                phone: document.getElementById('p-phone').value,
+                images: [imageUrl],
+                specs: specsString,
+                area: Number(area),
+                createdAt: Date.now()
+            };
+
+            await addDoc(collection(db, "properties"), data);
+            alert("تم النشر!");
+            location.reload();
+        });
+
+        async function loadAds() {
+            const list = document.getElementById('adsList');
+            const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+            const snap = await getDocs(q);
+            list.innerHTML = "";
+            snap.forEach(docSnap => {
+                const ad = docSnap.data();
+                const img = ad.images && ad.images.length > 0 ? ad.images[0] : 'logo.png';
+                list.innerHTML += `
+                    <div class="ad-item">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <img src="${img}" style="width:50px; height:50px; border-radius:5px; object-fit:cover;">
+                            <div>
+                                <h4 style="margin:0; font-size:0.9rem;">${ad.title}</h4>
+                                <span style="color:#aaa; font-size:0.8rem;">${ad.district}</span>
+                            </div>
+                        </div>
+                        <button onclick="deleteAd('${docSnap.id}')" class="btn-danger" style="padding:5px 10px;">حذف</button>
+                    </div>`;
+            });
         }
+
+        window.deleteAd = async function(id) {
+            if(confirm("حذف الإعلان؟")) {
+                await deleteDoc(doc(db, "properties", id));
+                loadAds();
+            }
+        };
     </script>
 </body>
 </html>
