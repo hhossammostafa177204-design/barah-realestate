@@ -7,36 +7,6 @@
     <link rel="icon" href="tree.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .login-box { background: rgba(20, 30, 46, 0.6); backdrop-filter: blur(20px); padding: 50px; border-radius: 20px; width: 100%; max-width: 450px; margin: 100px auto; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .dashboard { display: none; padding-top: 120px; padding-bottom: 50px; }
-        .file-upload-wrapper { position: relative; margin-bottom: 10px; border: 2px dashed rgba(212, 175, 55, 0.3); border-radius: 10px; padding: 20px; text-align: center; transition: 0.3s; cursor: pointer; }
-        .file-upload-wrapper:hover { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); }
-        input[type="file"] { display: none; }
-        .upload-label { cursor: pointer; color: #ccc; display: block; }
-        .upload-label i { font-size: 1.5rem; color: var(--gold); margin-bottom: 5px; display: block; }
-        
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 10px; }
-        .feature-checkbox { display: none; }
-        .feature-label {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px; border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.9rem; color: #ccc; transition: 0.3s;
-        }
-        .feature-checkbox:checked + .feature-label {
-            background: var(--gold); color: #000; font-weight: bold; border-color: var(--gold);
-        }
-
-        .manage-item {
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .delete-btn {
-            background: #ef4444; color: white; border: none; padding: 8px 15px;
-            border-radius: 5px; cursor: pointer; transition: 0.3s;
-        }
-        .delete-btn:hover { background: #dc2626; transform: scale(1.05); }
-    </style>
 </head>
 <body>
     <header>
@@ -77,7 +47,7 @@
                     <input type="number" id="pPrice" placeholder="مثال: 2500000">
                 </div>
                 <div>
-                    <label style="color:var(--gold)">رقم للتواصل (واتساب)</label>
+                    <label style="color:var(--gold)">رقم الموظف (واتساب)</label>
                     <input type="number" id="pPhone" placeholder="مثال: 2010xxxxxx">
                 </div>
                 <div>
@@ -155,7 +125,7 @@
 
                 <div style="grid-column: span 2; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
                     <label style="display: block; margin-bottom: 15px; color:var(--gold); font-size:1.1rem;">
-                        <i class="fas fa-images"></i> صور الوحدة
+                        <i class="fas fa-images"></i> صور الوحدة (مطلوب صورة واحدة على الأقل)
                     </label>
                     <div class="file-upload-wrapper">
                         <input type="file" id="imgFile1" accept="image/*" onchange="previewImage(this, 'label1')">
@@ -199,7 +169,6 @@
             if(code === "Aa10203040") {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                // تحميل قائمة الحذف تلقائياً
                 if(typeof loadManageList === 'function') loadManageList();
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
