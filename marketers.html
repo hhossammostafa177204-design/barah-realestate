@@ -129,6 +129,7 @@
                         <option value="rent">إيجار</option>
                     </select>
                 </div>
+
                 <div style="grid-column: span 2;">
                     <label style="color:var(--gold)">المميزات والتجهيزات</label>
                     <div class="features-grid">
@@ -146,10 +147,12 @@
                         <label><input type="checkbox" name="feature" value="يوجد تصالح" class="feature-checkbox"><span class="feature-label">يوجد تصالح</span></label>
                     </div>
                 </div>
+
                 <div style="grid-column: span 2;">
                     <label style="color:var(--gold)">الوصف التفصيلي</label>
                     <textarea id="pDesc" rows="4" placeholder="اكتب كل التفاصيل الإضافية هنا..."></textarea>
                 </div>
+
                 <div style="grid-column: span 2; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px;">
                     <label style="display: block; margin-bottom: 15px; color:var(--gold); font-size:1.1rem;">
                         <i class="fas fa-images"></i> صور الوحدة
@@ -188,15 +191,18 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    
     <script src="main.js"></script>
     
     <script>
+        // كود الدخول والـ Preview البسيط
         function checkAccess() {
             const code = document.getElementById('accessCode').value;
             if(code === "Aa10203040") {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                loadManageList();
+                // تحميل قائمة الحذف بمجرد الدخول
+                if(typeof loadManageList === 'function') loadManageList();
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
             }
