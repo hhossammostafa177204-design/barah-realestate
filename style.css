@@ -8,6 +8,8 @@
     --text-muted: #cbd5e1;
     --accent-blue: #3b82f6;
     --blue-light: #60a5fa;
+    --danger: #ef4444;
+    --success: #22c55e;
 }
 
 @keyframes pulse-gold {
@@ -63,7 +65,6 @@ nav a:hover, nav a.active {
 .hero.inner-page { height: 50vh; min-height: 400px; margin-bottom: 0; }
 .hero-overlay {
     position: absolute; inset: 0;
-    /* التفتيح اللي طلبته */
     background: linear-gradient(90deg, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.25) 100%);
     z-index: 1;
 }
@@ -86,7 +87,7 @@ nav a:hover, nav a.active {
 }
 .btn-secondary:hover { transform: translateY(-3px); }
 
-/* --- Filters & Cards --- */
+/* --- Filters & Search --- */
 .search-container {
     background: rgba(20, 30, 46, 0.85); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px;
     margin-top: -80px; position: relative; z-index: 10; box-shadow: 0 30px 60px rgba(0,0,0,0.4); 
@@ -102,12 +103,14 @@ input, select {
     background: linear-gradient(135deg, var(--blue-light) 0%, var(--accent-blue) 100%); color: white; width: 100%;
 }
 
+/* --- Properties Cards (UPDATED) --- */
 .grid-system { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 40px; padding: 60px 0; }
 .prop-card {
     background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); border-radius: 20px; overflow: hidden;
     transition: 0.4s; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;
 }
 .prop-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+
 .card-img-wrapper { position: relative; height: 260px; }
 .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
 .prop-card:hover img { transform: scale(1.1); }
@@ -115,14 +118,96 @@ input, select {
 .badge.sale { background: linear-gradient(135deg, #d4af37, #b48a20); color: black; }
 .badge.rent { background: var(--accent-blue); color: white; }
 .card-price { position: absolute; bottom: 15px; left: 15px; background: rgba(15, 23, 42, 0.9); color: var(--gold); padding: 10px 20px; border-radius: 12px; font-weight: 800; border: 1px solid var(--gold); }
+
 .card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; }
 .card-title { font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; color: #fff; }
-.card-features { display: flex; gap: 20px; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; }
 
-/* --- Auth (Login) Styles --- */
+/* New Card Features Grid (Icons) */
+.card-features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+    background: rgba(15, 23, 42, 0.5);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.feat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.feat-item i {
+    color: var(--gold);
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.card-location {
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Action Buttons (Video & Whatsapp) */
+.card-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.btn-video {
+    flex: 1;
+    background: #dc2626; /* Red for YouTube */
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+.btn-video:hover { background: #b91c1c; transform: translateY(-2px); }
+
+.btn-whatsapp {
+    flex: 2; /* Bigger width */
+    background: #25D366; /* Green for Whatsapp */
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+.btn-whatsapp:hover { background: #16a34a; transform: translateY(-2px); }
+
+/* --- Auth (Login) & Modals --- */
 .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95);
-    z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px);
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9);
+    z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(8px);
 }
 .modal-box {
     background: #1e293b; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center;

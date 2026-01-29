@@ -12,11 +12,13 @@
         .admin-container { max-width: 800px; margin: 40px auto; padding: 20px; }
         .form-box { background: rgba(30, 41, 59, 0.5); padding: 30px; border-radius: 15px; border: 1px solid var(--gold); }
         input, select { margin-bottom: 15px; background: #1e293b; color: white; border: 1px solid #334155; width: 100%; padding: 12px; border-radius: 8px; outline: none; }
-        input:focus, select:focus { border-color: var(--gold); }
         label { color: var(--gold); font-weight: bold; display: block; margin-bottom: 8px; font-size: 0.9rem; }
         .ad-item { background: #1e293b; padding: 15px; margin-bottom: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; }
         .grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 500px) { .grid-row { grid-template-columns: 1fr; } }
+        .grid-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; } /* تنسيق لـ 3 خانات بجانب بعض */
+        @media (max-width: 500px) { 
+            .grid-row, .grid-row-3 { grid-template-columns: 1fr; } 
+        }
     </style>
 </head>
 <body>
@@ -67,8 +69,8 @@
                         <option value="الحي الثاني">الحي الثاني</option>
                         <option value="الحي الثالث">الحي الثالث</option>
                         <option value="الحي الرابع">الحي الرابع</option>
-                        <option value="الحي الخامس">الحي الخامس (فيلات)</option>
-                        <option value="الحي السادس">الحي السادس (فيلات)</option>
+                        <option value="الحي الخامس">الحي الخامس</option>
+                        <option value="الحي السادس">الحي السادس</option>
                         <option value="الحي السابع">الحي السابع</option>
                         <option value="الحي الثامن">الحي الثامن</option>
                         <option value="الحي التاسع">الحي التاسع</option>
@@ -79,18 +81,18 @@
                         <option value="جمعية عرابي">جمعية عرابي</option>
                         <option value="المنطقة الصناعية">المنطقة الصناعية</option>
                     </optgroup>
-                    <optgroup label="المشاريع والمدن الجديدة">
+                    <optgroup label="العبور الجديدة">
                         <option value="العبور الجديدة">العبور الجديدة</option>
                         <option value="سكن مصر">سكن مصر</option>
                         <option value="دار مصر">دار مصر</option>
                         <option value="جنة">مشروع جنة</option>
                         <option value="إسكان عائلي">إسكان عائلي</option>
-                        <option value="إسكان الشباب">إسكان الشباب</option>
                     </optgroup>
                 </select>
 
                 <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed #444;">
                     <label style="color: #fff; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">تفاصيل الوحدة:</label>
+                    
                     <div class="grid-row">
                         <div><label>المساحة (م²)</label><input type="number" id="p-area" placeholder="150" required></div>
                         <div>
@@ -105,11 +107,16 @@
                             </select>
                         </div>
                     </div>
-                    <div class="grid-row">
-                        <div><label>عدد الغرف</label><input type="number" id="p-rooms" placeholder="3" required></div>
-                        <div><label>عدد الحمامات</label><input type="number" id="p-bathrooms" placeholder="2" required></div>
+
+                    <div class="grid-row-3">
+                        <div><label>الغرف</label><input type="number" id="p-rooms" placeholder="3" required></div>
+                        <div><label>الحمامات</label><input type="number" id="p-bathrooms" placeholder="2" required></div>
+                        <div><label>الدور</label><input type="number" id="p-floor" placeholder="4" required></div>
                     </div>
                 </div>
+
+                <label>رابط فيديو يوتيوب (اختياري)</label>
+                <input type="text" id="p-youtube" placeholder="https://youtu.be/...">
 
                 <label>رقم واتساب (+20)</label>
                 <input type="number" id="p-phone" placeholder="10xxxxxxxx" required>
@@ -137,6 +144,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
             authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -149,6 +157,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // كود الدخول
         window.checkPass = function() {
             if(document.getElementById('passInput').value === "1234") {
                 document.getElementById('loginOverlay').style.display = 'none';
@@ -156,10 +165,12 @@
             } else { alert("الباسورد غلط"); }
         };
 
+        // عرض اسم الملف عند الاختيار
         document.getElementById('imageFile').addEventListener('change', function(e) {
             if(e.target.files[0]) document.getElementById('fileName').innerText = "تم اختيار: " + e.target.files[0].name;
         });
 
+        // دالة رفع الصورة
         async function uploadToImgBB(file) {
             const formData = new FormData();
             formData.append("image", file);
@@ -172,6 +183,7 @@
             } catch (error) { return null; }
         }
 
+        // عند النشر
         document.getElementById('propertyForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.querySelector('button[type="submit"]');
@@ -179,13 +191,17 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
 
-            const area = document.getElementById('p-area').value;
-            const rooms = document.getElementById('p-rooms').value;
+            // تجميع البيانات من الخانات الجديدة
+            const area = Number(document.getElementById('p-area').value);
+            const rooms = Number(document.getElementById('p-rooms').value);
+            const bathrooms = Number(document.getElementById('p-bathrooms').value);
+            const floor = Number(document.getElementById('p-floor').value);
             const finishing = document.getElementById('p-finishing').value;
-            const specsString = `${area} م² | ${rooms} غرف | ${finishing}`;
+            const youtube = document.getElementById('p-youtube').value;
 
             let imageUrl = 'logo.png';
             const fileInput = document.getElementById('imageFile');
+            
             if(fileInput.files.length > 0) {
                 status.innerText = "جاري رفع الصورة...";
                 const url = await uploadToImgBB(fileInput.files[0]);
@@ -193,6 +209,7 @@
                 else { status.innerText = "فشل رفع الصورة ❌"; }
             }
 
+            // تجهيز البيانات للحفظ في قاعدة البيانات
             const data = {
                 title: document.getElementById('p-title').value,
                 price: Number(document.getElementById('p-price').value),
@@ -200,16 +217,24 @@
                 district: document.getElementById('p-district').value,
                 phone: document.getElementById('p-phone').value,
                 images: [imageUrl],
-                specs: specsString,
-                area: Number(area),
+                // حفظ البيانات التفصيلية
+                area: area,
+                rooms: rooms,
+                bathrooms: bathrooms,
+                floor: floor,
+                finishing: finishing,
+                youtube: youtube,
+                // حقل تجميعي للعرض القديم (احتياطي)
+                specs: `${area} م² | ${finishing}`,
                 createdAt: Date.now()
             };
 
             await addDoc(collection(db, "properties"), data);
-            alert("تم النشر!");
+            alert("تم نشر الإعلان بنجاح!");
             location.reload();
         });
 
+        // تحميل الإعلانات
         async function loadAds() {
             const list = document.getElementById('adsList');
             const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
@@ -232,8 +257,9 @@
             });
         }
 
+        // حذف الإعلان
         window.deleteAd = async function(id) {
-            if(confirm("حذف الإعلان؟")) {
+            if(confirm("هل أنت متأكد من حذف هذا الإعلان؟")) {
                 await deleteDoc(doc(db, "properties", id));
                 loadAds();
             }
