@@ -1,11 +1,10 @@
-/* اسم الملف: main.js - النسخة النهائية الخالية من الأخطاء */
+/* اسم الملف: main.js - النسخة النهائية (تحديث رسالة الواتساب) */
 
-// 1. استيراد جميع دوال Firebase المطلوبة (بما في ذلك addDoc للحجز)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, query, orderBy, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 2. إعدادات Firebase
+// --- 1. إعدادات Firebase ---
 const firebaseConfig = {
     apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
     authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -19,7 +18,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// 3. دوال تسجيل الدخول (Auth)
+// --- 2. Auth Logic ---
 window.openLoginModal = () => document.getElementById('loginModal').style.display = 'flex';
 window.closeLoginModal = () => document.getElementById('loginModal').style.display = 'none';
 
@@ -59,7 +58,7 @@ window.toggleUserMenu = () => {
     if(menu) menu.classList.toggle('active');
 }
 
-// 4. دوال الفيديو (YouTube)
+// --- 3. Video Logic ---
 function getYouTubeID(url) {
     if (!url) return null;
     var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -94,10 +93,9 @@ window.openVideo = function(url) {
     }
 }
 
-// 5. دوال VIP (الإصلاحات هنا)
+// --- 4. VIP Logic ---
 let selectedCarName = "";
 
-// فتح النافذة وتحميل السيارات
 window.openVipModal = async function(propTitle) {
     const modal = document.getElementById('vipModal');
     if(!modal) return;
@@ -105,15 +103,13 @@ window.openVipModal = async function(propTitle) {
     modal.style.display = 'flex';
     document.getElementById('vipPropTitle').value = propTitle;
     
-    // تصفير البيانات
     selectedCarName = "";
     document.getElementById('vipPhone').value = "";
     
-    // تفعيل التقويم (Flatpickr)
     if (typeof flatpickr !== 'undefined') {
         flatpickr("#vipDate", {
             enableTime: true,
-            dateFormat: "d/m/Y h:i K", // الصيغة: 30/01/2026 04:30 PM
+            dateFormat: "d/m/Y h:i K",
             minDate: "today",
             disableMobile: "true",
             time_24hr: false
@@ -121,9 +117,8 @@ window.openVipModal = async function(propTitle) {
         document.getElementById('vipDate').value = "";
     }
 
-    // تحميل السيارات من قاعدة البيانات
     const carGrid = document.getElementById('carSelection');
-    carGrid.innerHTML = '<p style="color:#aaa; font-size:0.8rem; text-align:center; grid-column:1/-1;">جاري تجهيز الأسطول...</p>';
+    carGrid.innerHTML = '<p style="color:#aaa; font-size:0.8rem; text-align:center; grid-column:1/-1;">جاري تحميل الأسطول...</p>';
 
     try {
         const q = query(collection(db, "vip_cars"), orderBy("createdAt", "desc"));
@@ -144,8 +139,6 @@ window.openVipModal = async function(propTitle) {
 
             const carDiv = document.createElement('div');
             carDiv.className = 'car-option';
-            
-            // إصلاح مهم: استخدام window.selectCar لضمان عمل الزر
             carDiv.onclick = function() { window.selectCar(this, car.name); };
             
             carDiv.innerHTML = `
@@ -170,14 +163,13 @@ window.closeVipModal = function() {
     document.getElementById('vipModal').style.display = 'none';
 }
 
-// دالة اختيار السيارة
 window.selectCar = function(element, carName) {
     document.querySelectorAll('.car-option').forEach(el => el.classList.remove('selected'));
     element.classList.add('selected');
     selectedCarName = carName;
 }
 
-// دالة إرسال الطلب (إصلاح الحفظ)
+// --- تحديث مهم: تنسيق رسالة الواتساب ---
 window.submitVipRequest = async function() {
     const propTitle = document.getElementById('vipPropTitle').value;
     const date = document.getElementById('vipDate').value;
@@ -193,7 +185,6 @@ window.submitVipRequest = async function() {
     btn.disabled = true;
 
     try {
-        // حفظ الطلب في Firebase (تم التأكد من استيراد addDoc)
         await addDoc(collection(db, "vip_requests"), {
             property: propTitle,
             car: selectedCarName,
@@ -203,14 +194,23 @@ window.submitVipRequest = async function() {
             status: "pending"
         });
 
-        // فتح الواتساب
-        const msg = `مرحباً، أرغب في حجز معاينة VIP 👑\n🏠 العقار: ${propTitle}\n🚗 السيارة: ${selectedCarName}\n📅 الموعد: ${date}`;
+        // --- هنا التعديل: نص الرسالة للادمن ---
+        const msg = `🔴 *تنبيه حجز VIP جديد* 🔴\n\n` +
+                    `👤 *رقم العميل:* ${phone}\n` +
+                    `🚗 *السيارة المحجوزة:* ${selectedCarName}\n` +
+                    `📅 *موعد المعاينة:* ${date}\n` +
+                    `🏠 *العقار:* ${propTitle}\n\n` +
+                    `يرجى التواصل مع العميل لتأكيد الحجز.`;
+
         const encodedMsg = encodeURIComponent(msg);
         
-        window.open(`https://wa.me/201000000000?text=${encodedMsg}`, '_blank');
+        // !!! ضع رقمك هنا بدلاً من 201000000000 !!!
+        const adminPhone = "01105572821"; 
+        
+        window.open(`https://wa.me/${adminPhone}?text=${encodedMsg}`, '_blank');
         
         closeVipModal();
-        alert("تم استلام طلبك بنجاح! سيتم التواصل معك.");
+        alert("تم استلام طلبك! سيتم نقلك للواتساب لإرسال التأكيد للأدمن.");
 
     } catch (error) {
         console.error("Booking Error:", error);
@@ -221,7 +221,7 @@ window.submitVipRequest = async function() {
     btn.disabled = false;
 }
 
-// 6. جلب وعرض العقارات
+// --- 5. Fetch & Render ---
 let allPropertiesData = [];
 
 async function fetchProperties() {
@@ -314,7 +314,7 @@ function renderProperties(properties, gridId) {
     });
 }
 
-// 7. الفلاتر الذكية
+// --- 6. Filters ---
 window.updatePriceRanges = function() {
     const offerType = document.getElementById('offerType').value;
     const priceSelect = document.getElementById('priceFilter');
