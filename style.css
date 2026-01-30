@@ -233,3 +233,79 @@ input, select {
 
 footer { background: rgba(15, 23, 42, 0.9); padding: 20px 0; text-align: center; color: var(--text-muted); margin-top: 50px; }
 @media (max-width: 768px) { .hero h1 { font-size: 2.5rem; } nav ul { gap: 10px; } nav a { padding: 8px 12px; font-size: 0.9rem; } .search-container { margin-top: 30px; padding: 25px; } }
+/* --- زر VIP في الكارت --- */
+.btn-vip {
+    flex: 1;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+    color: #ffd700; /* ذهبي */
+    border: 1px solid #ffd700;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: 0.3s;
+    font-size: 0.85rem;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.btn-vip:hover {
+    background: #ffd700;
+    color: #000;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+}
+
+/* --- تنسيق شاشة حجز الـ VIP --- */
+.vip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.car-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.car-option img {
+    width: 100%;
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.car-option h4 {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin: 0;
+}
+
+/* عند اختيار العربية */
+.car-option.selected {
+    border-color: #ffd700;
+    background: rgba(212, 175, 55, 0.1);
+    transform: scale(1.05);
+}
+
+.car-option.selected h4 { color: #ffd700; }
+
+.date-input {
+    width: 100%;
+    padding: 12px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    outline: none;
+}
+.date-input:focus { border-color: #d4af37; }
