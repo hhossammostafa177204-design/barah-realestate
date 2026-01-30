@@ -1,9 +1,11 @@
-/* اسم الملف: main.js - النسخة الكاملة (VIP + Filters) */
+/* اسم الملف: main.js - النسخة الشاملة (VIP Dynamic + Smart Filters) */
+
+// --- 1. استيراد مكتبات Firebase ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, getDocs, query, orderBy, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// --- 1. إعدادات Firebase ---
+// --- 2. إعدادات Firebase ---
 const firebaseConfig = {
     apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
     authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -17,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// --- 2. Auth Logic ---
+// --- 3. نظام تسجيل الدخول (Auth Logic) ---
 window.openLoginModal = () => document.getElementById('loginModal').style.display = 'flex';
 window.closeLoginModal = () => document.getElementById('loginModal').style.display = 'none';
 
@@ -28,7 +30,7 @@ window.loginWithGoogle = async function() {
         closeLoginModal();
     } catch (error) {
         console.error("Login Error:", error);
-        alert("حدث خطأ: " + error.message);
+        alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
     }
 }
 
@@ -57,7 +59,7 @@ window.toggleUserMenu = () => {
     if(menu) menu.classList.toggle('active');
 }
 
-// --- 3. Video Logic ---
+// --- 4. نظام الفيديو (YouTube Logic) ---
 function getYouTubeID(url) {
     if (!url) return null;
     var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -92,19 +94,53 @@ window.openVideo = function(url) {
     }
 }
 
-// --- 4. VIP Service Logic (الجديد) ---
+// --- 5. نظام خدمة VIP (الجديد والمطور) ---
 let selectedCarName = "";
 
-window.openVipModal = function(propTitle) {
+// دالة فتح نافذة الـ VIP وتحميل السيارات ديناميكياً
+window.openVipModal = async function(propTitle) {
     const modal = document.getElementById('vipModal');
-    if(modal) {
-        modal.style.display = 'flex';
-        document.getElementById('vipPropTitle').value = propTitle;
-        // تصفير الاختيارات السابقة
-        selectedCarName = "";
-        document.querySelectorAll('.car-option').forEach(el => el.classList.remove('selected'));
-        document.getElementById('vipDate').value = "";
-        document.getElementById('vipPhone').value = "";
+    if(!modal) return;
+
+    modal.style.display = 'flex';
+    document.getElementById('vipPropTitle').value = propTitle;
+    
+    // تصفير البيانات القديمة
+    selectedCarName = "";
+    document.getElementById('vipDate').value = "";
+    document.getElementById('vipPhone').value = "";
+    
+    const carGrid = document.getElementById('carSelection');
+    carGrid.innerHTML = '<p style="color:#aaa; font-size:0.8rem; text-align:center; grid-column:1/-1;">جاري تحميل الأسطول...</p>';
+
+    try {
+        // جلب السيارات من قاعدة البيانات (التي تضيفها من صفحة الأدمن)
+        const q = query(collection(db, "vip_cars"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        carGrid.innerHTML = ""; // مسح رسالة التحميل
+
+        if (querySnapshot.empty) {
+            carGrid.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">لا توجد سيارات متاحة حالياً.</p>';
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const car = doc.data();
+            // إنشاء عنصر السيارة
+            const carDiv = document.createElement('div');
+            carDiv.className = 'car-option';
+            carDiv.onclick = function() { selectCar(this, car.name); };
+            carDiv.innerHTML = `
+                <img src="${car.image}" alt="${car.name}">
+                <h4>${car.name}</h4>
+            `;
+            carGrid.appendChild(carDiv);
+        });
+
+    } catch (error) {
+        console.error("Error fetching cars:", error);
+        carGrid.innerHTML = '<p style="color:red; grid-column:1/-1; text-align:center;">حدث خطأ في تحميل السيارات.</p>';
     }
 }
 
@@ -133,7 +169,7 @@ window.submitVipRequest = async function() {
     btn.disabled = true;
 
     try {
-        // حفظ الطلب في قاعدة البيانات
+        // حفظ الطلب في Firebase
         await addDoc(collection(db, "vip_requests"), {
             property: propTitle,
             car: selectedCarName,
@@ -148,6 +184,8 @@ window.submitVipRequest = async function() {
         window.open(`https://wa.me/201000000000?text=${msg}`, '_blank');
         
         closeVipModal();
+        alert("تم استلام طلبك! سيتم توجيهك للواتساب.");
+
     } catch (error) {
         console.error(error);
         alert("حدث خطأ، حاول مرة أخرى.");
@@ -157,12 +195,12 @@ window.submitVipRequest = async function() {
     btn.disabled = false;
 }
 
-// --- 5. Fetch & Render ---
+// --- 6. جلب وعرض العقارات (Fetch & Render) ---
 let allPropertiesData = [];
 
 async function fetchProperties() {
-    const gridProps = document.getElementById('propertiesGrid');
-    const gridHome = document.getElementById('properties-grid');
+    const gridProps = document.getElementById('propertiesGrid'); // في صفحة الوحدات
+    const gridHome = document.getElementById('properties-grid'); // في الرئيسية
 
     try {
         const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
@@ -179,7 +217,7 @@ async function fetchProperties() {
         if (gridHome) renderProperties(allPropertiesData.slice(0, 6), 'properties-grid');
 
     } catch (error) {
-        console.error("Error fetching:", error);
+        console.error("Error fetching properties:", error);
     }
 }
 
@@ -198,15 +236,17 @@ function renderProperties(properties, gridId) {
         const typeClass = prop.type === 'sale' ? 'sale' : 'rent';
         const typeText = prop.type === 'sale' ? 'تمليك' : 'إيجار';
         
+        // بيانات الأيقونات (مع قيم افتراضية)
         const rooms = prop.rooms || '-';
         const baths = prop.bathrooms || '-';
         const floor = prop.floor || '-';
         const area = prop.area || 0;
 
+        // زر اليوتيوب (يظهر فقط إذا كان هناك رابط)
         let youtubeBtnHTML = '';
         if(prop.youtube && prop.youtube.length > 10) {
             youtubeBtnHTML = `
-                <button onclick="openVideo('${prop.youtube}')" class="btn-video">
+                <button onclick="openVideo('${prop.youtube}')" class="btn-video" title="شاهد فيديو">
                     <i class="fab fa-youtube"></i>
                 </button>
             `;
@@ -252,7 +292,7 @@ function renderProperties(properties, gridId) {
     });
 }
 
-// --- 6. Filters ---
+// --- 7. الفلاتر الذكية (Smart Filters) ---
 window.updatePriceRanges = function() {
     const offerType = document.getElementById('offerType').value;
     const priceSelect = document.getElementById('priceFilter');
@@ -262,6 +302,7 @@ window.updatePriceRanges = function() {
     let ranges = [];
 
     if (offerType === 'sale') {
+        // أسعار التمليك
         ranges = [
             { v: 'low', t: 'أقل من 500,000' },
             { v: '500000-1000000', t: 'من 500 ألف إلى مليون' },
@@ -271,6 +312,7 @@ window.updatePriceRanges = function() {
             { v: '10000000+', t: 'أكثر من 10 مليون' }
         ];
     } else {
+        // أسعار الإيجار
         ranges = [
             { v: 'low', t: 'أقل من 3,000' },
             { v: '3000-5000', t: 'من 3,000 إلى 5,000' },
@@ -294,9 +336,13 @@ window.applyFilters = function() {
     const propType = document.getElementById('propType').value;
 
     const filtered = allPropertiesData.filter(item => {
+        // 1. نوع العرض
         if(item.type !== offerType) return false;
+        
+        // 2. المنطقة
         if(area !== 'all' && item.district !== area) return false;
         
+        // 3. السعر (الذكي)
         if(priceRange !== 'all') {
             const p = Number(item.price);
             if(priceRange === 'low') {
@@ -311,6 +357,7 @@ window.applyFilters = function() {
             }
         }
 
+        // 4. نوع العقار
         if(propType !== 'all') {
             const title = item.title.toLowerCase();
             let k = '';
@@ -324,9 +371,11 @@ window.applyFilters = function() {
     renderProperties(filtered, 'propertiesGrid');
 }
 
+// --- 8. تشغيل الكود عند التحميل ---
 document.addEventListener('DOMContentLoaded', () => {
-    fetchProperties();
-    if(window.updatePriceRanges) window.updatePriceRanges();
+    fetchProperties(); // جلب العقارات
+    if(window.updatePriceRanges) window.updatePriceRanges(); // ضبط الأسعار الأولية
+    
     const btn = document.querySelector('.search-btn');
     if(btn) btn.addEventListener('click', window.applyFilters);
 });
