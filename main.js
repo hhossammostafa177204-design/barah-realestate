@@ -205,7 +205,7 @@ window.submitVipRequest = async function() {
         const encodedMsg = encodeURIComponent(msg);
         
         // !!! ضع رقمك هنا بدلاً من 201000000000 !!!
-        const adminPhone = "01105572821"; 
+        const adminPhone = "+201105572821"; 
         
         window.open(`https://wa.me/${adminPhone}?text=${encodedMsg}`, '_blank');
         
