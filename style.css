@@ -309,3 +309,30 @@ footer { background: rgba(15, 23, 42, 0.9); padding: 20px 0; text-align: center;
     outline: none;
 }
 .date-input:focus { border-color: #d4af37; }
+/* --- تنسيق خانة التاريخ الأنيقة --- */
+.elegant-date {
+    background-color: #0f172a !important; /* لون الخلفية */
+    border: 1px solid #334155 !important;
+    color: #ffd700 !important; /* لون النص ذهبي */
+    font-family: 'Courier New', Courier, monospace; /* خط رقمي */
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.elegant-date:focus {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+/* تعديل ألوان الـ Calendar نفسه (Flatpickr Dark Theme Customization) */
+.flatpickr-calendar.dark {
+    background: #1e293b;
+    border: 1px solid #d4af37;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.flatpickr-day.selected {
+    background: #d4af37;
+    border-color: #d4af37;
+    color: #000;
+    font-weight: bold;
+}
