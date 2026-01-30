@@ -14,23 +14,31 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <style>
-        /* تنسيقات خاصة بالرئيسية */
+        /* --- تنسيقات الهيرو (تعديل الخلفية) --- */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1600596542815-6ad4c727dd2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            /* تم تخفيف اللون الأسود جداً (0.3) لتظهر الفيلا بوضوح تام */
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1600596542815-6ad4c727dd2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
-            height: 80vh;
+            background-attachment: fixed; /* تأثير جمالي (Parallax) */
+            height: 85vh; /* زيادة الطول قليلاً للفخامة */
             display: flex; align-items: center; justify-content: center; text-align: center;
+            position: relative;
         }
         
-        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .hero p { font-size: 1.2rem; color: #ddd; max-width: 600px; margin: 0 auto 30px; }
+        .hero h1 { 
+            font-size: 3.5rem; margin-bottom: 20px; 
+            text-shadow: 0 5px 20px rgba(0,0,0,0.8); /* ظل قوي للكلام عشان يظهر مع الخلفية الفاتحة */
+        }
+        .hero p { 
+            font-size: 1.3rem; color: #fff; max-width: 700px; margin: 0 auto 30px; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8); font-weight: 500;
+        }
         
         .section-header { text-align: center; margin-bottom: 50px; }
         .section-header h2 { font-size: 2.5rem; margin-bottom: 10px; }
         .section-header p { color: #aaa; }
 
-        /* تنسيق خانة التاريخ (نسخة من صفحة الوحدات) */
         .elegant-date {
             background-color: #0f172a !important; border: 1px solid #334155 !important; color: #ffd700 !important;
             font-family: 'Courier New', Courier, monospace; font-weight: bold; cursor: pointer;
@@ -65,7 +73,7 @@
         <div class="container">
             <h1>مستقبلك يبدأ في <span style="color:var(--gold)">BARAH</span></h1>
             <p>اكتشف أرقى الوحدات السكنية والتجارية في مدينة العبور بأفضل الأسعار وأنظمة السداد.</p>
-            <a href="properties.html" class="btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">تصفح الوحدات</a>
+            <a href="properties.html" class="btn-primary" style="padding: 15px 40px; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">تصفح الوحدات</a>
         </div>
     </section>
 
