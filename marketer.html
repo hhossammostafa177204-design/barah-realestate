@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المسوقين | إضافة عقار جديد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: #1e293b;
+            --gold: #d4af37;
+            --gold-hover: #b38728;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            background: var(--panel-bg);
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+        .header h1 { color: var(--gold); margin: 0; font-size: 2rem; }
+        .header p { color: var(--text-muted); margin-top: 10px; }
+
+        /* تنسيق الشبكة */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .full-width { grid-column: 1 / -1; }
+
+        .input-group { margin-bottom: 5px; }
+        .input-group label {
+            display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Cairo';
+            font-size: 1rem;
+            transition: 0.3s;
+            box-sizing: border-box; /* هام جداً للتناسق */
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--gold);
+            outline: none;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        /* منطقة رفع الصور */
+        .image-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(255,255,255,0.02);
+        }
+        .image-upload-area:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+        .preview-box img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            border: 1px solid var(--gold);
+        }
+
+        /* زر النشر */
+        .btn-submit {
+            background: linear-gradient(135deg, #d4af37, #fcf6ba, #aa771c);
+            color: #000;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="header">
+            <h1><i class="fas fa-laptop-house"></i> لوحة المسوقين</h1>
+            <p>إضافة وحدة جديدة للموقع تلقائياً</p>
+        </div>
+
+        <form id="propertyForm" onsubmit="event.preventDefault(); publishProperty();">
+            <div class="form-grid">
+                
+                <div class="input-group full-width">
+                    <label>عنوان الإعلان</label>
+                    <input type="text" id="p_title" placeholder="مثال: فيلا فاخرة بالحي التاسع..." required>
+                </div>
+
+                <div class="input-group">
+                    <label>نوع العملية</label>
+                    <select id="p_status">
+                        <option value="sale">بيع (تظهر بالملايين)</option>
+                        <option value="rent">إيجار (تظهر بالآلاف)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>نوع الوحدة</label>
+                    <select id="p_type">
+                        <option value="villa">فيلا / قصر</option>
+                        <option value="apartment">شقة سكنية</option>
+                        <option value="duplex">دوبلكس</option>
+                        <option value="rooftop">روف</option>
+                        <option value="admin">إداري / تجاري</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>السعر (بالأرقام فقط)</label>
+                    <input type="number" id="p_priceVal" placeholder="مثال: 5000000" required>
+                </div>
+
+                <div class="input-group">
+                    <label>المساحة (متر مربع)</label>
+                    <input type="text" id="p_area" placeholder="مثال: 250م" required>
+                </div>
+
+                <div class="input-group">
+                    <label>الموقع / الحي</label>
+                    <select id="p_location">
+                        <option value="hi9">الحي التاسع</option>
+                        <option value="golf">جولف سيتي</option>
+                        <option value="hi5">الحي الخامس</option>
+                        <option value="hi1">الحي الأول</option>
+                        <option value="hi6">الحي السادس</option>
+                        <option value="hi7">الحي السابع</option>
+                        <option value="new_obour">العبور الجديدة</option>
+                        <option value="fun">الحي الترفيهي</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>عدد الغرف</label>
+                    <input type="number" id="p_rooms" placeholder="مثال: 4" required>
+                </div>
+
+                <div class="full-width">
+                    <label>صورة العقار</label>
+                    <div class="image-upload-area" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--gold);"></i>
+                        <p id="fileName">اضغط هنا لرفع صورة الوحدة</p>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewImage()">
+                    </div>
+                    <div class="preview-box">
+                        <img id="imgPreview">
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                نشر العقار الآن <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // إعدادات Firebase (نفس إعدادات موقعك)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
+            authDomain: "barah-realestate-c7095.firebaseapp.com",
+            projectId: "barah-realestate-c7095",
+            storageBucket: "barah-realestate-c7095.firebasestorage.app",
+            messagingSenderId: "491079034147",
+            appId: "1:491079034147:web:05dd6f5ba900a2c8a8d896"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const imgBbApiKey = "b6de9127ca29d022e6cf0c59bf601970"; // مفتاح الصور
+
+        // دالة المعاينة
+        window.previewImage = function() {
+            const file = document.getElementById('fileInput').files[0];
+            if(file) {
+                document.getElementById('fileName').textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('imgPreview');
+                    img.src = e.target.result;
+                    img.style.display = "inline-block";
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // دالة النشر الرئيسية
+        window.publishProperty = async function() {
+            const btn = document.getElementById('submitBtn');
+            const fileInput = document.getElementById('fileInput');
+
+            if (!fileInput.files[0]) {
+                alert("يرجى اختيار صورة للعقار!");
+                return;
+            }
+
+            // 1. بدء التحميل
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع الصورة...';
+
+            try {
+                // 2. رفع الصورة لـ ImgBB
+                const formData = new FormData();
+                formData.append("image", fileInput.files[0]);
+                
+                const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=${imgBbApiKey}`, {
+                    method: "POST",
+                    body: formData
+                });
+                const imgData = await imgRes.json();
+                
+                if (!imgData.success) throw new Error("فشل رفع الصورة");
+                
+                const imageUrl = imgData.data.url;
+
+                // 3. تجهيز البيانات لـ Firebase
+                btn.innerHTML = '<i class="fas fa-database"></i> جاري الحفظ في الموقع...';
+                
+                const priceVal = document.getElementById('p_priceVal').value;
+                // تنسيق السعر للعرض (مثال: 5,000,000 ج.م)
+                const formattedPrice = Number(priceVal).toLocaleString() + (document.getElementById('p_status').value === 'rent' ? ' ج.م/شهرياً' : ' ج.م');
+
+                const propertyData = {
+                    title: document.getElementById('p_title').value,
+                    status: document.getElementById('p_status').value,
+                    type: document.getElementById('p_type').value,
+                    location: document.getElementById('p_location').value,
+                    priceVal: Number(priceVal), // للحسابات والفلترة
+                    price: formattedPrice,      // للعرض
+                    area: document.getElementById('p_area').value,
+                    rooms: document.getElementById('p_rooms').value,
+                    image: imageUrl,
+                    createdAt: serverTimestamp()
+                };
+
+                // 4. الحفظ في قاعدة البيانات
+                await addDoc(collection(db, "properties"), propertyData);
+
+                alert("تم نشر العقار بنجاح! يظهر الآن في الموقع الرئيسي.");
+                location.reload(); // تحديث الصفحة لإضافة عقار جديد
+
+            } catch (error) {
+                console.error(error);
+                alert("حدث خطأ: " + error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'نشر العقار الآن <i class="fas fa-paper-plane"></i>';
+            }
+        }
+    </script>
+</body>
+</html>
