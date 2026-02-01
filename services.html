@@ -4,15 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدماتنا | BARAH</title>
+    
     <link rel="icon" href="logo.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
     <header>
         <div class="container header-content">
-            <div class="logo"><a href="index.html"><img src="logo.png" class="logo-img"></a></div>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="logo.png" alt="شعار بارح" class="logo-img">
+                </a>
+            </div>
             <nav>
                 <ul>
                     <li><a href="index.html">الرئيسية</a></li>
@@ -21,54 +29,71 @@
                     <li id="authSection"></li>
                 </ul>
             </nav>
-            <div class="user-menu" id="userMenu">
+            <div class="user-menu" id="userMenu" style="display: none;">
                 <p id="userName">أهلاً بك</p>
-                <button onclick="logoutUser()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+                <button onclick="logoutUser()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> خروج
+                </button>
             </div>
         </div>
     </header>
 
-    <section class="hero inner-page">
+    <section class="hero" style="height: 50vh; min-height: 400px;">
         <div class="container hero-content">
-            <h1>خدمات <span style="color:var(--gold)">بـراح</span></h1>
-            <p>نقدم لك حلولاً عقارية متكاملة توفر وقتك ومجهودك</p>
+            <h1>خدمات <span style="color:var(--gold)">استثنائية</span></h1>
+            <p>نقدم لك تجربة عقارية متكاملة تضمن لك الراحة، الأمان، والرفاهية.</p>
         </div>
     </section>
 
-    <div class="container" style="padding: 60px 20px;">
-        <div class="grid-system">
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center;">
-                <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-handshake"></i></div>
+    <section class="container" style="margin-top: -80px; position: relative; z-index: 10; margin-bottom: 80px;">
+        <div class="grid-system" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 0;">
+            
+            <div class="prop-card-service">
+                <i class="fas fa-handshake" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 15px;">الوساطة العقارية</h3>
-                <p style="color: var(--text-muted);">نساعدك في بيع أو شراء وحدتك بأفضل سعر في السوق مع ضمان سلامة الإجراءات.</p>
+                <p style="color: var(--text-muted);">نساعدك في بيع أو شراء وحدتك بأفضل سعر في السوق مع ضمان سلامة الإجراءات وسرعة التنفيذ.</p>
             </div>
 
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center;">
-                <div style="font-size: 3rem; color: var(--blue); margin-bottom: 20px;"><i class="fas fa-bullhorn"></i></div>
+            <div class="prop-card-service">
+                <i class="fas fa-bullhorn" style="font-size: 3.5rem; color: var(--blue); margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 15px;">التسويق الاحترافي</h3>
-                <p style="color: var(--text-muted);">نصور عقارك بأحدث الكاميرات وننشر إعلانات ممولة للوصول للعميل المناسب.</p>
+                <p style="color: var(--text-muted);">نصور عقارك بأحدث الكاميرات وننشر إعلانات ممولة للوصول للعميل المناسب في أسرع وقت.</p>
             </div>
 
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center;">
-                <div style="font-size: 3rem; color: var(--gold); margin-bottom: 20px;"><i class="fas fa-car-side"></i></div>
-                <h3 style="color: #fff; margin-bottom: 15px;">خدمة VIP</h3>
+            <div class="prop-card-service">
+                <i class="fas fa-paint-roller" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
+                <h3 style="color: #fff; margin-bottom: 15px;">التشطيبات والديكور</h3>
+                <p style="color: var(--text-muted);">استلم وحدتك طوب أحمر وسيب الباقي علينا. بنسلمك مفتاح على الفرش بأعلى جودة وأفضل خامات.</p>
+            </div>
+
+            <div class="prop-card-service">
+                <i class="fas fa-crown" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
+                <h3 style="color: #fff; margin-bottom: 15px;">خدمة معاينة VIP</h3>
                 <p style="color: var(--text-muted);">نرسل لك سيارة فاخرة لتأخذك من باب منزلك لمعاينة العقار الذي أعجبك بسعر مناسب.</p>
             </div>
 
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center;">
-                <div style="font-size: 3rem; color: var(--blue); margin-bottom: 20px;"><i class="fas fa-paint-roller"></i></div>
-                <h3 style="color: #fff; margin-bottom: 15px;">التشطيبات والديكور</h3>
-                <p style="color: var(--text-muted);">استلم وحدتك طوب أحمر وسيب الباقي علينا، بنسلمك مفتاح على الفرش.</p>
+            <div class="prop-card-service">
+                <i class="fas fa-file-contract" style="font-size: 3.5rem; color: var(--blue); margin-bottom: 20px;"></i>
+                <h3 style="color: #fff; margin-bottom: 15px;">عقود قانونية</h3>
+                <p style="color: var(--text-muted);">فريق قانوني يراجع كافة الأوراق لضمان استثمارك وأمان أموالك، لضمان عملية بيع وشراء آمنة.</p>
             </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 60px;">
-            <a href="https://wa.me/201105572821" target="_blank" class="gold-glow-btn">اطلب خدمتك الآن <i class="fab fa-whatsapp"></i></a>
-        </div>
-    </div>
 
-    <footer><div class="container"><p>جميع الحقوق محفوظة لشركة BARAH © 2026</p></div></footer>
-    <div class="modal-overlay" id="loginModal"><div class="modal-box"><i class="fas fa-times close-modal" onclick="closeLoginModal()"></i><button onclick="loginWithGoogle()" class="auth-btn google-btn">دخول بجوجل</button></div></div>
+            <div class="prop-card-service">
+                <i class="fas fa-map-marked-alt" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
+                <h3 style="color: #fff; margin-bottom: 15px;">تغطية شاملة</h3>
+                <p style="color: var(--text-muted);">نمتلك أكبر قاعدة بيانات للعقارات في جميع أحياء العبور، مما يضمن لك العثور على طلبك بسهولة.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>جميع الحقوق محفوظة لشركة BARAH © 2026</p>
+        </div>
+    </footer>
+
     <script type="module" src="main.js"></script>
+
 </body>
 </html>
