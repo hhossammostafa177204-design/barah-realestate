@@ -3,53 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الوحدات المتاحة | BARAH</title>
+    <title>الوحدات | BARAH</title>
     <link rel="icon" href="logo.png">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <style>
-        /* تنسيق البنر */
-        .listing-banner {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-            padding: 35px 45px;
-            border-radius: 20px;
-            border: 2px solid #b88a18;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
-            margin-bottom: 50px; box-shadow: 0 10px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden;
-        }
-
-        /* الزر الذهبي */
-        .gold-glow-btn {
-            background: linear-gradient(110deg, #b88a18 0%, #ffd700 25%, #fff8dc 50%, #ffd700 75%, #b88a18 100%);
-            background-size: 200% auto; color: #000; padding: 15px 45px; border-radius: 50px; font-weight: 900;
-            font-size: 1.25rem; border: 2px solid #fff; cursor: pointer; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-            animation: shineText 3s linear infinite; text-decoration: none; display: inline-flex; align-items: center; gap: 12px;
-            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        @keyframes shineText { to { background-position: 200% center; } }
-        .gold-glow-btn:hover { transform: scale(1.05) translateY(-3px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.8); border-color: #ffd700; }
-        
-        /* تنسيق التاريخ */
-        .elegant-date {
-            background-color: #0f172a !important; border: 1px solid #334155 !important; color: #ffd700 !important;
-            font-family: 'Courier New', Courier, monospace; font-weight: bold; cursor: pointer;
-        }
-        .elegant-date:focus { border-color: #d4af37 !important; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
-        
-        @media (max-width: 768px) {
-            .listing-banner { text-align: center; justify-content: center; padding: 25px; }
-            .gold-glow-btn { width: 100%; justify-content: center; }
-        }
-    </style>
 </head>
 <body>
-
     <header>
         <div class="container header-content">
             <div class="logo"><a href="index.html"><img src="logo.png" class="logo-img"></a></div>
@@ -69,75 +32,21 @@
     </header>
 
     <section class="hero inner-page">
-        <div class="hero-overlay"></div>
         <div class="container hero-content">
             <h1>وحدات <span style="color:var(--gold)">مميزة</span></h1>
             <p>ابحث عن العقار المناسب لك في أرقى أحياء العبور</p>
         </div>
     </section>
 
-    <div class="container" style="position: relative; z-index: 10; margin-top: -60px;">
+    <div class="container">
         <div class="search-container">
             <h3 style="color: var(--gold); margin-bottom: 20px;"><i class="fas fa-filter"></i> فلتر البحث</h3>
-            
             <div class="filter-grid">
-                <div>
-                    <span class="label">نظام الدفع</span>
-                    <select id="offerType" onchange="updatePriceRanges()">
-                        <option value="sale" selected>تمليك (بيع)</option>
-                        <option value="rent">إيجار</option>
-                    </select>
-                </div>
-
-                <div>
-                    <span class="label">المنطقة</span>
-                    <select id="areaFilter">
-                        <option value="all">كل المناطق</option>
-                        <optgroup label="الأحياء السكنية">
-                            <option value="الحي الأول">الحي الأول</option>
-                            <option value="الحي الثاني">الحي الثاني</option>
-                            <option value="الحي الثالث">الحي الثالث</option>
-                            <option value="الحي الرابع">الحي الرابع</option>
-                            <option value="الحي الخامس">الحي الخامس</option>
-                            <option value="الحي السادس">الحي السادس</option>
-                            <option value="الحي السابع">الحي السابع</option>
-                            <option value="الحي الثامن">الحي الثامن</option>
-                            <option value="الحي التاسع">الحي التاسع</option>
-                        </optgroup>
-                        <optgroup label="مناطق مميزة">
-                            <option value="الحي الترفيهي">الحي الترفيهي</option>
-                            <option value="جولف سيتي">جولف سيتي</option>
-                            <option value="جمعية عرابي">جمعية عرابي</option>
-                            <option value="المنطقة الصناعية">المنطقة الصناعية</option>
-                        </optgroup>
-                        <optgroup label="العبور الجديدة">
-                            <option value="العبور الجديدة">العبور الجديدة</option>
-                            <option value="سكن مصر">سكن مصر</option>
-                            <option value="دار مصر">دار مصر</option>
-                            <option value="جنة">مشروع جنة</option>
-                            <option value="إسكان عائلي">إسكان عائلي</option>
-                        </optgroup>
-                    </select>
-                </div>
-
-                <div>
-                    <span class="label">نوع العقار</span>
-                    <select id="propType">
-                        <option value="all">الكل</option>
-                        <option value="apartment">شقة سكنية</option>
-                        <option value="villa">فيلا / دوبلكس</option>
-                        <option value="store">تجارى / إداري</option>
-                    </select>
-                </div>
-
-                <div>
-                    <span class="label">نطاق السعر</span>
-                    <select id="priceFilter"><option value="all">كل الأسعار</option></select>
-                </div>
-
-                <div style="display: flex; align-items: flex-end;">
-                    <button class="search-btn" style="width: 100%; height: 52px;"><i class="fas fa-search"></i> بحث</button>
-                </div>
+                <div><span class="label">نظام الدفع</span><select id="offerType" onchange="updatePriceRanges()"><option value="sale">تمليك</option><option value="rent">إيجار</option></select></div>
+                <div><span class="label">المنطقة</span><select id="areaFilter"><option value="all">كل المناطق</option><optgroup label="الأحياء"><option value="الحي الأول">الحي الأول</option><option value="الحي التاسع">الحي التاسع</option></optgroup></select></div>
+                <div><span class="label">نوع العقار</span><select id="propType"><option value="all">الكل</option><option value="apartment">شقة</option><option value="villa">فيلا</option></select></div>
+                <div><span class="label">السعر</span><select id="priceFilter"><option value="all">الكل</option></select></div>
+                <div style="display: flex; align-items: flex-end;"><button class="search-btn"><i class="fas fa-search"></i> بحث</button></div>
             </div>
         </div>
     </div>
@@ -145,21 +54,15 @@
     <div class="container" style="margin-top: 40px;">
         <div class="listing-banner">
             <div>
-                <h2 style="color: white; margin-bottom: 10px; font-size: 1.8rem; text-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                    لديك عقار ترغب في <span style="color: #ffd700;">بيعه</span> أو <span style="color: #ffd700;">تأجيره</span>؟
-                </h2>
-                <p style="color: #ddd; font-size: 1.1rem; margin: 0;">اعرض وحدتك الآن لتصل لأكبر قاعدة عملاء في العبور.</p>
+                <h2 style="color: white; margin-bottom: 10px; font-size: 1.8rem;">لديك عقار ترغب في <span style="color: #ffd700;">بيعه</span> أو <span style="color: #ffd700;">تأجيره</span>؟</h2>
+                <p style="color: #ddd; font-size: 1.1rem; margin: 0;">اعرض وحدتك الآن لتصل لأكبر قاعدة عملاء.</p>
             </div>
-            <a href="https://wa.me/201000000000?text=السلام عليكم، أرغب في عرض وحدتي العقارية معكم" target="_blank" class="gold-glow-btn">
-                <i class="fas fa-plus"></i> اعرض وحدتك الآن
-            </a>
+            <a href="https://wa.me/201105572821" target="_blank" class="gold-glow-btn"><i class="fas fa-plus"></i> اعرض وحدتك الآن</a>
         </div>
     </div>
 
     <div class="container" style="padding-bottom: 60px;">
-        <div id="propertiesGrid" class="grid-system">
-            <p style="text-align:center; width:100%; color:#aaa;">جاري تحميل الوحدات...</p>
-        </div>
+        <div id="propertiesGrid" class="grid-system"><p style="text-align:center; width:100%; color:#aaa;">جاري التحميل...</p></div>
     </div>
 
     <footer><div class="container"><p>جميع الحقوق محفوظة لشركة BARAH © 2026</p></div></footer>
@@ -167,53 +70,23 @@
     <div class="modal-overlay" id="loginModal">
         <div class="modal-box">
             <i class="fas fa-times close-modal" onclick="closeLoginModal()"></i>
-            <h2 style="color:var(--gold); margin-bottom:10px;">أهلاً بك في BARAH</h2>
-            <p style="color:#aaa; margin-bottom:30px;">سجل دخولك للوصول إلى كافة المميزات</p>
-            <button onclick="loginWithGoogle()" class="auth-btn google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"> تسجيل الدخول بجوجل
-            </button>
-            <p style="font-size:0.8rem; color:#666; margin-top:20px;">بتسجيل الدخول أنت توافق على شروط الاستخدام</p>
+            <h2 style="color:var(--gold); margin-bottom:20px; text-align:center;">تسجيل الدخول</h2>
+            <button onclick="loginWithGoogle()" class="auth-btn google-btn">دخول بجوجل</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="vipModal">
-        <div class="modal-box" style="max-width: 550px; text-align: right; border: 1px solid var(--gold); background: #0f172a;">
+        <div class="modal-box">
             <i class="fas fa-times close-modal" onclick="closeVipModal()"></i>
-            
-            <h2 style="color:var(--gold); text-align:center; margin-bottom:5px;">
-                <i class="fas fa-crown"></i> معاينة VIP
-            </h2>
-            <p style="text-align:center; color:#aaa; font-size:0.9rem; margin-bottom:25px;">
-                الرجاء إدخال البيانات بدقة لترتيب سيارة خاصة لك
-            </p>
-
-            <label class="label"><i class="fas fa-car-side"></i> اختر السيارة</label>
+            <h2 style="color:var(--gold); text-align:center; margin-bottom:10px;"><i class="fas fa-crown"></i> معاينة VIP</h2>
+            <label class="label"><i class="fas fa-car"></i> اختر السيارة</label>
             <div class="vip-grid" id="carSelection"></div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px;">
-                <div style="grid-column: 1 / -1;">
-                    <label class="label"><i class="far fa-calendar-alt"></i> تاريخ المعاينة</label>
-                    <div style="position: relative;">
-                        <input type="text" id="vipDate" class="date-input elegant-date" placeholder="اختر اليوم والوقت (DD/MM/YYYY)">
-                        <i class="fas fa-chevron-down" style="position: absolute; left: 15px; top: 15px; color: var(--gold); pointer-events: none;"></i>
-                    </div>
-                </div>
-
-                <div style="grid-column: 1 / -1;">
-                    <label class="label"><i class="fas fa-mobile-alt"></i> رقم الهاتف (لتأكيد الحجز)</label>
-                    <div style="position: relative;">
-                        <input type="number" id="vipPhone" class="date-input" placeholder="01xxxxxxxxx" style="padding-left: 40px; font-weight: bold; letter-spacing: 1px;">
-                        <i class="fas fa-check-circle" style="position: absolute; left: 15px; top: 15px; color: #22c55e;"></i>
-                    </div>
-                    <p style="font-size: 0.75rem; color: #aaa; margin-top: 5px;">* سيتم التواصل معك على هذا الرقم لتأكيد وصول السيارة.</p>
-                </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
+                <div style="grid-column: 1 / -1;"><label class="label">الموعد</label><div style="position: relative;"><input type="text" id="vipDate" class="date-input elegant-date"><i class="fas fa-chevron-down" style="position: absolute; left: 15px; top: 15px; color: var(--gold);"></i></div></div>
+                <div style="grid-column: 1 / -1;"><label class="label">الهاتف</label><input type="number" id="vipPhone" class="date-input"></div>
             </div>
-
             <input type="hidden" id="vipPropTitle">
-
-            <button onclick="submitVipRequest()" class="gold-glow-btn" style="width:100%; justify-content:center; border:none; margin-top:20px; font-size: 1.1rem; padding: 12px;">
-                تأكيد طلب المعاينة <i class="fas fa-arrow-left"></i>
-            </button>
+            <button onclick="submitVipRequest()" class="gold-glow-btn" style="width:100%; justify-content:center; border:none; margin-top:25px;">تأكيد</button>
         </div>
     </div>
 
