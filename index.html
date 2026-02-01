@@ -53,22 +53,91 @@
         </div>
     </section>
 
-    <section class="container" style="margin-top: -50px; position: relative; z-index: 10;">
+    <div class="container relative-box" style="margin-top: -80px; position: relative; z-index: 20; margin-bottom: 50px;">
+        <div class="search-panel">
+            
+            <div class="search-tabs">
+                <button class="tab-btn active" onclick="switchSearchMode('sale')" id="btnSale">شراء</button>
+                <button class="tab-btn" onclick="switchSearchMode('rent')" id="btnRent">إيجار</button>
+            </div>
+
+            <form id="searchForm" onsubmit="event.preventDefault(); filterProperties();">
+                <div class="search-grid">
+                    
+                    <div class="input-group">
+                        <label><i class="fas fa-home"></i> نوع الوحدة</label>
+                        <div class="select-wrapper">
+                            <select id="filterType">
+                                <option value="all">الكل</option>
+                                <option value="villa">فيلا / قصر</option>
+                                <option value="apartment">شقة سكنية</option>
+                                <option value="duplex">دوبلكس</option>
+                                <option value="rooftop">روف</option>
+                                <option value="admin">إداري / تجاري</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fas fa-map-marker-alt"></i> الحي / المنطقة</label>
+                        <div class="select-wrapper">
+                            <select id="filterLocation">
+                                <option value="all">كل مدينة العبور</option>
+                                <option value="hi9">الحي التاسع (Villas)</option>
+                                <option value="golf">جولف سيتي</option>
+                                <option value="hi5">الحي الخامس</option>
+                                <option value="hi6">الحي السادس</option>
+                                <option value="hi7">الحي السابع</option>
+                                <option value="hi1">الحي الأول</option>
+                                <option value="hi2">الحي الثاني</option>
+                                <option value="hi3">الحي الثالث</option>
+                                <option value="hi4">الحي الرابع</option>
+                                <option value="hi8">الحي الثامن</option>
+                                <option value="fun">الحي الترفيهي</option>
+                                <option value="family">إسكان عائلي</option>
+                                <option value="future">إسكان المستقبل</option>
+                                <option value="new_obour">العبور الجديدة</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label><i class="fas fa-coins"></i> الميزانية</label>
+                        <div class="select-wrapper">
+                            <select id="filterPrice">
+                                <option value="all">جميع الأسعار</option>
+                                </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group btn-group">
+                        <label style="visibility: hidden;">بحث</label>
+                        <button type="submit" class="search-btn-luxury">
+                            اعرض النتائج <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <section class="container" style="position: relative; z-index: 10;">
         <div class="grid-system" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 0;">
             
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center; background: rgba(30, 41, 59, 0.95);">
+            <div class="prop-card-service" style="padding: 40px; text-align: center; align-items: center; background: rgba(30, 41, 59, 0.95);">
                 <i class="fas fa-crown" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 15px;">خدمة معاينة VIP</h3>
                 <p style="color: var(--text-muted);">نرسل لك سيارة فاخرة لتأخذك من باب منزلك لمعاينة العقار الذي أعجبك بسعر مناسب.</p>
             </div>
 
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center; background: rgba(30, 41, 59, 0.95);">
+            <div class="prop-card-service" style="padding: 40px; text-align: center; align-items: center; background: rgba(30, 41, 59, 0.95);">
                 <i class="fas fa-file-contract" style="font-size: 3.5rem; color: var(--blue); margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 15px;">عقود قانونية</h3>
                 <p style="color: var(--text-muted);">فريق قانوني يراجع كافة الأوراق لضمان استثمارك وأمان أموالك.</p>
             </div>
 
-            <div class="prop-card" style="padding: 40px; text-align: center; align-items: center; background: rgba(30, 41, 59, 0.95);">
+            <div class="prop-card-service" style="padding: 40px; text-align: center; align-items: center; background: rgba(30, 41, 59, 0.95);">
                 <i class="fas fa-map-marked-alt" style="font-size: 3.5rem; color: var(--gold); margin-bottom: 20px;"></i>
                 <h3 style="color: #fff; margin-bottom: 15px;">تغطية شاملة</h3>
                 <p style="color: var(--text-muted);">نمتلك أكبر قاعدة بيانات للعقارات في جميع أحياء العبور.</p>
@@ -79,7 +148,7 @@
     <section class="container" style="padding: 80px 20px;">
         <div style="text-align: center; margin-bottom: 50px;">
             <h2 style="font-size: 2.5rem; margin-bottom: 10px;">أحدث <span style="color:var(--gold)">العروض</span></h2>
-            <p style="color: #94a3b8;">تشكيلة مميزة من العقارات التي تم إضافتها حديثاً</p>
+            <p style="color: #94a3b8;">تشكيلة مميزة من العقارات المتاحة للبيع والإيجار</p>
         </div>
         
         <div id="properties-grid" class="grid-system">
@@ -88,6 +157,25 @@
         
         <div style="text-align: center; margin-top: 50px;">
             <a href="properties.html" class="btn-secondary" style="padding: 12px 35px; font-size: 1.1rem;">عرض كل الوحدات</a>
+        </div>
+    </section>
+
+    <section class="container" style="margin-bottom: 50px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 10px;">الوحدات المتاحة على <span style="color:var(--gold)">الخريطة</span></h2>
+            <p style="color: #94a3b8;">استكشف أماكن تواجد عقاراتنا المميزة في مدينة العبور</p>
+        </div>
+        
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d55169.64687259449!2d31.439499878198242!3d30.222301981997424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14581f1d1d3226c5%3A0x6b86490793666d49!2sEl%20Obour%20City%2C%20Al%20Qalyubia%20Governorate!5e0!3m2!1sen!2seg!4v1707575000000!5m2!1sen!2seg" 
+                width="100%" 
+                height="450" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
     </section>
 
