@@ -18,6 +18,17 @@
         
         body { margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; background: var(--bg-deep); color: #fff; overflow-x: hidden; }
 
+        /* --- زر الرجوع --- */
+        .back-floating-btn {
+            position: fixed; top: 25px; right: 25px; width: 50px; height: 50px;
+            background: rgba(0, 0, 0, 0.8); color: #D4AF37; border: 2px solid #D4AF37;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; z-index: 99999; font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .back-floating-btn:hover { transform: scale(1.1); background: #D4AF37; color: #000; box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
+
         /* --- 1. شاشة الاحتفال (Intro) --- */
         #celebrationOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -48,9 +59,14 @@
         /* --- 2. لوحة التحكم الفخمة (Dashboard) --- */
         #vipDashboard { display: none; padding: 40px 20px; opacity: 0; transition: 1s; }
         
-        .dash-header { text-align: center; margin-bottom: 50px; }
+        .dash-header { text-align: center; margin-bottom: 50px; margin-top: 40px; }
         .dash-header h2 { font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 10px; }
         .dash-header p { color: #aaa; }
+
+        .section-title {
+            color: #fff; font-size: 1.5rem; margin: 40px 0 20px; border-right: 4px solid var(--gold-primary);
+            padding-right: 15px; max-width: 1200px; margin-left: auto; margin-right: auto; width: 90%;
+        }
 
         .vip-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -72,12 +88,12 @@
         .vip-card:hover { transform: translateY(-10px); border-color: var(--gold-primary); box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1); }
 
         .icon-circle {
-            width: 80px; height: 80px; border-radius: 50%; background: rgba(212, 175, 55, 0.1);
+            width: 70px; height: 70px; border-radius: 50%; background: rgba(212, 175, 55, 0.1);
             display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
-            font-size: 2rem; color: var(--gold-primary); border: 1px solid rgba(212, 175, 55, 0.3);
+            font-size: 1.8rem; color: var(--gold-primary); border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        .card-title { font-size: 1.5rem; font-weight: bold; color: #fff; margin-bottom: 10px; }
+        .card-title { font-size: 1.3rem; font-weight: bold; color: #fff; margin-bottom: 10px; }
         .card-desc { color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 25px; }
 
         .card-btn {
@@ -89,13 +105,12 @@
         .btn-gold:hover { background: #fff; box-shadow: 0 0 20px var(--gold-primary); }
         
         .btn-outline { border: 1px solid #555; color: #aaa; }
-        .btn-outline:hover { border-color: #fff; color: #fff; }
+        .btn-outline:hover { border-color: var(--gold-primary); color: var(--gold-primary); }
 
         /* Animations */
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { to { opacity: 1; } }
         
-        /* Canvas الكونفيتي */
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
     </style>
 
@@ -106,47 +121,90 @@
 </head>
 <body>
 
+    <a href="javascript:history.back()" class="back-floating-btn" title="رجوع"><i class="fas fa-arrow-right"></i></a>
+
     <div id="celebrationOverlay">
         <canvas id="confetti-canvas"></canvas>
         <div class="welcome-text">أهلاً بك في النخبة</div>
-        <div class="sub-text">تم تفعيل عضويتك بنجاح. أنت الآن ترى ما لا يراه الآخرون.</div>
+        <div class="sub-text">تم تفعيل عضويتك بنجاح. عالم من الرفاهية بانتظارك.</div>
         <button class="enter-btn" onclick="enterDashboard()">دخول القصر الملكي</button>
     </div>
 
     <div id="vipDashboard">
         <div class="dash-header">
             <h2 id="userNameDisplay">مرحباً ..</h2>
-            <p>هذه هي لوحة التحكم الخاصة بك. جميع الخدمات متاحة لك 24/7</p>
+            <p>لوحة التحكم الشاملة - جميع الخدمات بين يديك</p>
         </div>
 
+        <h3 class="section-title">💎 العقارات</h3>
         <div class="vip-grid">
-            
             <div class="vip-card">
                 <div class="icon-circle"><i class="fas fa-user-secret"></i></div>
                 <div class="card-title">الوحدات السيكرت</div>
                 <div class="card-desc">الدخول للخزنة السرية ومشاهدة عقارات مخفية عن العامة وحصرية فقط لأعضاء VIP.</div>
-                <a href="listings.html" class="card-btn btn-gold">تصفح الخزنة الآن</a>
+                <a href="listings.html" class="card-btn btn-gold">تصفح الخزنة (Secret)</a>
             </div>
 
             <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-globe"></i></div>
+                <div class="card-title">جميع الوحدات</div>
+                <div class="card-desc">تصفح كامل المعرض العقاري (سيكرت + عام) واستخدم الفلتر المتطور للوصول لهدفك.</div>
+                <a href="listings.html" class="card-btn btn-outline">تصفح الكل</a>
+            </div>
+        </div>
+
+        <h3 class="section-title">👑 خدمات الرفاهية</h3>
+        <div class="vip-grid">
+            <div class="vip-card">
                 <div class="icon-circle"><i class="fas fa-car"></i></div>
                 <div class="card-title">سيارة المعاينة</div>
-                <div class="card-desc">لا داعي للقيادة. اطلب سيارة ليموزين فاخرة لتأخذك في جولة معاينة من منزلك.</div>
-                <a href="https://wa.me/20110557821?text=طلب خدمة الليموزين (VIP Member)" target="_blank" class="card-btn btn-outline">حجز سيارة</a>
+                <div class="card-desc">خدمة ليموزين خاصة تأخذك من منزلك لمعاينة الوحدات بأقصى درجات الراحة.</div>
+                <a href="https://wa.me/20110557821?text=أنا عضو VIP وأرغب في حجز سيارة للمعاينة" target="_blank" class="card-btn btn-outline">حجز سيارة</a>
             </div>
 
             <div class="vip-card">
                 <div class="icon-circle"><i class="fas fa-user-tie"></i></div>
                 <div class="card-title">مدير حسابك</div>
-                <div class="card-desc">مستشار عقاري وقانوني مخصص لك وحدك، يجيب على استفساراتك وينهي إجراءاتك.</div>
-                <a href="https://wa.me/20110557821?text=تواصل مع مدير حسابي" target="_blank" class="card-btn btn-outline">تواصل الآن</a>
+                <div class="card-desc">مستشار عقاري مخصص لك وحدك، متاح 24/7 للإجابة على استفساراتك.</div>
+                <a href="https://wa.me/20110557821?text=أنا عضو VIP وأحتاج التحدث مع مدير حسابي" target="_blank" class="card-btn btn-outline">تواصل الآن</a>
+            </div>
+        </div>
+
+        <h3 class="section-title">🛠️ خدمات متكاملة</h3>
+        <div class="vip-grid">
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-gavel"></i></div>
+                <div class="card-title">استشارات قانونية</div>
+                <div class="card-desc">مراجعة العقود والملفات القانونية مجاناً للأعضاء لضمان حقوقك.</div>
+                <a href="https://wa.me/20110557821?text=أنا عضو VIP وأريد استشارة قانونية" target="_blank" class="card-btn btn-outline">طلب استشارة</a>
             </div>
 
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-paint-roller"></i></div>
+                <div class="card-title">تشطيبات وديكور</div>
+                <div class="card-desc">باقات تشطيب حصرية بخصومات خاصة للأعضاء، وتسليم على المفتاح.</div>
+                <a href="https://wa.me/20110557821?text=أنا عضو VIP ومهتم بخدمات التشطيب" target="_blank" class="card-btn btn-outline">معاينة تشطيب</a>
+            </div>
+
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-key"></i></div>
+                <div class="card-title">إدارة أملاك</div>
+                <div class="card-desc">للمستثمرين: ندير عقارك (تأجير، صيانة) ونحول لك الأرباح.</div>
+                <a href="https://wa.me/20110557821?text=أنا عضو VIP وأريد خدمة إدارة الأملاك" target="_blank" class="card-btn btn-outline">إدارة عقاري</a>
+            </div>
+
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-chart-line"></i></div>
+                <div class="card-title">التقييم العقاري</div>
+                <div class="card-desc">تقرير مفصل بسعر المتر السوقي لوحدتك الحالية.</div>
+                <a href="https://wa.me/20110557821?text=أنا عضو VIP وأريد تقييم عقاري" target="_blank" class="card-btn btn-outline">طلب تقييم</a>
+            </div>
         </div>
+
     </div>
 
     <script>
-        // ⚠️ إعدادات Firebase
+        // ⚠️ إعدادات Firebase الحقيقية
         const firebaseConfig = {
           apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
           authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -162,15 +220,15 @@
         // 1. تشغيل الاحتفال فور فتح الصفحة
         window.onload = function() {
             launchConfetti();
-            // التحقق من أن المستخدم VIP فعلاً (حماية)
+            
             auth.onAuthStateChanged(user => {
                 if (user) {
                     db.collection('customers').doc(user.uid).get().then(doc => {
                         if (doc.exists && doc.data().isVIP) {
                             document.getElementById('userNameDisplay').innerText = `مرحباً، ${user.displayName}`;
                         } else {
-                            // لو دخل بالصدفة وهو مش VIP يطرده
-                            alert("عفواً، هذه الصفحة للأعضاء فقط");
+                            // حماية الصفحة: لو دخل باللينك وهو مش VIP
+                            alert("عفواً، هذه المنطقة مخصصة للأعضاء فقط");
                             window.location.href = 'index.html';
                         }
                     });
@@ -180,7 +238,7 @@
             });
         };
 
-        // 2. كود الألعاب النارية (Confetti)
+        // 2. كود الألعاب النارية
         function launchConfetti() {
             var duration = 3000;
             var end = Date.now() + duration;
@@ -191,7 +249,7 @@
                     angle: 60,
                     spread: 55,
                     origin: { x: 0 },
-                    colors: ['#D4AF37', '#ffffff'] // ذهبي وأبيض
+                    colors: ['#D4AF37', '#ffffff']
                 });
                 confetti({
                     particleCount: 5,
@@ -216,7 +274,7 @@
             setTimeout(() => {
                 overlay.style.display = 'none';
                 dashboard.style.display = 'block';
-                // تفعيل فيد إن للوحة
+                // Fade In Dashboard
                 setTimeout(() => dashboard.style.opacity = '1', 100);
             }, 1000);
         }
