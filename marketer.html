@@ -71,7 +71,7 @@
             font-family: 'Cairo';
             font-size: 1rem;
             transition: 0.3s;
-            box-sizing: border-box; /* هام جداً للتناسق */
+            box-sizing: border-box;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -79,6 +79,10 @@
             outline: none;
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
         }
+
+        /* تنسيق القوائم المجمعة */
+        optgroup { color: var(--gold); font-weight: bold; background: #1e293b; }
+        option { color: #fff; background: #0f172a; padding: 5px; }
 
         /* منطقة رفع الصور */
         .image-upload-area {
@@ -178,14 +182,31 @@
                 <div class="input-group">
                     <label>الموقع / الحي</label>
                     <select id="p_location">
-                        <option value="hi9">الحي التاسع</option>
-                        <option value="golf">جولف سيتي</option>
-                        <option value="hi5">الحي الخامس</option>
-                        <option value="hi1">الحي الأول</option>
-                        <option value="hi6">الحي السادس</option>
-                        <option value="hi7">الحي السابع</option>
-                        <option value="new_obour">العبور الجديدة</option>
-                        <option value="fun">الحي الترفيهي</option>
+                        <optgroup label="الأحياء الرئيسية">
+                            <option value="hi1">الحي الأول</option>
+                            <option value="hi2">الحي الثاني</option>
+                            <option value="hi3">الحي الثالث</option>
+                            <option value="hi4">الحي الرابع</option>
+                            <option value="hi5">الحي الخامس</option>
+                            <option value="hi6">الحي السادس</option>
+                            <option value="hi7">الحي السابع</option>
+                            <option value="hi8">الحي الثامن</option>
+                            <option value="hi9">الحي التاسع</option>
+                        </optgroup>
+
+                        <optgroup label="مناطق مميزة">
+                            <option value="golf">جولف سيتي</option>
+                            <option value="orabi">جمعية أحمد عرابي</option>
+                            <option value="fun">الحي الترفيهي</option>
+                        </optgroup>
+
+                        <optgroup label="مناطق أخرى">
+                            <option value="shabab">إسكان الشباب</option>
+                            <option value="future">إسكان المستقبل</option>
+                            <option value="family">الإسكان العائلي</option>
+                            <option value="new_obour">العبور الجديدة</option>
+                            <option value="industrial">المنطقة الصناعية</option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -218,7 +239,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // إعدادات Firebase (نفس إعدادات موقعك)
+        // إعدادات Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
             authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -280,7 +301,6 @@
                 btn.innerHTML = '<i class="fas fa-database"></i> جاري الحفظ في الموقع...';
                 
                 const priceVal = document.getElementById('p_priceVal').value;
-                // تنسيق السعر للعرض (مثال: 5,000,000 ج.م)
                 const formattedPrice = Number(priceVal).toLocaleString() + (document.getElementById('p_status').value === 'rent' ? ' ج.م/شهرياً' : ' ج.م');
 
                 const propertyData = {
@@ -288,8 +308,8 @@
                     status: document.getElementById('p_status').value,
                     type: document.getElementById('p_type').value,
                     location: document.getElementById('p_location').value,
-                    priceVal: Number(priceVal), // للحسابات والفلترة
-                    price: formattedPrice,      // للعرض
+                    priceVal: Number(priceVal), 
+                    price: formattedPrice,      
                     area: document.getElementById('p_area').value,
                     rooms: document.getElementById('p_rooms').value,
                     image: imageUrl,
@@ -300,7 +320,7 @@
                 await addDoc(collection(db, "properties"), propertyData);
 
                 alert("تم نشر العقار بنجاح! يظهر الآن في الموقع الرئيسي.");
-                location.reload(); // تحديث الصفحة لإضافة عقار جديد
+                location.reload(); 
 
             } catch (error) {
                 console.error(error);
