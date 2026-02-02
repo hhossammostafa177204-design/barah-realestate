@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>BARAH | غرفة التحكم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0f1215; color: #fff; font-family: 'Tajawal'; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        
+        /* شاشة الدخول */
+        #loginScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .pass-input { padding: 15px; border-radius: 50px; text-align: center; font-size: 1.2rem; border: 1px solid #333; background: #111; color: #D4AF37; width: 200px; margin-bottom: 20px; outline: none; }
+        .login-btn { padding: 10px 40px; background: #D4AF37; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; }
+
+        /* المحتوى */
+        .container { text-align: center; display: none; width: 90%; max-width: 500px; }
+        .card { background: #1a1d23; border: 2px solid #D4AF37; border-radius: 20px; padding: 40px; box-shadow: 0 0 50px rgba(212, 175, 55, 0.2); }
+        
+        h1 { color: #D4AF37; margin-bottom: 10px; }
+        p { color: #aaa; margin-bottom: 30px; }
+
+        .code-display {
+            font-size: 3rem; font-weight: 900; color: #fff; letter-spacing: 5px;
+            background: #000; padding: 20px; border-radius: 15px; border: 1px dashed #555;
+            margin-bottom: 30px; position: relative;
+        }
+        
+        .action-btn {
+            width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: none;
+            font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-copy { background: #333; color: #fff; }
+        .btn-copy:hover { background: #444; }
+        .btn-new { background: linear-gradient(45deg, #D4AF37, #b38728); color: #000; }
+        .btn-new:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+
+        .status { margin-top: 10px; font-size: 0.9rem; height: 20px; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <div id="loginScreen">
+        <h2 style="color:#D4AF37">SECURITY CHECK</h2>
+        <input type="password" id="adminPass" class="pass-input" placeholder="Password">
+        <button class="login-btn" onclick="checkPass()">ENTER</button>
+    </div>
+
+    <div class="container" id="mainContent">
+        <div class="card">
+            <h1><i class="fas fa-key"></i> كود التفعيل النشط</h1>
+            <p>هذا هو الكود الحالي الذي يعمل عند العملاء</p>
+            
+            <div class="code-display" id="currentCode">...</div>
+            
+            <button class="action-btn btn-copy" onclick="copyCode()">
+                <i class="fas fa-copy"></i> نسخ الكود
+            </button>
+            
+            <button class="action-btn btn-new" onclick="generateNewCode()">
+                <i class="fas fa-sync-alt"></i> توليد كود جديد وتغييره
+            </button>
+
+            <div class="status" id="statusMsg" style="color:#25D366;"></div>
+        </div>
+        <p style="margin-top:20px; font-size:0.8rem;">⚠️ تحذير: عند تغيير الكود، سيتوقف الكود القديم عن العمل فوراً.</p>
+    </div>
+
+    <script>
+        // ⚠️ إعدادات Firebase
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY", 
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 1. الدخول
+        function checkPass() {
+            if(document.getElementById('adminPass').value === "AHE123") {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                loadCode();
+            } else { alert("Wrong Password"); }
+        }
+
+        // 2. جلب الكود الحالي
+        function loadCode() {
+            db.collection('system_config').doc('promo').onSnapshot(doc => {
+                if(doc.exists) {
+                    document.getElementById('currentCode').innerText = doc.data().active_code;
+                } else {
+                    // إنشاء المستند لأول مرة إذا لم يكن موجوداً
+                    db.collection('system_config').doc('promo').set({ active_code: 'BARAH2026' });
+                }
+            });
+        }
+
+        // 3. توليد كود جديد عشوائي وحفظه
+        function generateNewCode() {
+            const randomNum = Math.floor(1000 + Math.random() * 9000); // رقم عشوائي
+            const newCode = "VIP" + randomNum; // مثال: VIP4592
+            
+            if(confirm(`هل أنت متأكد من تغيير الكود إلى ${newCode}؟`)) {
+                db.collection('system_config').doc('promo').set({ active_code: newCode })
+                .then(() => {
+                    showMsg("✅ تم تحديث الكود بنجاح");
+                });
+            }
+        }
+
+        // 4. نسخ الكود
+        function copyCode() {
+            const code = document.getElementById('currentCode').innerText;
+            navigator.clipboard.writeText(code);
+            showMsg("تم النسخ!");
+        }
+
+        function showMsg(txt) {
+            document.getElementById('statusMsg').innerText = txt;
+            setTimeout(() => document.getElementById('statusMsg').innerText = "", 3000);
+        }
+    </script>
+</body>
+</html>

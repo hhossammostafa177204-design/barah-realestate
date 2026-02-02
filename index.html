@@ -76,13 +76,40 @@
         .vip-price { font-size: 3rem; color: var(--gold-primary); font-weight: 900; margin: 20px 0; }
         .vip-features li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #ddd; }
         .vip-features i { color: var(--gold-primary); }
+        
         .vip-btn {
             background: var(--gold-gradient); color: #000; padding: 15px; width: 100%; border: none;
             border-radius: 10px; font-weight: 900; font-size: 1.2rem; cursor: pointer; margin-top: auto;
             box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4); animation: pulse 2s infinite;
             text-decoration: none; text-align: center; display: block; box-sizing: border-box;
         }
+
+        /* زر تفعيل الكود */
+        .code-btn {
+            background: transparent; border: 1px solid #555; color: #aaa; padding: 10px;
+            width: 100%; border-radius: 10px; margin-top: 15px; cursor: pointer; transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        .code-btn:hover { border-color: var(--gold-primary); color: var(--gold-primary); }
+
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+
+        /* زر الرجوع للخلف العائم */
+        .back-floating-btn {
+            position: fixed; top: 25px; right: 25px; width: 50px; height: 50px;
+            background: rgba(0, 0, 0, 0.8); color: #D4AF37; border: 2px solid #D4AF37;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; z-index: 99999; font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .back-floating-btn:hover {
+            transform: scale(1.1); background: #D4AF37; color: #000;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+        }
+        @media (max-width: 768px) {
+            .back-floating-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1rem; }
+        }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -90,6 +117,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
+
+    <a href="javascript:history.back()" class="back-floating-btn" title="رجوع"><i class="fas fa-arrow-right"></i></a>
 
     <nav>
         <div class="nav-logo">BARAH</div>
@@ -131,12 +160,15 @@
                 <li><i class="fas fa-headset"></i> مدير حساب شخصي</li>
                 <li><i class="fas fa-crown"></i> تاج ذهبي على صورتك</li>
             </ul>
-            <a href="https://wa.me/201000000000?text=أرغب في الاشتراك في باقة VIP" target="_blank" class="vip-btn">اشترك الآن</a>
+            
+            <a href="https://wa.me/20110557821?text=مرحباً، أرغب في الاشتراك في باقة VIP (99ج)" target="_blank" class="vip-btn">اشترك الآن</a>
+            
+            <button class="code-btn" onclick="activateCode()">لديك كود تفعيل؟</button>
         </div>
     </section>
 
     <script>
-        // ⚠️ ضع مفاتيحك هنا
+        // ⚠️ إعدادات Firebase (ضع بياناتك هنا)
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY", 
             authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -149,11 +181,13 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // 1. تسجيل الدخول بجوجل
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider).then((res) => checkVIP(res.user));
         }
 
+        // 2. التحقق من حالة العضوية
         function checkVIP(user) {
             const userRef = db.collection('customers').doc(user.uid);
             userRef.get().then((doc) => {
@@ -165,6 +199,45 @@
             });
         }
 
+        // 3. 🔥 دالة تفعيل الكود الديناميكية (الجديدة) 🔥
+        function activateCode() {
+            const user = auth.currentUser;
+            if(!user) {
+                alert("يرجى تسجيل الدخول أولاً بحساب جوجل!");
+                signInWithGoogle();
+                return;
+            }
+
+            const inputCode = prompt("أدخل كود التفعيل الذي استلمته:");
+            if(!inputCode) return; // تم إلغاء الأمر
+
+            // البحث في قاعدة البيانات عن الكود النشط حالياً
+            db.collection('system_config').doc('promo').get().then((doc) => {
+                if (doc.exists) {
+                    const serverCode = doc.data().active_code;
+                    
+                    if (inputCode === serverCode) {
+                        // ✅ الكود صحيح -> تفعيل المستخدم فوراً
+                        db.collection('customers').doc(user.uid).update({
+                            isVIP: true
+                        }).then(() => {
+                            alert("🎉 مبروك! الكود صحيح. تم تفعيل عضوية VIP بنجاح.");
+                            location.reload(); // إعادة تحميل الصفحة ليظهر التاج
+                        });
+                    } else {
+                        // ❌ الكود خطأ
+                        alert("❌ عذراً، الكود الذي أدخلته غير صحيح أو منتهي الصلاحية.");
+                    }
+                } else {
+                    alert("خطأ في النظام: لم يتم ضبط كود التفعيل.");
+                }
+            }).catch((error) => {
+                console.error("Error:", error);
+                alert("تأكد من اتصال الإنترنت وحاول مجدداً.");
+            });
+        }
+
+        // 4. مراقبة حالة المستخدم
         auth.onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('googleBtn').style.display = 'none';
