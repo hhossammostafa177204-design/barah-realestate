@@ -1,12 +1,12 @@
 // ==========================================
-// 1. استيراد مكتبات Firebase (CDN)
+// 1. استيراد مكتبات Firebase
 // ==========================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ==========================================
-// 2. إعدادات Firebase (مشروعك: Barah Realestate)
+// 2. إعدادات Firebase (مشروع Barah Realestate)
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
@@ -24,18 +24,18 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 // ==========================================
-// 3. المتغيرات العامة وإعدادات الصفحة
+// 3. المتغيرات العامة
 // ==========================================
 let currentUser = null;
 let selectedCar = null;
-let allProperties = []; 
+let allProperties = []; // المخزن الرئيسي للعقارات القادمة من المسوقين
 let currentMode = 'sale'; 
 
 // تشغيل عند تحميل الصفحة
 document.addEventListener("DOMContentLoaded", () => {
     initFlatpickr();
     renderCars();
-    loadProperties();
+    loadProperties(); // ✅ هنا يتم جلب الصور والبيانات
     checkAuthState();
     
     if(typeof switchSearchMode === 'function') {
@@ -43,22 +43,178 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// إعداد تقويم اختيار التاريخ (Flatpickr)
+// إعداد التقويم
 function initFlatpickr() {
     if(document.getElementById("vipDate")) {
         flatpickr("#vipDate", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            theme: "dark",
-            disableMobile: "true",
-            locale: { firstDayOfWeek: 6 }
+            enableTime: true, dateFormat: "Y-m-d H:i", minDate: "today",
+            theme: "dark", disableMobile: "true", locale: { firstDayOfWeek: 6 }
         });
     }
 }
 
 // ==========================================
-// 4. إدارة المستخدمين (تسجيل الدخول/الخروج)
+// 4. جلب البيانات (الربط بين المسوق والزبون)
+// ==========================================
+async function loadProperties() {
+    const grid = document.getElementById("properties-grid");
+    if (!grid) return;
+
+    // عرض علامة تحميل شيك
+    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:#d4af37;"></i><p style="color:#fff; margin-top:10px;">جاري تحميل أحدث العروض...</p></div>';
+    
+    try {
+        // جلب العقارات مرتبة من الأحدث للأقدم
+        const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        allProperties = [];
+        
+        querySnapshot.forEach((doc) => {
+            // تخزين البيانات (بما فيها رابط الصورة القادم من ImgBB)
+            allProperties.push({ id: doc.id, ...doc.data() });
+        });
+
+        // لو مفيش عقارات، اعرض رسالة
+        if (allProperties.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#aaa;">لا توجد عقارات متاحة حالياً.</div>';
+            return;
+        }
+
+        filterProperties(); // عرض العقارات
+
+    } catch (error) {
+        console.error("Error fetching properties:", error);
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; color:red;">حدث خطأ في تحميل البيانات.</div>';
+    }
+}
+
+// ==========================================
+// 5. الفلترة والعرض
+// ==========================================
+
+// التبديل بين بيع وإيجار
+window.switchSearchMode = function(mode) {
+    currentMode = mode;
+    const btnSale = document.getElementById('btnSale');
+    const btnRent = document.getElementById('btnRent');
+    if(btnSale && btnRent) {
+        btnSale.classList.toggle('active', mode === 'sale');
+        btnRent.classList.toggle('active', mode === 'rent');
+    }
+    updatePriceFilter(mode);
+    filterProperties();
+};
+
+// تحديث قائمة الأسعار
+function updatePriceFilter(mode) {
+    const priceSelect = document.getElementById('filterPrice');
+    if (priceSelect) {
+        if (mode === 'sale') {
+            priceSelect.innerHTML = `<option value="all">جميع الأسعار</option><option value="cat1">أقل من 3 مليون</option><option value="cat2">من 3 - 6 مليون</option><option value="cat3">من 6 - 10 مليون</option><option value="cat4">أكثر من 10 مليون</option>`;
+        } else {
+            priceSelect.innerHTML = `<option value="all">جميع الأسعار</option><option value="cat1">أقل من 10,000 ج.م</option><option value="cat2">من 10 - 20 ألف ج.م</option><option value="cat3">من 20 - 40 ألف ج.م</option><option value="cat4">أكثر من 40 ألف ج.م</option>`;
+        }
+    }
+}
+
+// منطق الفلترة
+window.filterProperties = function() {
+    const grid = document.getElementById("properties-grid");
+    if (!grid) return;
+
+    const type = document.getElementById("filterType") ? document.getElementById("filterType").value : "all";
+    const location = document.getElementById("filterLocation") ? document.getElementById("filterLocation").value : "all";
+    const priceRange = document.getElementById("filterPrice") ? document.getElementById("filterPrice").value : "all";
+
+    const filtered = allProperties.filter(prop => {
+        if (prop.status && prop.status !== currentMode) return false;
+        
+        const matchType = (type === "all") || (prop.type === type);
+        const matchLocation = (location === "all") || (prop.location === location);
+        
+        let matchPrice = true;
+        if (priceRange !== "all" && prop.priceVal) {
+            const p = Number(prop.priceVal);
+            if (currentMode === 'sale') {
+                if (priceRange === "cat1") matchPrice = p < 3000000;
+                else if (priceRange === "cat2") matchPrice = p >= 3000000 && p <= 6000000;
+                else if (priceRange === "cat3") matchPrice = p > 6000000 && p <= 10000000;
+                else if (priceRange === "cat4") matchPrice = p > 10000000;
+            } else { 
+                if (priceRange === "cat1") matchPrice = p < 10000;
+                else if (priceRange === "cat2") matchPrice = p >= 10000 && p <= 20000;
+                else if (priceRange === "cat3") matchPrice = p > 20000 && p <= 40000;
+                else if (priceRange === "cat4") matchPrice = p > 40000;
+            }
+        }
+        return matchType && matchLocation && matchPrice;
+    });
+
+    renderProperties(filtered);
+};
+
+// رسم الكروت (HTML)
+function renderProperties(propsList) {
+    const grid = document.getElementById("properties-grid");
+    if (!grid) return;
+
+    if (propsList.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 50px; background: rgba(255,255,255,0.02); border-radius: 15px; border:1px dashed #334155;"><i class="fas fa-search" style="font-size: 3rem; color: #555; margin-bottom: 20px;"></i><h3 style="color:#fff;">لا توجد نتائج</h3><p style="color:#aaa">جرب تغيير المنطقة أو السعر</p></div>`;
+        return;
+    }
+
+    let htmlContent = "";
+    propsList.forEach(prop => {
+        const isSale = prop.status === 'sale';
+        const badgeClass = isSale ? 'sale' : 'rent';
+        const badgeText = isSale ? 'للبيع' : 'للإيجار';
+
+        // ✅ هنا السحر: استخدام الصورة المرفوعة، ولو مش موجودة نستخدم صورة احتياطية
+        const bgImage = prop.image ? prop.image : 'https://via.placeholder.com/400x300?text=No+Image';
+
+        htmlContent += `
+            <div class="prop-card">
+                <div class="prop-img-wrapper">
+                    <img src="${bgImage}" alt="${prop.title}" loading="lazy">
+                    <span class="prop-badge ${badgeClass}">${badgeText}</span>
+                </div>
+                <div class="prop-details">
+                    <div class="prop-info-top">
+                        <h3 class="prop-title">${prop.title}</h3>
+                        <p class="prop-price">${prop.price}</p>
+                    </div>
+                    
+                    <div class="prop-features">
+                        <span><i class="fas fa-bed"></i> ${prop.rooms}</span>
+                        <span><i class="fas fa-ruler-combined"></i> ${prop.area}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${translateLocation(prop.location)}</span>
+                    </div>
+
+                    <button onclick="openVipModal('${prop.title}')" class="btn-view">
+                        <i class="fas fa-eye"></i> تفاصيل ومعاينة
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    grid.innerHTML = htmlContent;
+}
+
+// دالة لترجمة أكواد المناطق إلى أسماء عربية جميلة
+function translateLocation(locCode) {
+    const locs = {
+        'hi1': 'الحي الأول', 'hi2': 'الحي الثاني', 'hi3': 'الحي الثالث', 'hi4': 'الحي الرابع',
+        'hi5': 'الحي الخامس', 'hi6': 'الحي السادس', 'hi7': 'الحي السابع', 'hi8': 'الحي الثامن', 'hi9': 'الحي التاسع',
+        'golf': 'جولف سيتي', 'orabi': 'جمعية عرابي', 'fun': 'الحي الترفيهي',
+        'shabab': 'إسكان الشباب', 'future': 'المستقبل', 'family': 'عائلي',
+        'new_obour': 'العبور الجديدة', 'industrial': 'المنطقة الصناعية'
+    };
+    return locs[locCode] || locCode;
+}
+
+// ==========================================
+// 6. المصادقة والـ VIP
 // ==========================================
 
 function checkAuthState() {
@@ -84,156 +240,16 @@ function checkAuthState() {
 }
 
 window.loginWithGoogle = async function() {
-    try {
-        await signInWithPopup(auth, provider);
-    } catch (error) {
-        console.error("Error logging in:", error);
-        alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
-    }
+    try { await signInWithPopup(auth, provider); } 
+    catch (error) { console.error(error); alert("خطأ في الدخول: " + error.message); }
 }
 
 window.logoutUser = async function() {
-    try {
-        await signOut(auth);
-        window.location.reload();
-    } catch (error) {
-        console.error("Error logging out:", error);
-    }
+    try { await signOut(auth); window.location.reload(); } 
+    catch (error) { console.error(error); }
 }
 
-// ==========================================
-// 5. إدارة العقارات والفلترة
-// ==========================================
-
-const dummyProperties = [
-    { id: 1, title: "فيلا قصر - الحي التاسع", status: "sale", type: "villa", location: "hi9", priceVal: 18000000, price: "18,000,000 ج.م", area: "1200م", rooms: "9", image: "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" },
-    { id: 2, title: "شقة لوكس - الحي الخامس", status: "sale", type: "apartment", location: "hi5", priceVal: 4500000, price: "4,500,000 ج.م", area: "200م", rooms: "3", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" },
-    { id: 3, title: "دوبلكس - جولف سيتي", status: "sale", type: "duplex", location: "golf", priceVal: 8000000, price: "8,000,000 ج.م", area: "400م", rooms: "5", image: "https://images.unsplash.com/photo-1600596542815-2495db9dc2c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" }
-];
-
-async function loadProperties() {
-    const grid = document.getElementById("properties-grid");
-    if (!grid) return;
-
-    grid.innerHTML = '<p style="text-align:center; color:#fff;">جاري التحميل...</p>';
-    
-    try {
-        const querySnapshot = await getDocs(collection(db, "properties"));
-        allProperties = [];
-        querySnapshot.forEach((doc) => {
-            allProperties.push({ id: doc.id, ...doc.data() });
-        });
-
-        if (allProperties.length === 0) {
-            allProperties = dummyProperties;
-        }
-        filterProperties();
-
-    } catch (error) {
-        console.error("Error fetching properties:", error);
-        allProperties = dummyProperties;
-        filterProperties();
-    }
-}
-
-window.switchSearchMode = function(mode) {
-    currentMode = mode;
-    const btnSale = document.getElementById('btnSale');
-    const btnRent = document.getElementById('btnRent');
-    if(btnSale && btnRent) {
-        btnSale.classList.toggle('active', mode === 'sale');
-        btnRent.classList.toggle('active', mode === 'rent');
-    }
-    const priceSelect = document.getElementById('filterPrice');
-    if (priceSelect) {
-        if (mode === 'sale') {
-            priceSelect.innerHTML = `<option value="all">جميع الأسعار</option><option value="cat1">أقل من 3 مليون</option><option value="cat2">من 3 - 6 مليون</option><option value="cat3">من 6 - 10 مليون</option><option value="cat4">أكثر من 10 مليون</option>`;
-        } else {
-            priceSelect.innerHTML = `<option value="all">جميع الأسعار</option><option value="cat1">أقل من 10,000 ج.م</option><option value="cat2">من 10 - 20 ألف ج.م</option><option value="cat3">من 20 - 40 ألف ج.م</option><option value="cat4">أكثر من 40 ألف ج.م</option>`;
-        }
-    }
-    filterProperties();
-};
-
-window.filterProperties = function() {
-    const grid = document.getElementById("properties-grid");
-    if (!grid) return;
-
-    const type = document.getElementById("filterType") ? document.getElementById("filterType").value : "all";
-    const location = document.getElementById("filterLocation") ? document.getElementById("filterLocation").value : "all";
-    const priceRange = document.getElementById("filterPrice") ? document.getElementById("filterPrice").value : "all";
-
-    const filtered = allProperties.filter(prop => {
-        if (prop.status && prop.status !== currentMode) return false;
-        const matchType = (type === "all") || (prop.type === type);
-        const matchLocation = (location === "all") || (prop.location === location);
-
-        let matchPrice = true;
-        if (priceRange !== "all" && prop.priceVal) {
-            const price = prop.priceVal;
-            if (currentMode === 'sale') {
-                if (priceRange === "cat1") matchPrice = price < 3000000;
-                else if (priceRange === "cat2") matchPrice = price >= 3000000 && price <= 6000000;
-                else if (priceRange === "cat3") matchPrice = price > 6000000 && price <= 10000000;
-                else if (priceRange === "cat4") matchPrice = price > 10000000;
-            } else { 
-                if (priceRange === "cat1") matchPrice = price < 10000;
-                else if (priceRange === "cat2") matchPrice = price >= 10000 && price <= 20000;
-                else if (priceRange === "cat3") matchPrice = price > 20000 && price <= 40000;
-                else if (priceRange === "cat4") matchPrice = price > 40000;
-            }
-        }
-        return matchType && matchLocation && matchPrice;
-    });
-
-    renderProperties(filtered);
-};
-
-function renderProperties(propsList) {
-    const grid = document.getElementById("properties-grid");
-    if (!grid) return;
-
-    if (propsList.length === 0) {
-        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 50px; background: rgba(255,255,255,0.02); border-radius: 15px; border:1px dashed #334155;"><i class="fas fa-search" style="font-size: 3rem; color: #555; margin-bottom: 20px;"></i><h3 style="color:#fff;">لا توجد نتائج</h3><p style="color:#aaa">جرب تغيير المنطقة أو السعر</p></div>`;
-        return;
-    }
-
-    let htmlContent = "";
-    propsList.forEach(prop => {
-        const isSale = prop.status === 'sale';
-        const badgeClass = isSale ? 'sale' : 'rent';
-        const badgeText = isSale ? 'للبيع' : 'للإيجار';
-
-        htmlContent += `
-            <div class="prop-card">
-                <div class="prop-img-wrapper">
-                    <img src="${prop.image}" alt="${prop.title}">
-                    <span class="prop-badge ${badgeClass}">${badgeText}</span>
-                </div>
-                <div class="prop-details">
-                    <div class="prop-info-top">
-                        <h3 class="prop-title">${prop.title}</h3>
-                        <p class="prop-price">${prop.price}</p>
-                    </div>
-                    <div class="prop-features">
-                        <span><i class="fas fa-bed"></i> ${prop.rooms}</span>
-                        <span><i class="fas fa-ruler-combined"></i> ${prop.area}</span>
-                        <span><i class="fas fa-map-marker-alt"></i> ${prop.location}</span>
-                    </div>
-                    <button onclick="openVipModal('${prop.title}')" class="btn-view">
-                        <i class="fas fa-eye"></i> تفاصيل ومعاينة
-                    </button>
-                </div>
-            </div>
-        `;
-    });
-    grid.innerHTML = htmlContent;
-}
-
-// ==========================================
-// 6. نظام VIP (السيارات والمعاينة)
-// ==========================================
-
+// --- إعدادات نافذة الحجز ---
 const cars = [
     { id: 'mercedes', name: 'Mercedes S500', icon: 'fa-car', price: 'مجاني للعملاء' },
     { id: 'bmw', name: 'BMW 7 Series', icon: 'fa-car-alt', price: 'مجاني للعملاء' },
@@ -243,16 +259,9 @@ const cars = [
 function renderCars() {
     const container = document.getElementById("carSelection");
     if (!container) return;
-
     let html = "";
     cars.forEach(car => {
-        html += `
-            <div class="car-option" onclick="selectCar('${car.id}', this)">
-                <i class="fas ${car.icon}"></i>
-                <h4>${car.name}</h4>
-                <p style="font-size:0.8rem; color:#aaa;">${car.price}</p>
-            </div>
-        `;
+        html += `<div class="car-option" onclick="selectCar('${car.id}', this)"><i class="fas ${car.icon}"></i><h4>${car.name}</h4><p style="font-size:0.8rem; color:#aaa;">${car.price}</p></div>`;
     });
     container.innerHTML = html;
 }
@@ -264,30 +273,22 @@ window.selectCar = function(carId, element) {
 };
 
 window.openVipModal = function(propTitle) {
-    if (!currentUser) {
-        openLoginModal();
-        return;
-    }
+    if (!currentUser) { openLoginModal(); return; }
     const titleInput = document.getElementById("vipPropTitle");
     if (titleInput) titleInput.value = propTitle;
-    
     const modal = document.getElementById("vipModal");
     if (modal) modal.classList.add("active");
 };
 
-// ==========================================
-// 🔴 دالة الإرسال المحدثة (تشمل السعر)
-// ==========================================
+// إرسال الطلب (شامل السعر المحسوب)
 window.submitVipRequest = async function() {
     const date = document.getElementById("vipDate").value;
     const phone = document.getElementById("vipPhone").value;
     const propTitle = document.getElementById("vipPropTitle").value;
-    
-    // 🆕 الحصول على السعر المحسوب من الحقل المخفي
     const estimatedPrice = document.getElementById("calculatedPrice").value || "لم يحسب";
 
     if (!selectedCar || !date || !phone) {
-        alert("يرجى اختيار السيارة، الموعد، وإدخال رقم الهاتف.");
+        alert("يرجى إكمال جميع البيانات (السيارة، الموعد، الهاتف).");
         return;
     }
 
@@ -305,28 +306,24 @@ window.submitVipRequest = async function() {
             car_choice: selectedCar,
             date: date,
             phone: phone,
-            estimated_ride_price: estimatedPrice, // 🆕 إرسال السعر لقاعدة البيانات
+            ride_price: estimatedPrice, // إرسال السعر للإدارة
             status: "pending",
             created_at: serverTimestamp()
         });
 
-        // رسالة نجاح توضح السعر
-        const priceMsg = estimatedPrice !== "لم يحسب" ? `التكلفة التقديرية: ${estimatedPrice} ج.م` : "سيتم تحديد التكلفة لاحقاً";
-        alert(`تم استلام طلب المعاينة بنجاح! \n${priceMsg} \nسيتصل بك فريقنا قريباً.`);
+        const priceMsg = estimatedPrice !== "لم يحسب" ? `\nالتكلفة التقديرية للمشوار: ${estimatedPrice} ج.م` : "";
+        alert(`تم الحجز بنجاح! ${priceMsg}\nسيتصل بك فريقنا قريباً.`);
         
         closeVipModal();
-        
-        // إعادة تعيين الحقول
         document.getElementById("vipDate").value = "";
         document.getElementById("vipPhone").value = "";
-        document.getElementById("rideResult").style.display = "none"; // إخفاء نتيجة المشوار
-        document.getElementById("calculatedPrice").value = ""; // تصفير السعر
+        document.getElementById("rideResult").style.display = "none";
         selectedCar = null;
         document.querySelectorAll('.car-option').forEach(el => el.classList.remove('selected'));
 
     } catch (error) {
-        console.error("Error submitting request:", error);
-        alert("حدث خطأ، يرجى المحاولة مرة أخرى.");
+        console.error(error);
+        alert("حدث خطأ في الحجز.");
     } finally {
         btn.innerText = originalText;
         btn.disabled = false;
@@ -334,21 +331,11 @@ window.submitVipRequest = async function() {
 };
 
 // ==========================================
-// 7. دوال النوافذ المنبثقة
+// 7. النوافذ المنبثقة & نظام أوبر
 // ==========================================
-
-window.openLoginModal = () => {
-    const el = document.getElementById("loginModal");
-    if(el) el.classList.add("active");
-};
-window.closeLoginModal = () => {
-    const el = document.getElementById("loginModal");
-    if(el) el.classList.remove("active");
-};
-window.closeVipModal = () => {
-    const el = document.getElementById("vipModal");
-    if(el) el.classList.remove("active");
-};
+window.openLoginModal = () => { const el = document.getElementById("loginModal"); if(el) el.classList.add("active"); };
+window.closeLoginModal = () => { const el = document.getElementById("loginModal"); if(el) el.classList.remove("active"); };
+window.closeVipModal = () => { const el = document.getElementById("vipModal"); if(el) el.classList.remove("active"); };
 
 window.onclick = function(event) {
     if (event.target.classList.contains('modal-overlay')) {
@@ -356,76 +343,50 @@ window.onclick = function(event) {
     }
 };
 
-// ==========================================
-// 8. نظام "أوبر" لحساب التكلفة والمسافة
-// ==========================================
-
-const RIDE_SETTINGS = {
-    pricePerKm: 15, // سعر الكيلو
-    baseFare: 50,   // فتح العداد
-    companyLat: 30.1691, // خط عرض العبور
-    companyLng: 31.4795  // خط طول العبور
-};
+// --- Uber Ride Calculator ---
+const RIDE_SETTINGS = { pricePerKm: 15, baseFare: 50, companyLat: 30.1691, companyLng: 31.4795 };
 
 window.calculateRideCost = function() {
     const statusElem = document.getElementById('userLocationStatus');
-    const btn = document.querySelector('.btn-secondary'); // زر الحساب الموجود في المودال
+    const btn = document.querySelector('.btn-secondary');
     
-    if (!navigator.geolocation) {
-        alert("المتصفح لا يدعم تحديد الموقع الجغرافي.");
-        return;
-    }
+    if (!navigator.geolocation) { alert("المتصفح لا يدعم GPS"); return; }
 
     statusElem.textContent = "جاري تحديد الموقع...";
-    if(btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحساب...';
-    }
+    if(btn) btn.disabled = true;
 
     navigator.geolocation.getCurrentPosition(
         (position) => {
             const userLat = position.coords.latitude;
             const userLng = position.coords.longitude;
-
-            // 1. حساب المسافة
-            const distanceKm = getDistanceFromLatLonInKm(userLat, userLng, RIDE_SETTINGS.companyLat, RIDE_SETTINGS.companyLng);
+            const dist = getDistanceFromLatLonInKm(userLat, userLng, RIDE_SETTINGS.companyLat, RIDE_SETTINGS.companyLng);
             
-            // 2. حساب السعر
             const roadFactor = 1.3; 
-            const estimatedDist = (distanceKm * roadFactor).toFixed(1);
-            const totalPrice = Math.ceil((estimatedDist * RIDE_SETTINGS.pricePerKm) + RIDE_SETTINGS.baseFare);
+            const estDist = (dist * roadFactor).toFixed(1);
+            const price = Math.ceil((estDist * RIDE_SETTINGS.pricePerKm) + RIDE_SETTINGS.baseFare);
 
-            // 3. عرض النتائج
-            const resultDiv = document.getElementById('rideResult');
-            if(resultDiv) resultDiv.style.display = 'block';
+            // عرض النتيجة
+            const resBox = document.getElementById('rideResult');
+            if(resBox) resBox.style.display = 'block';
             
             const distElem = document.getElementById('distValue');
-            if(distElem) distElem.textContent = estimatedDist + ' كم';
+            if(distElem) distElem.textContent = estDist + ' كم';
             
             const priceElem = document.getElementById('priceValue');
-            if(priceElem) priceElem.textContent = totalPrice + ' ج.م';
+            if(priceElem) priceElem.textContent = price + ' ج.م';
             
-            // حفظ السعر في الحقل المخفي
-            const hiddenPriceInput = document.getElementById('calculatedPrice');
-            if(hiddenPriceInput) hiddenPriceInput.value = totalPrice;
+            const hiddenInput = document.getElementById('calculatedPrice');
+            if(hiddenInput) hiddenInput.value = price;
             
-            statusElem.textContent = "تم تحديد الموقع بنجاح ✅";
+            statusElem.textContent = "تم بنجاح ✅";
             statusElem.style.color = "#4ade80";
-            
-            if(btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-sync-alt"></i> تحديث الموقع';
-            }
+            if(btn) btn.disabled = false;
         },
         (error) => {
-            console.error("Error:", error);
-            statusElem.textContent = "فشل تحديد الموقع ❌";
+            statusElem.textContent = "فشل التحديد ❌";
             statusElem.style.color = "#ef4444";
-            alert("يرجى السماح للموقع بالوصول للـ GPS لحساب التكلفة.");
-            if(btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-location-arrow"></i> محاولة مرة أخرى';
-            }
+            alert("يرجى تفعيل الـ GPS");
+            if(btn) btn.disabled = false;
         }
     );
 };
@@ -434,14 +395,8 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     const R = 6371; 
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
-    const a = 
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
-    const d = R * c; 
-    return d;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    return R * c; 
 }
-
-function deg2rad(deg) {
-    return deg * (Math.PI / 180);
-}
+function deg2rad(deg) { return deg * (Math.PI/180); }
