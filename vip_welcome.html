@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARAH ELITE | Member Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-light: #fceabb;
+            --gold-dark: #9b7d28;
+            --bg-deep: #050505;
+            --card-bg: rgba(20, 20, 20, 0.9);
+        }
+        
+        body { margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; background: var(--bg-deep); color: #fff; overflow-x: hidden; }
+
+        /* --- 1. شاشة الاحتفال (Intro) --- */
+        #celebrationOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            transition: opacity 1.5s ease;
+        }
+        
+        .welcome-text {
+            font-size: 4rem; font-weight: 900; background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0; transform: translateY(20px); animation: fadeUp 1s forwards 0.5s;
+        }
+        
+        .sub-text {
+            font-size: 1.5rem; color: #888; margin-top: 10px;
+            opacity: 0; animation: fadeUp 1s forwards 1.5s;
+        }
+
+        .enter-btn {
+            margin-top: 40px; padding: 15px 50px; background: transparent;
+            border: 2px solid var(--gold-primary); color: var(--gold-primary);
+            font-size: 1.2rem; font-weight: bold; border-radius: 50px; cursor: pointer;
+            transition: 0.3s; opacity: 0; animation: fadeIn 1s forwards 2.5s;
+        }
+        .enter-btn:hover { background: var(--gold-primary); color: #000; box-shadow: 0 0 30px var(--gold-primary); }
+
+        /* --- 2. لوحة التحكم الفخمة (Dashboard) --- */
+        #vipDashboard { display: none; padding: 40px 20px; opacity: 0; transition: 1s; }
+        
+        .dash-header { text-align: center; margin-bottom: 50px; }
+        .dash-header h2 { font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 10px; }
+        .dash-header p { color: #aaa; }
+
+        .vip-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px; max-width: 1200px; margin: 0 auto;
+        }
+
+        .vip-card {
+            background: linear-gradient(145deg, #111, #1a1a1a);
+            border: 1px solid #333; border-radius: 20px; padding: 30px;
+            position: relative; overflow: hidden; transition: 0.4s;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+        }
+        
+        .vip-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+        }
+
+        .vip-card:hover { transform: translateY(-10px); border-color: var(--gold-primary); box-shadow: 0 10px 40px rgba(212, 175, 55, 0.1); }
+
+        .icon-circle {
+            width: 80px; height: 80px; border-radius: 50%; background: rgba(212, 175, 55, 0.1);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+            font-size: 2rem; color: var(--gold-primary); border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .card-title { font-size: 1.5rem; font-weight: bold; color: #fff; margin-bottom: 10px; }
+        .card-desc { color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 25px; }
+
+        .card-btn {
+            margin-top: auto; padding: 12px 30px; border-radius: 10px; text-decoration: none;
+            font-weight: bold; transition: 0.3s; width: 100%; box-sizing: border-box;
+        }
+        
+        .btn-gold { background: var(--gold-primary); color: #000; }
+        .btn-gold:hover { background: #fff; box-shadow: 0 0 20px var(--gold-primary); }
+        
+        .btn-outline { border: 1px solid #555; color: #aaa; }
+        .btn-outline:hover { border-color: #fff; color: #fff; }
+
+        /* Animations */
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        /* Canvas الكونفيتي */
+        #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <div id="celebrationOverlay">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="welcome-text">أهلاً بك في النخبة</div>
+        <div class="sub-text">تم تفعيل عضويتك بنجاح. أنت الآن ترى ما لا يراه الآخرون.</div>
+        <button class="enter-btn" onclick="enterDashboard()">دخول القصر الملكي</button>
+    </div>
+
+    <div id="vipDashboard">
+        <div class="dash-header">
+            <h2 id="userNameDisplay">مرحباً ..</h2>
+            <p>هذه هي لوحة التحكم الخاصة بك. جميع الخدمات متاحة لك 24/7</p>
+        </div>
+
+        <div class="vip-grid">
+            
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-user-secret"></i></div>
+                <div class="card-title">الوحدات السيكرت</div>
+                <div class="card-desc">الدخول للخزنة السرية ومشاهدة عقارات مخفية عن العامة وحصرية فقط لأعضاء VIP.</div>
+                <a href="listings.html" class="card-btn btn-gold">تصفح الخزنة الآن</a>
+            </div>
+
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-car"></i></div>
+                <div class="card-title">سيارة المعاينة</div>
+                <div class="card-desc">لا داعي للقيادة. اطلب سيارة ليموزين فاخرة لتأخذك في جولة معاينة من منزلك.</div>
+                <a href="https://wa.me/20110557821?text=طلب خدمة الليموزين (VIP Member)" target="_blank" class="card-btn btn-outline">حجز سيارة</a>
+            </div>
+
+            <div class="vip-card">
+                <div class="icon-circle"><i class="fas fa-user-tie"></i></div>
+                <div class="card-title">مدير حسابك</div>
+                <div class="card-desc">مستشار عقاري وقانوني مخصص لك وحدك، يجيب على استفساراتك وينهي إجراءاتك.</div>
+                <a href="https://wa.me/20110557821?text=تواصل مع مدير حسابي" target="_blank" class="card-btn btn-outline">تواصل الآن</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ إعدادات Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
+          authDomain: "barah-realestate-c7095.firebaseapp.com",
+          projectId: "barah-realestate-c7095",
+          storageBucket: "barah-realestate-c7095.firebasestorage.app",
+          messagingSenderId: "491079034147",
+          appId: "1:491079034147:web:c7d985a6387dfa75a8d896"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // 1. تشغيل الاحتفال فور فتح الصفحة
+        window.onload = function() {
+            launchConfetti();
+            // التحقق من أن المستخدم VIP فعلاً (حماية)
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    db.collection('customers').doc(user.uid).get().then(doc => {
+                        if (doc.exists && doc.data().isVIP) {
+                            document.getElementById('userNameDisplay').innerText = `مرحباً، ${user.displayName}`;
+                        } else {
+                            // لو دخل بالصدفة وهو مش VIP يطرده
+                            alert("عفواً، هذه الصفحة للأعضاء فقط");
+                            window.location.href = 'index.html';
+                        }
+                    });
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+        };
+
+        // 2. كود الألعاب النارية (Confetti)
+        function launchConfetti() {
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#D4AF37', '#ffffff'] // ذهبي وأبيض
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#D4AF37', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // 3. الانتقال للوحة التحكم
+        function enterDashboard() {
+            const overlay = document.getElementById('celebrationOverlay');
+            const dashboard = document.getElementById('vipDashboard');
+            
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                dashboard.style.display = 'block';
+                // تفعيل فيد إن للوحة
+                setTimeout(() => dashboard.style.opacity = '1', 100);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
