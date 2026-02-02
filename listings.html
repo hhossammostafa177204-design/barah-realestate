@@ -126,6 +126,18 @@
         .cinema-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
         .video-box { width: 90%; max-width: 900px; aspect-ratio: 16/9; border: 2px solid #333; border-radius: 15px; overflow: hidden; background: #000; }
         .close-video { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 3rem; cursor: pointer; }
+
+        /* زر الرجوع العائم */
+        .back-floating-btn {
+            position: fixed; top: 25px; right: 25px; width: 50px; height: 50px;
+            background: rgba(0, 0, 0, 0.8); color: #D4AF37; border: 2px solid #D4AF37;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; z-index: 99999; font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .back-floating-btn:hover { transform: scale(1.1); background: #D4AF37; color: #000; box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
+        @media (max-width: 768px) { .back-floating-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1rem; } }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -138,6 +150,8 @@
         <h2 class="brand-name">BARAH ELITE</h2>
         <span id="vipStatus" class="vip-status-text">جاري التحقق من الصلاحيات...</span>
     </header>
+
+    <a href="javascript:history.back()" class="back-floating-btn" title="رجوع"><i class="fas fa-arrow-right"></i></a>
 
     <div class="filter-container">
         <div class="filter-card">
@@ -232,14 +246,14 @@
     </div>
 
     <script>
-        // ⚠️ Firebase Config
+        // ⚠️ Firebase Config الحقيقية
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", 
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
+          apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
+          authDomain: "barah-realestate-c7095.firebaseapp.com",
+          projectId: "barah-realestate-c7095",
+          storageBucket: "barah-realestate-c7095.firebasestorage.app",
+          messagingSenderId: "491079034147",
+          appId: "1:491079034147:web:c7d985a6387dfa75a8d896"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -386,25 +400,3 @@
     </script>
 </body>
 </html>
-<a href="javascript:history.back()" class="back-floating-btn" title="رجوع">
-        <i class="fas fa-arrow-right"></i>
-    </a>
-
-    <style>
-        .back-floating-btn {
-            position: fixed; top: 25px; right: 25px; width: 50px; height: 50px;
-            background: rgba(0, 0, 0, 0.8); color: #D4AF37; border: 2px solid #D4AF37;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; z-index: 99999; font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-        .back-floating-btn:hover {
-            transform: scale(1.1); background: #D4AF37; color: #000;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-        }
-        @media (max-width: 768px) {
-            .back-floating-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1rem; }
-        }
-    </style>
-    </body>  </html>

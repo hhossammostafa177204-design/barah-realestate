@@ -168,14 +168,14 @@
     </section>
 
     <script>
-        // ⚠️ إعدادات Firebase (ضع بياناتك هنا)
+        // ⚠️ إعدادات Firebase الحقيقية
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", 
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
+          apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
+          authDomain: "barah-realestate-c7095.firebaseapp.com",
+          projectId: "barah-realestate-c7095",
+          storageBucket: "barah-realestate-c7095.firebasestorage.app",
+          messagingSenderId: "491079034147",
+          appId: "1:491079034147:web:c7d985a6387dfa75a8d896"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -199,7 +199,7 @@
             });
         }
 
-        // 3. 🔥 دالة تفعيل الكود الديناميكية (الجديدة) 🔥
+        // 3. 🔥 دالة تفعيل الكود الديناميكية 🔥
         function activateCode() {
             const user = auth.currentUser;
             if(!user) {
