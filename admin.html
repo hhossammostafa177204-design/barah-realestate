@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- نفس التصميم الفخم --- */
         :root {
             --gold-primary: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.3);
             --bg-dark: #0f1215; --card-dark: #1a1d23; --input-bg: #25282e; --text-main: #ffffff;
+            --danger: #ff4444;
         }
         body { font-family: 'Tajawal'; background: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; }
 
@@ -24,7 +24,7 @@
 
         /* المحتوى */
         #dashboardContent { display: none; padding: 40px 20px; max-width: 900px; margin: 0 auto; }
-        .container { background: var(--card-dark); padding: 40px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; }
+        .container { background: var(--card-dark); padding: 40px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; margin-bottom: 50px; }
         
         /* قسم الادمن الخاص */
         #superAdminPanel { display: none; margin-bottom: 40px; }
@@ -47,13 +47,9 @@
 
         /* أزرار السيكرت */
         .visibility-tabs { display: flex; gap: 15px; margin-bottom: 30px; }
-        .vis-btn { 
-            flex: 1; padding: 15px; border: 1px solid #333; border-radius: 10px; 
-            cursor: pointer; text-align: center; transition: 0.3s; background: #222; color: #aaa;
-            display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold;
-        }
-        .vis-btn.public.active { background: #004085; color: #fff; border-color: #0056b3; box-shadow: 0 0 15px rgba(0, 86, 179, 0.3); }
-        .vis-btn.private.active { background: #5a0000; color: #ffcccc; border-color: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.3); }
+        .vis-btn { flex: 1; padding: 15px; border: 1px solid #333; border-radius: 10px; cursor: pointer; text-align: center; transition: 0.3s; background: #222; color: #aaa; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; }
+        .vis-btn.public.active { background: #004085; color: #fff; border-color: #0056b3; }
+        .vis-btn.private.active { background: #5a0000; color: #ffcccc; border-color: #ff0000; }
 
         /* الحقول */
         .input-wrapper { background: var(--input-bg); border: 1px solid #444; border-radius: 10px; display: flex; align-items: center; padding: 0 15px; margin-bottom: 15px; }
@@ -67,6 +63,21 @@
         .amenity-box.active { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(212, 175, 55, 0.1); }
         .submit-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--gold-primary), #aa8c2c); color: #000; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; }
         .submit-btn:hover { transform: scale(1.02); }
+
+        /* --- تصميم قسم إدارة الوحدات --- */
+        .manage-card {
+            background: #222; border: 1px solid #444; border-radius: 10px; padding: 15px;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;
+            transition: 0.3s;
+        }
+        .manage-card:hover { border-color: var(--gold-primary); background: #2a2a2a; }
+        .unit-info { display: flex; align-items: center; gap: 15px; }
+        .mini-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid #555; }
+        .delete-btn {
+            background: rgba(255, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger);
+            padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-weight: bold;
+        }
+        .delete-btn:hover { background: var(--danger); color: #fff; }
 
         /* زر الرجوع العائم */
         .back-floating-btn {
@@ -91,10 +102,8 @@
     <div id="loginOverlay">
         <div class="login-brand">BARAH SYSTEM</div>
         <p style="color:#888; margin-bottom:20px;">يرجى تسجيل الدخول للمتابعة</p>
-        
         <input type="text" id="usernameInput" class="login-input" placeholder="اسم المستخدم (User)">
         <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور">
-        
         <button class="login-btn" onclick="systemLogin()">تسجيل الدخول</button>
         <p id="loginMsg" style="color:#ff4d4d; margin-top:15px; display:none;"></p>
     </div>
@@ -102,9 +111,9 @@
     <div id="dashboardContent">
         
         <div id="superAdminPanel">
-            <h3 style="color:var(--gold-primary); text-align:center; margin-bottom:20px;">📊 لوحة قيادة المديرين (Admin Dashboard)</h3>
+            <h3 style="color:var(--gold-primary); text-align:center; margin-bottom:20px;">📊 لوحة قيادة المديرين</h3>
             <div class="stats-grid" id="statsContainer">
-                <div class="stat-card">جارٍ تحميل بيانات الموظفين...</div>
+                <div class="stat-card">جارٍ تحميل البيانات...</div>
             </div>
             <hr style="border-color:#333; margin:40px 0;">
         </div>
@@ -115,7 +124,10 @@
         </div>
 
         <div class="container">
-            
+            <h3 style="color:#aaa; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
+                <i class="fas fa-upload"></i> رفع وحدة جديدة
+            </h3>
+
             <div class="row-grid">
                 <div class="input-wrapper" style="border-color: var(--gold-primary); background: rgba(212,175,55,0.05);">
                     <i class="fas fa-id-badge"></i>
@@ -123,7 +135,7 @@
                 </div>
                 <div class="input-wrapper" style="border-color: #25D366; background: rgba(37, 211, 102, 0.05);">
                     <i class="fab fa-whatsapp" style="color:#25D366"></i>
-                    <input type="number" id="marketerPhone" placeholder="رقم واتساب المسوق (للتواصل)">
+                    <input type="number" id="marketerPhone" placeholder="رقم واتساب المسوق">
                 </div>
             </div>
 
@@ -132,13 +144,13 @@
                 <div class="tab-btn" id="tabRent" onclick="setType('rent')">إيجار</div>
             </div>
 
-            <p style="color:#aaa; font-size:0.9rem; margin-bottom:10px;">نوع العرض (من سيرى الوحدة؟):</p>
+            <p style="color:#aaa; font-size:0.9rem; margin-bottom:10px;">نوع العرض:</p>
             <div class="visibility-tabs">
                 <div class="vis-btn public active" id="visPublic" onclick="setVis('public')">
                     <i class="fas fa-globe"></i> عام (Public)
                 </div>
                 <div class="vis-btn private" id="visPrivate" onclick="setVis('private')">
-                    <i class="fas fa-user-secret"></i> سيكرت (VIP Only)
+                    <i class="fas fa-user-secret"></i> سيكرت (VIP)
                 </div>
             </div>
 
@@ -239,8 +251,17 @@
 
             <button class="submit-btn" onclick="uploadUnit()">نشر الوحدة</button>
             <p id="status" style="text-align:center; margin-top:15px; color:#fff;"></p>
-
         </div>
+
+        <div class="container" style="border-color: #ff4444;">
+            <h3 style="color:#ff4444; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:20px;">
+                <i class="fas fa-trash-alt"></i> إدارة وحذف الوحدات
+            </h3>
+            <div id="unitsList">
+                <p style="color:#777; text-align:center;">جاري تحميل الوحدات...</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -268,6 +289,9 @@
                 document.getElementById('marketerCode').value = userIn.toUpperCase();
 
                 updateUserStatus(userIn);
+                
+                // تحميل الوحدات لإدارتها
+                loadAllUnits();
 
                 if (userIn === 'admin') {
                     document.getElementById('superAdminPanel').style.display = 'block';
@@ -280,7 +304,7 @@
             }
         }
 
-        // ⚠️ إعدادات Firebase الحقيقية
+        // ⚠️ إعدادات Firebase
         const firebaseConfig = {
           apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
           authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -298,6 +322,52 @@
                 lastActive: firebase.firestore.FieldValue.serverTimestamp(),
                 name: USERS[userId].name
             }, { merge: true });
+        }
+
+        // --- دالة تحميل جميع الوحدات (للإدارة والحذف) ---
+        function loadAllUnits() {
+            db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
+                const container = document.getElementById('unitsList');
+                container.innerHTML = "";
+                
+                if(snap.empty) {
+                    container.innerHTML = "<p style='text-align:center;'>لا توجد وحدات مرفوعة.</p>";
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const img = (d.images && d.images.length > 0) ? d.images[0] : 'https://via.placeholder.com/60';
+                    
+                    container.innerHTML += `
+                        <div class="manage-card">
+                            <div class="unit-info">
+                                <img src="${img}" class="mini-img">
+                                <div>
+                                    <div style="color:#fff; font-weight:bold;">${d.title}</div>
+                                    <div style="color:#888; font-size:0.8rem;">${d.district} | ${d.price.toLocaleString()} EGP</div>
+                                    <div style="color:#D4AF37; font-size:0.7rem;">نوع العرض: ${d.visibility}</div>
+                                </div>
+                            </div>
+                            <button class="delete-btn" onclick="deleteUnit('${doc.id}')">
+                                <i class="fas fa-trash-alt"></i> حذف
+                            </button>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // --- دالة الحذف ---
+        function deleteUnit(docId) {
+            if(confirm("⚠️ هل أنت متأكد تماماً من حذف هذه الوحدة؟ لا يمكن التراجع عن هذا الإجراء.")) {
+                db.collection("apartments").doc(docId).delete().then(() => {
+                    alert("✅ تم حذف الوحدة بنجاح");
+                }).catch(err => {
+                    console.error(err);
+                    alert("❌ حدث خطأ أثناء الحذف");
+                });
+            }
         }
 
         async function loadAdminStats() {
@@ -320,7 +390,6 @@
 
                 statsContainer.innerHTML += `
                     <div class="stat-card ${isOnline ? 'online' : ''}">
-                        <div class="status-dot ${isOnline ? 'active' : ''}"></div>
                         <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
                         <h4 style="color:#fff; margin:5px 0;">${USERS[user].name}</h4>
                         <p style="color:#aaa; font-size:0.9rem;">${isOnline ? '🟢 متصل الآن' : '🔴 غير متصل'}</p>
@@ -338,7 +407,7 @@
 
         // --- المتغيرات والمنطق ---
         let currentType = 'sale';
-        let visibility = 'public'; // الافتراضي عام
+        let visibility = 'public';
         let selectedAmenities = [];
 
         function setType(t) {
@@ -347,7 +416,6 @@
             document.getElementById('tabRent').className = (t==='rent') ? 'tab-btn active' : 'tab-btn';
         }
 
-        // دالة السيكرت الجديدة
         function setVis(v) {
             visibility = v;
             document.getElementById('visPublic').className = v==='public'?'vis-btn public active':'vis-btn';
@@ -361,7 +429,6 @@
             else selectedAmenities.push(val);
         }
 
-        // --- دالة رفع الوحدة (المحدثة بالمفتاح الحقيقي) ---
         async function uploadUnit() {
             const status = document.getElementById('status');
             const files = document.getElementById('images').files;
@@ -370,11 +437,11 @@
             if(!document.getElementById('unitType').value) { alert("يرجى اختيار نوع العقار"); return; }
             if(files.length === 0) { alert("يجب رفع صور"); return; }
 
-            status.innerText = "⏳ جاري رفع الصور... يرجى الانتظار";
+            status.innerText = "⏳ جاري رفع الصور...";
             status.style.color = "#D4AF37";
             updateUserStatus(CURRENT_USER);
 
-            // 🔥🔥 مفتاح الـ API الحقيقي 🔥🔥
+            // 🔥 مفتاح ImgBB الحقيقي
             const imgbbKey = "2b382d98a074d27c5304c08340d339ac";
 
             let imageUrls = [];
