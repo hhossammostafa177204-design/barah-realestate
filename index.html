@@ -3,243 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الرئيسية | BARAH</title>
+    <title>BARAH | بوابة النخبة العقارية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="icon" href="logo.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --blue-primary: #004085;
+            --bg-dark: #0f1215;
+            --card-dark: #1a1d23;
+            --text-main: #ffffff;
+        }
+        body { font-family: 'Tajawal'; background: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; }
+
+        /* Nav */
+        nav {
+            display: flex; justify-content: space-between; align-items: center; padding: 20px 40px;
+            background: rgba(0,0,0,0.8); border-bottom: 1px solid #333; position: fixed;
+            width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(10px); box-sizing: border-box;
+        }
+        .nav-logo { font-size: 1.8rem; font-weight: 900; color: var(--gold-primary); letter-spacing: 2px; }
+        .google-btn {
+            background: #fff; color: #333; padding: 8px 20px; border-radius: 50px; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; gap: 10px; border: none; transition: 0.3s;
+        }
+        .google-btn:hover { background: #eee; }
+        
+        /* Profile */
+        .user-profile { display: none; align-items: center; gap: 10px; }
+        .user-img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold-primary); }
+        .vip-crown { color: var(--gold-primary); font-size: 1.2rem; display: none; animation: float 2s infinite ease-in-out; }
+        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        /* Hero */
+        .hero {
+            height: 85vh;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), var(--bg-dark)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; background-position: center; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center; padding: 20px; margin-top: 60px;
+        }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { max-width: 700px; font-size: 1.2rem; line-height: 1.6; color: #ddd; margin-bottom: 40px; }
+
+        /* Plans */
+        .plans-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+        .plan-card {
+            flex: 1; min-width: 300px; max-width: 450px; background: var(--card-dark); border-radius: 20px;
+            padding: 40px; position: relative; overflow: hidden; transition: 0.4s; display: flex; flex-direction: column;
+        }
+
+        /* Normal Plan */
+        .plan-normal { border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .plan-normal:hover { transform: translateY(-10px); border-color: var(--blue-primary); }
+        .normal-btn {
+            background: var(--blue-primary); color: #fff; padding: 15px; width: 100%; border: none;
+            border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; margin-top: auto;
+            text-decoration: none; text-align: center; display: block; box-sizing: border-box;
+        }
+
+        /* VIP Plan */
+        .plan-vip {
+            border: 2px solid var(--gold-primary); box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            background: linear-gradient(180deg, #1a1d23 0%, #25221b 100%);
+        }
+        .plan-vip:hover { transform: translateY(-15px) scale(1.02); box-shadow: 0 0 80px rgba(212, 175, 55, 0.3); }
+        .vip-badge {
+            position: absolute; top: 20px; left: 20px; background: var(--gold-gradient);
+            color: #000; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.9rem;
+        }
+        .vip-price { font-size: 3rem; color: var(--gold-primary); font-weight: 900; margin: 20px 0; }
+        .vip-features li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; color: #ddd; }
+        .vip-features i { color: var(--gold-primary); }
+        .vip-btn {
+            background: var(--gold-gradient); color: #000; padding: 15px; width: 100%; border: none;
+            border-radius: 10px; font-weight: 900; font-size: 1.2rem; cursor: pointer; margin-top: auto;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4); animation: pulse 2s infinite;
+            text-decoration: none; text-align: center; display: block; box-sizing: border-box;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
 
-    <header>
-        <div class="container header-content">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="logo.png" alt="شعار بارح" class="logo-img">
-                </a>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html" class="active">الرئيسية</a></li>
-                    <li><a href="services.html">خدماتنا</a></li>
-                    <li id="authSection"></li>
-                </ul>
-            </nav>
-            <div class="user-menu" id="userMenu" style="display: none;">
-                <p id="userName">أهلاً بك</p>
-                <button onclick="logoutUser()" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> خروج
-                </button>
-            </div>
+    <nav>
+        <div class="nav-logo">BARAH</div>
+        <button id="googleBtn" class="google-btn" onclick="signInWithGoogle()">
+            <i class="fab fa-google"></i> دخول
+        </button>
+        <div id="userProfile" class="user-profile">
+            <span id="userName" style="font-weight:bold; color:#fff;">User</span>
+            <i id="vipCrown" class="fas fa-crown vip-crown" title="عضو VIP"></i>
+            <img id="userImg" src="" class="user-img">
+            <button onclick="logout()" style="background:none; border:none; color:#ff4444; cursor:pointer;">(خروج)</button>
         </div>
-    </header>
+    </nav>
 
     <section class="hero">
-        <div class="container hero-content">
-            <h1>استثمر في <br> <span style="color:var(--gold)">مدينة العبور</span></h1>
-            <p>سواء كنت تبحث عن سكن راقي أو استثمار آمن، نحن نوفر لك أفضل الخيارات.</p>
-            <div class="hero-btns">
-                <a href="services.html" class="btn-blue" style="min-width: 180px;">خدماتنا</a>
-            </div>
+        <h1>BARAH ELITE</h1>
+        <p>المنصة العقارية الأولى في مدينة العبور. نقدم لك فخامة السكن وضمان الاستثمار في أرقى الأحياء (التاسع، عرابي، والجولف). اختر خطتك وابدأ رحلة البحث عن منزل أحلامك.</p>
+    </section>
+
+    <section class="plans-container">
+        <div class="plan-card plan-normal">
+            <h2 style="color:#58a6ff"><i class="fas fa-user"></i> عضوية الزوار</h2>
+            <p style="color:#aaa;">تصفح العقارات المتاحة مجاناً</p>
+            <ul style="list-style:none; padding:0; line-height:2;">
+                <li><i class="fas fa-check" style="color:#58a6ff"></i> تصفح جميع الوحدات</li>
+                <li><i class="fas fa-check" style="color:#58a6ff"></i> صور بجودة عالية</li>
+                <li><i class="fas fa-check" style="color:#58a6ff"></i> التواصل مع الوكلاء</li>
+            </ul>
+            <a href="listings.html" class="normal-btn">دخول للموقع (مجاني)</a>
+        </div>
+
+        <div class="plan-card plan-vip">
+            <div class="vip-badge">VIP</div>
+            <h2 style="color:var(--gold-primary)"><i class="fas fa-crown"></i> عضوية VIP</h2>
+            <div class="vip-price">99 <span style="font-size:1.5rem">ج.م</span></div>
+            <ul class="vip-features" style="list-style:none; padding:0;">
+                <li><i class="fas fa-car"></i> سيارة خاصة للمعاينة</li>
+                <li><i class="fas fa-eye"></i> مشاهدة وحدات "سيكرت"</li>
+                <li><i class="fas fa-headset"></i> مدير حساب شخصي</li>
+                <li><i class="fas fa-crown"></i> تاج ذهبي على صورتك</li>
+            </ul>
+            <a href="https://wa.me/201000000000?text=أرغب في الاشتراك في باقة VIP" target="_blank" class="vip-btn">اشترك الآن</a>
         </div>
     </section>
 
-    <div class="container relative-box" style="margin-top: -80px; position: relative; z-index: 20; margin-bottom: 50px;">
-        <div class="search-panel">
-            
-            <div class="search-tabs">
-                <button class="tab-btn active" onclick="switchSearchMode('sale')" id="btnSale">شراء</button>
-                <button class="tab-btn" onclick="switchSearchMode('rent')" id="btnRent">إيجار</button>
-            </div>
+    <script>
+        // ⚠️ ضع مفاتيحك هنا
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY", 
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-            <form id="searchForm" onsubmit="event.preventDefault(); filterProperties();">
-                <div class="search-grid">
-                    
-                    <div class="input-group">
-                        <label><i class="fas fa-home"></i> نوع الوحدة</label>
-                        <div class="select-wrapper">
-                            <select id="filterType">
-                                <option value="all">الكل</option>
-                                <option value="villa">فيلا / قصر</option>
-                                <option value="apartment">شقة سكنية</option>
-                                <option value="duplex">دوبلكس</option>
-                                <option value="rooftop">روف</option>
-                                <option value="admin">إداري / تجاري</option>
-                            </select>
-                        </div>
-                    </div>
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider).then((res) => checkVIP(res.user));
+        }
 
-                    <div class="input-group">
-                        <label><i class="fas fa-map-marker-alt"></i> الحي / المنطقة</label>
-                        <div class="select-wrapper">
-                            <select id="filterLocation">
-                                <option value="all">كل مدينة العبور</option>
-                                
-                                <optgroup label="الأحياء الرئيسية (فيلات وعمارات)">
-                                    <option value="hi1">الحي الأول</option>
-                                    <option value="hi2">الحي الثاني</option>
-                                    <option value="hi3">الحي الثالث</option>
-                                    <option value="hi4">الحي الرابع</option>
-                                    <option value="hi5">الحي الخامس (فيلات)</option>
-                                    <option value="hi6">الحي السادس (فيلات)</option>
-                                    <option value="hi7">الحي السابع (عاليا)</option>
-                                    <option value="hi8">الحي الثامن (فيلات)</option>
-                                    <option value="hi9">الحي التاسع (فيلات)</option>
-                                </optgroup>
-                    
-                                <optgroup label="مناطق مميزة وكمبوندات">
-                                    <option value="golf">جولف سيتي (Golf City)</option>
-                                    <option value="orabi">جمعية أحمد عرابي</option>
-                                    <option value="fun">الحي الترفيهي</option>
-                                </optgroup>
-                    
-                                <optgroup label="الإسكان القومي والشباب">
-                                    <option value="shabab">إسكان الشباب</option>
-                                    <option value="future">إسكان المستقبل</option>
-                                    <option value="family">الإسكان العائلي</option>
-                                </optgroup>
-                    
-                                <optgroup label="الامتدادات الجديدة">
-                                    <option value="new_obour">العبور الجديدة</option>
-                                    <option value="industrial">المنطقة الصناعية</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                    </div>
+        function checkVIP(user) {
+            const userRef = db.collection('customers').doc(user.uid);
+            userRef.get().then((doc) => {
+                if (!doc.exists) {
+                    userRef.set({ name: user.displayName, email: user.email, photo: user.photoURL, isVIP: false });
+                } else if (doc.data().isVIP) {
+                    document.getElementById('vipCrown').style.display = 'block';
+                }
+            });
+        }
 
-                    <div class="input-group">
-                        <label><i class="fas fa-coins"></i> الميزانية</label>
-                        <div class="select-wrapper">
-                            <select id="filterPrice">
-                                <option value="all">جميع الأسعار</option>
-                            </select>
-                        </div>
-                    </div>
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('googleBtn').style.display = 'none';
+                document.getElementById('userProfile').style.display = 'flex';
+                document.getElementById('userName').innerText = user.displayName;
+                document.getElementById('userImg').src = user.photoURL;
+                checkVIP(user);
+            } else {
+                document.getElementById('googleBtn').style.display = 'flex';
+                document.getElementById('userProfile').style.display = 'none';
+            }
+        });
 
-                    <div class="input-group btn-group">
-                        <label style="visibility: hidden;">بحث</label>
-                        <button type="submit" class="search-btn-luxury">
-                            اعرض النتائج <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <section class="container" style="padding: 50px 20px;">
-        <div style="text-align: center; margin-bottom: 50px;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 10px;">أحدث <span style="color:var(--gold)">العروض</span></h2>
-            <p style="color: #94a3b8;">تشكيلة مميزة من العقارات المتاحة للبيع والإيجار</p>
-        </div>
-        
-        <div id="properties-grid" class="grid-system">
-            <p style="text-align:center; width:100%; color:#aaa; padding: 20px;">جاري تحميل الوحدات...</p>
-        </div>
-    </section>
-
-    <section class="container" style="margin-bottom: 50px;">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <h2 style="font-size: 2.5rem; margin-bottom: 10px;">الوحدات المتاحة على <span style="color:var(--gold)">الخريطة</span></h2>
-            <p style="color: #94a3b8;">استكشف أماكن تواجد عقاراتنا المميزة في مدينة العبور</p>
-        </div>
-        
-        <div class="map-container">
-            <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d55169.64687259449!2d31.439499878198242!3d30.222301981997424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14581f1d1d3226c5%3A0x6b86490793666d49!2sEl%20Obour%20City%2C%20Al%20Qalyubia%20Governorate!5e0!3m2!1sen!2seg!4v1707575000000!5m2!1sen!2seg" 
-                width="100%" 
-                height="450" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-        </div>
-    </section>
-
-    <footer>
-        <div class="container">
-            <p>جميع الحقوق محفوظة لشركة BARAH © 2026</p>
-        </div>
-    </footer>
-
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal-box">
-            <i class="fas fa-times close-modal" onclick="closeLoginModal()"></i>
-            <h2 style="color:var(--gold); margin-bottom:20px; text-align:center;">تسجيل الدخول</h2>
-            <button onclick="loginWithGoogle()" class="auth-btn google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google Logo"> 
-                دخول باستخدام جوجل
-            </button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="vipModal">
-        <div class="modal-box" style="max-width: 550px;">
-            <i class="fas fa-times close-modal" onclick="closeVipModal()"></i>
-            
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h2 style="color:var(--gold); margin-bottom:5px;"><i class="fas fa-taxi"></i> خدمة توصيل VIP</h2>
-                <p style="color:#aaa; font-size:0.9rem;">سنقوم بتوصيلك من موقعك الحالي إلى الوحدة للمعاينة</p>
-            </div>
-
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed #444;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="color: var(--gold);"><i class="fas fa-map-marker-alt"></i> موقعك الحالي:</span>
-                    <span id="userLocationStatus" style="font-size: 0.8rem; color: #aaa;">غير محدد</span>
-                </div>
-                
-                <button onclick="calculateRideCost()" class="btn-secondary" style="width: 100%; font-size: 0.9rem; margin-bottom: 10px;">
-                    <i class="fas fa-location-arrow"></i> تحديد موقعي وحساب التكلفة
-                </button>
-
-                <div id="rideResult" style="display: none; text-align: center; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div style="background: #0f172a; padding: 10px; border-radius: 10px;">
-                            <span style="display:block; color:#aaa; font-size:0.8rem;">المسافة</span>
-                            <strong id="distValue" style="color: #fff; font-size: 1.2rem;">0 km</strong>
-                        </div>
-                        <div style="background: #0f172a; padding: 10px; border-radius: 10px; border: 1px solid var(--gold);">
-                            <span style="display:block; color:var(--gold); font-size:0.8rem;">التكلفة التقديرية</span>
-                            <strong id="priceValue" style="color: #fff; font-size: 1.2rem;">0 EGP</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <label class="label"><i class="fas fa-car-side"></i> اختر نوع السيارة</label>
-            <div class="vip-grid" id="carSelection">
-                </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
-                <div style="grid-column: 1 / -1;">
-                    <label class="label">الموعد المفضل</label>
-                    <div style="position: relative;">
-                        <input type="text" id="vipDate" class="date-input elegant-date" placeholder="اختر التاريخ والوقت">
-                        <i class="fas fa-chevron-down" style="position: absolute; left: 15px; top: 15px; color: var(--gold); pointer-events: none;"></i>
-                    </div>
-                </div>
-                <div style="grid-column: 1 / -1;">
-                    <label class="label">رقم الهاتف للتواصل</label>
-                    <input type="tel" id="vipPhone" class="date-input" placeholder="01xxxxxxxxx">
-                </div>
-            </div>
-            
-            <input type="hidden" id="vipPropTitle">
-            <input type="hidden" id="calculatedPrice"> <button onclick="submitVipRequest()" class="gold-glow-btn" style="width:100%; justify-content:center; border:none; margin-top:25px;">
-                تأكيد الحجز
-            </button>
-        </div>
-    </div>
-
-    <script type="module" src="main.js"></script>
-
+        function logout() { auth.signOut(); window.location.reload(); }
+    </script>
 </body>
 </html>

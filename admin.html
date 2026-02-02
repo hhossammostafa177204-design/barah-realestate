@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARAH SYSTEM | النظام الإداري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- نفس التصميم الفخم السابق --- */
+        :root {
+            --gold-primary: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.3);
+            --bg-dark: #0f1215; --card-dark: #1a1d23; --input-bg: #25282e; --text-main: #ffffff;
+        }
+        body { font-family: 'Tajawal'; background: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; }
+
+        /* شاشة الدخول */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .login-brand { font-size: 3.5rem; font-weight: 900; color: var(--gold-primary); text-transform: uppercase; margin-bottom: 30px; text-shadow: 0 0 20px var(--gold-glow); }
+        .login-input { width: 280px; padding: 15px; background: #111; border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 1.1rem; text-align: center; margin-bottom: 10px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--gold-primary); }
+        .login-btn { padding: 12px 50px; background: var(--gold-primary); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 10px; }
+
+        /* المحتوى */
+        #dashboardContent { display: none; padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+        .container { background: var(--card-dark); padding: 40px; border-radius: 20px; border: 1px solid rgba(212, 175, 55, 0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; }
+        
+        /* قسم الادمن الخاص */
+        #superAdminPanel { display: none; margin-bottom: 40px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-card { background: #222; border: 1px solid #333; padding: 20px; border-radius: 15px; text-align: center; position: relative; overflow: hidden; }
+        .stat-card.online { border-color: #28a745; box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); }
+        .user-avatar { width: 50px; height: 50px; background: #333; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--gold-primary); }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #555; position: absolute; top: 15px; right: 15px; }
+        .status-dot.active { background: #28a745; box-shadow: 0 0 5px #28a745; }
+        
+        /* الهيدر */
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { font-size: 2rem; font-weight: 800; color: var(--gold-primary); }
+        .current-user-badge { background: #111; color: var(--gold-primary); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; margin-top: 10px; display: inline-block; border: 1px solid #333; }
+        
+        /* الأزرار العلوية */
+        .type-tabs { display: flex; background: #111; padding: 5px; border-radius: 50px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; text-align: center; cursor: pointer; border-radius: 50px; color: #777; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: var(--gold-primary); color: #000; }
+
+        /* أزرار السيكرت */
+        .visibility-tabs { display: flex; gap: 15px; margin-bottom: 30px; }
+        .vis-btn { 
+            flex: 1; padding: 15px; border: 1px solid #333; border-radius: 10px; 
+            cursor: pointer; text-align: center; transition: 0.3s; background: #222; color: #aaa;
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold;
+        }
+        .vis-btn.public.active { background: #004085; color: #fff; border-color: #0056b3; box-shadow: 0 0 15px rgba(0, 86, 179, 0.3); }
+        .vis-btn.private.active { background: #5a0000; color: #ffcccc; border-color: #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.3); }
+
+        /* الحقول */
+        .input-wrapper { background: var(--input-bg); border: 1px solid #444; border-radius: 10px; display: flex; align-items: center; padding: 0 15px; margin-bottom: 15px; }
+        .input-wrapper i { color: var(--gold-primary); width: 25px; }
+        input, select, textarea { width: 100%; background: transparent; border: none; color: #fff; padding: 15px 10px; font-family: 'Tajawal'; font-size: 1rem; outline: none; }
+        select option { background: #222; color: #fff; }
+
+        .row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .amenities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .amenity-box { background: #222; border: 1px solid #333; border-radius: 10px; padding: 15px 5px; text-align: center; cursor: pointer; color: #777; transition: 0.3s; font-size: 0.9rem; }
+        .amenity-box.active { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(212, 175, 55, 0.1); }
+        .submit-btn { width: 100%; padding: 18px; background: linear-gradient(135deg, var(--gold-primary), #aa8c2c); color: #000; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        .submit-btn:hover { transform: scale(1.02); }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-brand">BARAH SYSTEM</div>
+        <p style="color:#888; margin-bottom:20px;">يرجى تسجيل الدخول للمتابعة</p>
+        
+        <input type="text" id="usernameInput" class="login-input" placeholder="اسم المستخدم (User)">
+        <input type="password" id="passwordInput" class="login-input" placeholder="كلمة المرور">
+        
+        <button class="login-btn" onclick="systemLogin()">تسجيل الدخول</button>
+        <p id="loginMsg" style="color:#ff4d4d; margin-top:15px; display:none;"></p>
+    </div>
+
+    <div id="dashboardContent">
+        
+        <div id="superAdminPanel">
+            <h3 style="color:var(--gold-primary); text-align:center; margin-bottom:20px;">📊 لوحة قيادة المديرين (Admin Dashboard)</h3>
+            <div class="stats-grid" id="statsContainer">
+                <div class="stat-card">جارٍ تحميل بيانات الموظفين...</div>
+            </div>
+            <hr style="border-color:#333; margin:40px 0;">
+        </div>
+
+        <div class="header">
+            <div class="logo">إدارة الوحدات</div>
+            <div id="welcomeMsg" class="current-user-badge"></div>
+        </div>
+
+        <div class="container">
+            
+            <div class="row-grid">
+                <div class="input-wrapper" style="border-color: var(--gold-primary); background: rgba(212,175,55,0.05);">
+                    <i class="fas fa-id-badge"></i>
+                    <input type="text" id="marketerCode" placeholder="كود المسوق (تلقائي)" readonly>
+                </div>
+                <div class="input-wrapper" style="border-color: #25D366; background: rgba(37, 211, 102, 0.05);">
+                    <i class="fab fa-whatsapp" style="color:#25D366"></i>
+                    <input type="number" id="marketerPhone" placeholder="رقم واتساب المسوق (للتواصل)">
+                </div>
+            </div>
+
+            <div class="type-tabs">
+                <div class="tab-btn active" id="tabSale" onclick="setType('sale')">تمليك</div>
+                <div class="tab-btn" id="tabRent" onclick="setType('rent')">إيجار</div>
+            </div>
+
+            <p style="color:#aaa; font-size:0.9rem; margin-bottom:10px;">نوع العرض (من سيرى الوحدة؟):</p>
+            <div class="visibility-tabs">
+                <div class="vis-btn public active" id="visPublic" onclick="setVis('public')">
+                    <i class="fas fa-globe"></i> عام (Public)
+                </div>
+                <div class="vis-btn private" id="visPrivate" onclick="setVis('private')">
+                    <i class="fas fa-user-secret"></i> سيكرت (VIP Only)
+                </div>
+            </div>
+
+            <div class="input-wrapper">
+                <i class="fas fa-building"></i>
+                <select id="unitType">
+                    <option value="">اختر نوع العقار</option>
+                    <option value="شقة">شقة</option>
+                    <option value="فيلا">فيلا</option>
+                    <option value="دوبلكس">دوبلكس</option>
+                    <option value="بنتهاوس">بنتهاوس</option>
+                    <option value="توين هاوس">توين هاوس</option>
+                    <option value="مكتب">مكتب إداري</option>
+                    <option value="محل">محل تجاري</option>
+                    <option value="أرض">أرض</option>
+                </select>
+            </div>
+
+            <div class="input-wrapper"><i class="fas fa-heading"></i><input type="text" id="title" placeholder="عنوان الإعلان"></div>
+
+            <div class="row-grid">
+                <div class="input-wrapper"><i class="fas fa-money-bill"></i><input type="number" id="price" placeholder="السعر"></div>
+                <div class="input-wrapper">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <select id="district">
+                        <option value="">اختر المنطقة / الحي</option>
+                        <option value="الحي الأول">الحي الأول</option>
+                        <option value="الحي الثاني">الحي الثاني</option>
+                        <option value="الحي الثالث">الحي الثالث</option>
+                        <option value="الحي الرابع">الحي الرابع</option>
+                        <option value="الحي الخامس">الحي الخامس</option>
+                        <option value="الحي السادس">الحي السادس</option>
+                        <option value="الحي السابع">الحي السابع</option>
+                        <option value="الحي الثامن">الحي الثامن</option>
+                        <option value="الحي التاسع">الحي التاسع (VIP)</option>
+                        <option value="جمعية عرابي">🌳 جمعية أحمد عرابي</option>
+                        <option value="جولف سيتي">⛳ جولف سيتي</option>
+                        <option value="العبور الجديدة">العبور الجديدة</option>
+                        <option value="المنطقة الترفيهية">المنطقة الترفيهية</option>
+                        <option value="إسكان عائلي">إسكان عائلي</option>
+                        <option value="إسكان الشباب">إسكان الشباب</option>
+                        <option value="بيت الوطن">بيت الوطن</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row-grid">
+                <div class="input-wrapper"><i class="fas fa-bed"></i><input type="number" id="rooms" placeholder="الغرف"></div>
+                <div class="input-wrapper"><i class="fas fa-bath"></i><input type="number" id="bathrooms" placeholder="الحمامات"></div>
+            </div>
+            
+            <div class="row-grid">
+                <div class="input-wrapper"><i class="fas fa-layer-group"></i><input type="number" id="floor" placeholder="الدور"></div>
+                <div class="input-wrapper"><i class="fas fa-vector-square"></i><input type="number" id="area" placeholder="المساحة (م²)"></div>
+            </div>
+
+            <div class="input-wrapper">
+                <i class="fas fa-paint-roller"></i>
+                <select id="finishing">
+                    <option value="">نوع التشطيب</option>
+                    <option value="بدون تشطيب">طوب أحمر</option>
+                    <option value="نص تشطيب">نص تشطيب</option>
+                    <option value="سوبر لوكس">سوبر لوكس</option>
+                    <option value="الترا سوبر لوكس">💎 الترا سوبر لوكس</option>
+                </select>
+            </div>
+
+            <p style="color:#aaa; margin-bottom:10px;">المميزات:</p>
+            <div class="amenities-grid">
+                <div class="amenity-box" onclick="toggleAm(this)" data-val="أسانسير"><i class="fas fa-elevator"></i>أسانسير</div>
+                <div class="amenity-box" onclick="toggleAm(this)" data-val="جراج"><i class="fas fa-car"></i>جراج</div>
+                <div class="amenity-box" onclick="toggleAm(this)" data-val="حديقة"><i class="fas fa-tree"></i>حديقة</div>
+                <div class="amenity-box" onclick="toggleAm(this)" data-val="مسبح"><i class="fas fa-swimming-pool"></i>مسبح</div>
+                <div class="amenity-box" onclick="toggleAm(this)" data-val="غاز"><i class="fas fa-fire"></i>غاز</div>
+                <div class="amenity-box" onclick="toggleAm(this)" data-val="أمن"><i class="fas fa-user-shield"></i>أمن</div>
+            </div>
+
+            <div class="input-wrapper" style="align-items:start;">
+                <i class="fas fa-pen" style="margin-top:10px;"></i>
+                <textarea id="desc" rows="4" placeholder="تفاصيل إضافية..."></textarea>
+            </div>
+
+            <div style="background:rgba(0,50,100,0.2); border:1px dashed #004085; padding:15px; border-radius:10px; margin-top:20px;">
+                <p style="margin:0 0 5px 0; color:#58a6ff; font-size:0.9rem;">🔒 رابط الموقع (GPS) - سري للمسوقين فقط</p>
+                <input type="text" id="locationLink" placeholder="ضع رابط Google Maps هنا" style="background:#002347; border-radius:5px; color:#fff; width:95%;">
+            </div>
+
+            <div style="margin-top:20px; border:2px dashed #444; padding:20px; text-align:center; border-radius:10px;">
+                <i class="fas fa-images" style="font-size:2rem; color:var(--gold-primary);"></i>
+                <p>اختر صور الوحدة</p>
+                <input type="file" id="images" multiple>
+            </div>
+            
+            <div class="input-wrapper" style="margin-top:15px;">
+                <i class="fab fa-youtube"></i>
+                <input type="text" id="youtube" placeholder="رابط يوتيوب (اختياري)">
+            </div>
+
+            <button class="submit-btn" onclick="uploadUnit()">نشر الوحدة</button>
+            <p id="status" style="text-align:center; margin-top:15px; color:#fff;"></p>
+
+        </div>
+    </div>
+
+    <script>
+        // --- 1. إعدادات المستخدمين ---
+        const USERS = {
+            'user101': { pass: '123', name: 'المسوق 101' },
+            'user102': { pass: '123', name: 'المسوق 102' },
+            'user103': { pass: '123', name: 'المسوق 103' },
+            'admin':   { pass: 'AHE123', name: 'المدير العام (Admin)' }
+        };
+
+        let CURRENT_USER = null;
+
+        function systemLogin() {
+            const userIn = document.getElementById('usernameInput').value.toLowerCase().trim();
+            const passIn = document.getElementById('passwordInput').value;
+            const msg = document.getElementById('loginMsg');
+
+            if (USERS[userIn] && USERS[userIn].pass === passIn) {
+                CURRENT_USER = userIn;
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('dashboardContent').style.display = 'block';
+                document.getElementById('welcomeMsg').innerText = `مرحباً بك: ${USERS[userIn].name}`;
+                
+                document.getElementById('marketerCode').value = userIn.toUpperCase();
+
+                updateUserStatus(userIn);
+
+                if (userIn === 'admin') {
+                    document.getElementById('superAdminPanel').style.display = 'block';
+                    loadAdminStats();
+                }
+
+            } else {
+                msg.innerText = "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
+                msg.style.display = "block";
+            }
+        }
+
+        // --- Firebase Config ---
+        // ⚠️ تأكد من وضع مفاتيحك هنا
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        function updateUserStatus(userId) {
+            if(userId === 'admin') return;
+            db.collection('users').doc(userId).set({
+                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                name: USERS[userId].name
+            }, { merge: true });
+        }
+
+        async function loadAdminStats() {
+            const statsContainer = document.getElementById('statsContainer');
+            statsContainer.innerHTML = "";
+            const targets = ['user101', 'user102', 'user103'];
+
+            for (let user of targets) {
+                const userDoc = await db.collection('users').doc(user).get();
+                let isOnline = false;
+                if(userDoc.exists) {
+                    const lastActive = userDoc.data().lastActive.toDate();
+                    const now = new Date();
+                    const diffMins = (now - lastActive) / 1000 / 60;
+                    if(diffMins < 10) isOnline = true;
+                }
+
+                const unitsSnap = await db.collection('apartments').where('marketer', '==', user.toUpperCase()).get();
+                const totalUnits = unitsSnap.size;
+
+                statsContainer.innerHTML += `
+                    <div class="stat-card ${isOnline ? 'online' : ''}">
+                        <div class="status-dot ${isOnline ? 'active' : ''}"></div>
+                        <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+                        <h4 style="color:#fff; margin:5px 0;">${USERS[user].name}</h4>
+                        <p style="color:#aaa; font-size:0.9rem;">${isOnline ? '🟢 متصل الآن' : '🔴 غير متصل'}</p>
+                        <hr style="border-color:#333; margin:10px 0;">
+                        <div style="display:flex; justify-content:space-around;">
+                            <div>
+                                <h2 style="color:var(--gold-primary); margin:0;">${totalUnits}</h2>
+                                <span style="font-size:0.8rem; color:#777;">وحدة مسجلة</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // --- المتغيرات والمنطق ---
+        let currentType = 'sale';
+        let visibility = 'public'; // الافتراضي عام
+        let selectedAmenities = [];
+
+        function setType(t) {
+            currentType = t;
+            document.getElementById('tabSale').className = (t==='sale') ? 'tab-btn active' : 'tab-btn';
+            document.getElementById('tabRent').className = (t==='rent') ? 'tab-btn active' : 'tab-btn';
+        }
+
+        // دالة السيكرت الجديدة
+        function setVis(v) {
+            visibility = v;
+            document.getElementById('visPublic').className = v==='public'?'vis-btn public active':'vis-btn';
+            document.getElementById('visPrivate').className = v==='private'?'vis-btn private active':'vis-btn';
+        }
+
+        function toggleAm(el) {
+            el.classList.toggle('active');
+            const val = el.getAttribute('data-val');
+            if(selectedAmenities.includes(val)) selectedAmenities = selectedAmenities.filter(x => x !== val);
+            else selectedAmenities.push(val);
+        }
+
+        async function uploadUnit() {
+            const status = document.getElementById('status');
+            const files = document.getElementById('images').files;
+            
+            if(!document.getElementById('title').value) { alert("أدخل العنوان"); return; }
+            // التحقق من نوع العقار
+            const unitType = document.getElementById('unitType').value;
+            if(!unitType) { alert("يرجى اختيار نوع العقار"); return; }
+
+            if(files.length === 0) { alert("يجب رفع صور"); return; }
+
+            status.innerText = "جاري الرفع...";
+            updateUserStatus(CURRENT_USER);
+
+            let imageUrls = [];
+            const imgbbKey = "YOUR_IMGBB_API_KEY"; // ⚠️ ضع مفتاح ImgBB
+
+            try {
+                for(let i=0; i<files.length; i++) {
+                    const formData = new FormData();
+                    formData.append("image", files[i]);
+                    const req = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, {method:"POST", body:formData});
+                    const res = await req.json();
+                    if(res.success) imageUrls.push(res.data.url);
+                }
+
+                await db.collection("apartments").add({
+                    marketer: document.getElementById('marketerCode').value,
+                    marketerPhone: document.getElementById('marketerPhone').value,
+                    type: currentType,
+                    visibility: visibility,
+                    unitType: unitType, // 🔥 حفظ نوع العقار (شقة/فيلا)
+                    title: document.getElementById('title').value,
+                    price: Number(document.getElementById('price').value),
+                    district: document.getElementById('district').value,
+                    rooms: document.getElementById('rooms').value,
+                    bathrooms: document.getElementById('bathrooms').value,
+                    floor: document.getElementById('floor').value,
+                    area: document.getElementById('area').value,
+                    finishing: document.getElementById('finishing').value,
+                    description: document.getElementById('desc').value,
+                    amenities: selectedAmenities,
+                    locationPrivate: document.getElementById('locationLink').value,
+                    images: imageUrls,
+                    youtube: document.getElementById('youtube').value,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                status.innerText = "✅ تم النشر بنجاح";
+                setTimeout(() => location.reload(), 2000);
+
+            } catch(e) {
+                console.error(e);
+                status.innerText = "❌ حدث خطأ";
+            }
+        }
+    </script>
+</body>
+</html>
