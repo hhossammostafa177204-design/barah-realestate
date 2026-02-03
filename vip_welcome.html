@@ -8,146 +8,141 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- الأساسيات والتصميم الملوكي --- */
+        /* --- التصميم الأساسي الفخم (أسود وذهبي) --- */
         :root {
             --gold-primary: #D4AF37;
-            --gold-shine: linear-gradient(45deg, #D4AF37, #FEE140, #D4AF37);
-            --bg-deep: #050505;
-            --card-bg: #121212;
-            --nav-bg: rgba(15, 15, 15, 0.95);
+            --gold-gradient: linear-gradient(135deg, #D4AF37, #FEE140, #D4AF37);
+            --bg-deep: #000000;
+            --card-bg: #111111;
+            --nav-bg: rgba(10, 10, 10, 0.95);
         }
         
         body { 
             margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; 
             background: var(--bg-deep); color: #fff; overflow-x: hidden; 
-            padding-bottom: 90px; /* مسافة للبار السفلي */
+            padding-bottom: 90px; /* مسافة للشريط السفلي */
         }
 
-        /* --- الهيدر والترحيب --- */
-        .vip-header {
-            padding: 30px 20px 10px; text-align: center;
-            background: linear-gradient(180deg, rgba(0,0,0,1), transparent);
+        /* --- 1. الرسالة الترحيبية الراقية --- */
+        .header-welcome {
+            padding: 40px 20px 20px; text-align: center;
+            background: radial-gradient(circle at top, #1a1a1a, #000);
         }
-        .royal-welcome {
-            font-size: 2.5rem; font-weight: 800;
-            background: var(--gold-shine); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 5px; text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        .royal-title {
+            font-size: 2.2rem; font-weight: 800; margin: 0;
+            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
-        .royal-sub { color: #888; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
+        .royal-subtitle { color: #888; font-size: 0.9rem; margin-top: 5px; letter-spacing: 1px; }
 
-        /* --- نظام التبويبات (Tabs Layout) --- */
-        .tab-content { display: none; padding: 10px 20px; animation: fadeIn 0.6s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- نظام التبويبات (Tabs) --- */
+        .tab-section { display: none; padding: 0 20px; animation: fadeIn 0.5s ease; }
+        .tab-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ================= القائمة الأولى: الرئيسية (Home) ================= */
+        /* ============ القائمة الأولى: الرئيسية (فلاتر + خريطة 3D) ============ */
         
         /* الفلاتر */
-        .filter-toggle {
+        .filter-bar {
             display: flex; background: #1a1a1a; border-radius: 50px; padding: 5px;
-            margin: 20px auto 30px; max-width: 350px; border: 1px solid #333;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            margin: 20px auto; max-width: 90%; border: 1px solid #333;
         }
-        .toggle-btn {
+        .filter-btn {
             flex: 1; padding: 12px; border: none; background: transparent; color: #666;
-            border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.4s;
-            font-family: 'Tajawal'; font-size: 0.95rem;
+            border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s;
         }
-        .toggle-btn.active { 
+        .filter-btn.active { 
             background: var(--gold-primary); color: #000; 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); 
         }
 
-        /* 🔥 الخريطة الواقعية 3D 🔥 */
-        .map-wrapper-3d {
+        /* الخريطة 3D */
+        .map-3d-wrapper {
             position: relative; width: 100%; height: 450px;
-            perspective: 1000px; /* سر الـ 3D */
-            margin-bottom: 30px;
+            perspective: 1000px; /* السر في الـ 3D */
+            margin-top: 30px; margin-bottom: 20px;
         }
         .map-board {
             width: 100%; height: 100%;
+            /* صورة خريطة داكنة لتعطي واقعية */
             background: url('https://media.wired.com/photos/59269cd37034dc5f91becd32/master/pass/GoogleMapTA.jpg') center/cover;
-            border-radius: 20px;
-            border: 2px solid #333;
-            transform: rotateX(20deg) scale(0.95); /* إمالة الخريطة */
-            box-shadow: 0 30px 50px rgba(0,0,0,0.8), 0 0 0 5px rgba(212, 175, 55, 0.1);
-            filter: grayscale(100%) contrast(1.2) brightness(0.5) sepia(20%); /* لون داكن فخم */
-            transition: 0.5s; position: relative; overflow: hidden;
+            border-radius: 20px; border: 2px solid #333;
+            transform: rotateX(30deg) scale(0.9); /* إمالة الخريطة لتصبح مسطحة */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 0 5px rgba(212, 175, 55, 0.1);
+            filter: grayscale(100%) contrast(1.2) brightness(0.6);
+            transition: 0.5s; position: relative;
         }
-        .map-wrapper-3d:hover .map-board { transform: rotateX(0deg) scale(1); filter: grayscale(80%) brightness(0.6); }
+        .map-3d-wrapper:hover .map-board { transform: rotateX(0deg) scale(1); filter: grayscale(50%) brightness(0.8); }
 
-        /* النقاط الحمراء على الخريطة */
-        .pin {
-            position: absolute; width: 14px; height: 14px; background: #ff0000;
-            border-radius: 50%; box-shadow: 0 0 0 rgba(255,0,0,0.5);
-            z-index: 10; cursor: pointer;
+        /* العلامات الحمراء */
+        .red-marker {
+            position: absolute; width: 20px; height: 20px; background: #ff0000;
+            border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 20px #ff0000;
+            z-index: 10; animation: pulse 2s infinite; cursor: pointer;
         }
-        .pin::before { /* تأثير النبض */
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; height: 100%; border-radius: 50%; background: rgba(255, 0, 0, 0.6);
-            animation: pulse 2s infinite;
-        }
-        .pin-label {
-            position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); color: #fff; padding: 4px 8px; border-radius: 4px;
+        .red-marker::after {
+            content: attr(data-loc); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: #fff; padding: 5px 10px; border-radius: 5px;
             font-size: 0.7rem; white-space: nowrap; opacity: 0; transition: 0.3s; pointer-events: none;
-            border-bottom: 2px solid var(--gold-primary);
+            border: 1px solid var(--gold-primary);
         }
-        .pin:hover .pin-label { opacity: 1; bottom: 30px; }
+        .red-marker:hover::after { opacity: 1; bottom: 30px; }
 
-        @keyframes pulse { 0% { width: 100%; height: 100%; opacity: 1; } 100% { width: 400%; height: 400%; opacity: 0; } }
+        /* مواقع العلامات */
+        .loc1 { top: 40%; left: 30%; } /* الحي التاسع */
+        .loc2 { top: 60%; left: 70%; } /* عرابي */
+        .loc3 { top: 30%; left: 60%; } /* جولف */
+        .loc4 { top: 50%; left: 45%; } /* العبور الجديدة */
 
-        /* مواقع النقاط (تخيلية) */
-        .p1 { top: 40%; left: 30%; } /* الحي التاسع */
-        .p2 { top: 60%; left: 60%; } /* عرابي */
-        .p3 { top: 30%; left: 70%; } /* جولف */
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
 
-        /* ================= القائمة الثانية: خدمات VIP ================= */
-        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .srv-card {
-            background: linear-gradient(145deg, #151515, #0d0d0d);
+        /* ============ القائمة الثانية: خدمات VIP ============ */
+        .vip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .vip-card {
+            background: linear-gradient(145deg, #151515, #0a0a0a);
             border: 1px solid #333; border-radius: 20px; padding: 25px 15px;
             text-align: center; transition: 0.3s;
         }
-        .srv-card:hover { border-color: var(--gold-primary); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.1); }
-        .srv-icon { font-size: 2rem; color: var(--gold-primary); margin-bottom: 15px; }
-        .srv-title { font-size: 1.1rem; color: #fff; margin-bottom: 5px; }
-        .srv-text { font-size: 0.8rem; color: #777; line-height: 1.4; }
+        .vip-card:hover { border-color: var(--gold-primary); transform: translateY(-5px); }
+        .vc-icon { font-size: 2rem; color: var(--gold-primary); margin-bottom: 10px; }
+        .vc-title { color: #fff; font-weight: bold; font-size: 1rem; margin-bottom: 5px; }
+        .vc-desc { color: #777; font-size: 0.8rem; }
 
-        /* ================= القائمة الثالثة: مركز الطلبات (Requests) ================= */
-        .req-list { display: flex; flex-direction: column; gap: 15px; }
-        .req-btn {
+        /* ============ القائمة الثالثة: مركز الطلبات (Action Center) ============ */
+        .action-list { display: flex; flex-direction: column; gap: 15px; }
+        .action-btn {
             display: flex; align-items: center; justify-content: space-between;
-            background: #1a1a1a; padding: 20px; border-radius: 18px;
-            border-right: 4px solid #333; text-decoration: none; transition: 0.3s;
+            background: #1a1a1a; padding: 20px; border-radius: 15px;
+            text-decoration: none; border-right: 4px solid #333; transition: 0.3s;
         }
-        .req-btn:hover { background: #222; border-right-color: var(--gold-primary); transform: translateX(-5px); }
+        .action-btn:hover { background: #222; border-right-color: var(--gold-primary); padding-right: 25px; }
         
-        .req-content { display: flex; align-items: center; gap: 15px; }
-        .req-icon-box {
-            width: 50px; height: 50px; background: rgba(212, 175, 55, 0.1);
+        .ac-content { display: flex; align-items: center; gap: 15px; }
+        .ac-icon { 
+            width: 50px; height: 50px; background: rgba(212, 175, 55, 0.1); 
             border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            color: var(--gold-primary); font-size: 1.3rem;
+            color: var(--gold-primary); font-size: 1.4rem;
         }
-        .req-titles h4 { margin: 0 0 4px 0; color: #fff; font-size: 1rem; }
-        .req-titles span { font-size: 0.8rem; color: #666; }
+        .ac-text h4 { margin: 0; color: #fff; font-size: 1.1rem; }
+        .ac-text p { margin: 3px 0 0; color: #666; font-size: 0.8rem; }
 
-        /* ================= القائمة السفلية (Bottom Nav) ================= */
-        .bottom-nav {
+        /* ============ الشريط السفلي (Navigation) ============ */
+        .nav-bar {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
             background: var(--nav-bg); backdrop-filter: blur(10px);
             border-top: 1px solid rgba(255,255,255,0.1);
             display: flex; justify-content: space-around; align-items: center;
-            z-index: 1000; padding-bottom: 10px; box-sizing: border-box;
+            z-index: 1000;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: #555; font-size: 0.75rem; text-decoration: none; transition: 0.3s;
-            width: 70px; cursor: pointer;
+        .nav-link {
+            display: flex; flex-direction: column; align-items: center;
+            color: #555; text-decoration: none; font-size: 0.8rem; transition: 0.3s;
+            cursor: pointer; width: 70px;
         }
-        .nav-item i { font-size: 1.5rem; margin-bottom: 5px; transition: 0.3s; }
-        .nav-item.active { color: var(--gold-primary); }
-        .nav-item.active i { transform: translateY(-5px); filter: drop-shadow(0 0 10px var(--gold-primary)); }
+        .nav-link i { font-size: 1.5rem; margin-bottom: 5px; transition: 0.3s; }
+        
+        .nav-link.active { color: var(--gold-primary); }
+        .nav-link.active i { transform: translateY(-5px); text-shadow: 0 0 15px var(--gold-primary); }
 
     </style>
 
@@ -157,100 +152,101 @@
 </head>
 <body>
 
-    <header class="vip-header">
-        <div class="royal-welcome" id="userNameDisplay">أهلاً بك</div>
+    <div class="header-welcome">
+        <h1 class="royal-title" id="userNameDisplay">أهلاً بك</h1>
         <div class="royal-sub">عضوية النخبة | BARAH ELITE</div>
-    </header>
+    </div>
 
-    <div id="tab-home" class="tab-content active">
+    <div id="section-home" class="tab-section active">
         
-        <div class="filter-toggle">
-            <button class="toggle-btn active" onclick="filterMap('all', this)">الكل</button>
-            <button class="toggle-btn" onclick="filterMap('vip', this)"><i class="fas fa-crown"></i> وحدات VIP</button>
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="toggleMapMode(this)">الكل</button>
+            <button class="filter-btn" onclick="toggleMapMode(this)"><i class="fas fa-crown"></i> وحدات VIP</button>
         </div>
 
-        <div class="map-wrapper-3d">
+        <div class="map-3d-wrapper">
             <div class="map-board">
-                <div class="pin p1" title="الحي التاسع"><div class="pin-label">الحي التاسع</div></div>
-                <div class="pin p2" title="جمعية عرابي"><div class="pin-label">عرابي</div></div>
-                <div class="pin p3" title="جولف سيتي"><div class="pin-label">الجولف</div></div>
+                <div class="red-marker loc1" data-loc="الحي التاسع"></div>
+                <div class="red-marker loc2" data-loc="جمعية عرابي"></div>
+                <div class="red-marker loc3" data-loc="جولف سيتي"></div>
+                <div class="red-marker loc4" data-loc="العبور الجديدة"></div>
             </div>
         </div>
 
-        <a href="listings.html" style="display:block; background:var(--gold-shine); color:#000; text-align:center; padding:15px; border-radius:15px; text-decoration:none; font-weight:bold; box-shadow:0 5px 20px rgba(212,175,55,0.3);">
-            تصفح جميع الوحدات بالتفصيل &larr;
+        <a href="listings.html" style="display:block; text-align:center; color:#fff; text-decoration:underline;">
+            اضغط هنا لتصفح جميع الوحدات بالتفصيل
         </a>
     </div>
 
-    <div id="tab-services" class="tab-content">
-        <h3 style="color:var(--gold-primary); text-align:center; margin-bottom:20px;">خدماتك المميزة</h3>
-        <div class="services-grid">
-            <div class="srv-card">
-                <i class="fas fa-car srv-icon"></i>
-                <div class="srv-title">ليموزين خاصة</div>
-                <div class="srv-text">سيارة خاصة للمعاينة من باب المنزل.</div>
+    <div id="section-services" class="tab-section">
+        <h3 style="color:var(--gold-primary); margin-bottom:20px;">خدماتك الخاصة</h3>
+        <div class="vip-grid">
+            <div class="vip-card">
+                <i class="fas fa-car vc-icon"></i>
+                <div class="vc-title">ليموزين</div>
+                <div class="vc-desc">انتقالات خاصة للمعاينة</div>
             </div>
-            <div class="srv-card">
-                <i class="fas fa-user-tie srv-icon"></i>
-                <div class="srv-title">مستشار عقاري</div>
-                <div class="srv-text">مدير حساب مخصص لاستفساراتك.</div>
+            <div class="vip-card">
+                <i class="fas fa-user-tie vc-icon"></i>
+                <div class="vc-title">مستشار خاص</div>
+                <div class="vc-desc">مدير حسابك الشخصي</div>
             </div>
-            <div class="srv-card">
-                <i class="fas fa-balance-scale srv-icon"></i>
-                <div class="srv-title">دعم قانوني</div>
-                <div class="srv-text">مراجعة العقود والتسجيل بالشهر العقاري.</div>
+            <div class="vip-card">
+                <i class="fas fa-gavel vc-icon"></i>
+                <div class="vc-title">قانوني</div>
+                <div class="vc-desc">مراجعة وتسجيل العقود</div>
             </div>
-            <div class="srv-card">
-                <i class="fas fa-chart-line srv-icon"></i>
-                <div class="srv-title">تحليل سوق</div>
-                <div class="srv-text">تقارير حصرية عن أسعار المنطقة.</div>
+            <div class="vip-card">
+                <i class="fas fa-chart-line vc-icon"></i>
+                <div class="vc-title">تحليل سوق</div>
+                <div class="vc-desc">تقارير أسعار حصرية</div>
             </div>
         </div>
     </div>
 
-    <div id="tab-requests" class="tab-content">
-        <h3 style="color:var(--gold-primary); text-align:center; margin-bottom:20px;">مركز الطلبات</h3>
-        <div class="req-list">
+    <div id="section-requests" class="tab-section">
+        <h3 style="color:var(--gold-primary); margin-bottom:20px;">إدارة طلباتك</h3>
+        <div class="action-list">
             
-            <a href="https://wa.me/20110557821?text=مرحباً، بصفتي VIP أرغب في عرض وحدتي للبيع/الإيجار" target="_blank" class="req-btn">
-                <div class="req-content">
-                    <div class="req-icon-box"><i class="fas fa-home"></i></div>
-                    <div class="req-titles">
+            <a href="https://wa.me/20110557821?text=مرحباً، بصفتي عضو VIP أرغب في عرض وحدتي للبيع/الإيجار" target="_blank" class="action-btn">
+                <div class="ac-content">
+                    <div class="ac-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <div class="ac-text">
                         <h4>اعرض وحدتك</h4>
-                        <span>بيع أو أجر وحدتك لصفوة المجتمع</span>
+                        <p>استثمر عقارك معنا</p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-left" style="color:#555;"></i>
             </a>
 
-            <a href="https://wa.me/20110557821?text=مرحباً، أرغب في طلب وحدة بمواصفات خاصة" target="_blank" class="req-btn">
-                <div class="req-content">
-                    <div class="req-icon-box"><i class="fas fa-search-location"></i></div>
-                    <div class="req-titles">
+            <a href="https://wa.me/20110557821?text=مرحباً، أرغب في طلب وحدة بمواصفات خاصة جداً" target="_blank" class="action-btn">
+                <div class="ac-content">
+                    <div class="ac-icon"><i class="fas fa-search-location"></i></div>
+                    <div class="ac-text">
                         <h4>اطلب وحدتك</h4>
-                        <span>ابحث عن مواصفات خاصة غير معروضة</span>
+                        <p>ابحث عن مواصفات خاصة</p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-left" style="color:#555;"></i>
             </a>
 
-            <a href="https://wa.me/20110557821?text=مرحباً، مهتم بخدمات التشطيب والديكور" target="_blank" class="req-btn">
-                <div class="req-content">
-                    <div class="req-icon-box"><i class="fas fa-paint-roller"></i></div>
-                    <div class="req-titles">
+            <a href="https://wa.me/20110557821?text=مرحباً، مهتم بخدمات التشطيب والديكور" target="_blank" class="action-btn">
+                <div class="ac-content">
+                    <div class="ac-icon"><i class="fas fa-paint-roller"></i></div>
+                    <div class="ac-text">
                         <h4>طلب تشطيب</h4>
-                        <span>باقات تشطيب فاخرة بخصم للأعضاء</span>
+                        <p>باقات VIP حصرية</p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-left" style="color:#555;"></i>
             </a>
 
-            <a href="https://wa.me/20110557821?text=عندي استفسار بخصوص..." target="_blank" class="req-btn">
-                <div class="req-content">
-                    <div class="req-icon-box"><i class="fas fa-question-circle"></i></div>
-                    <div class="req-titles">
+            <a href="https://wa.me/20110557821?text=عندي استفسار بخصوص..." target="_blank" class="action-btn">
+                <div class="ac-content">
+                    <div class="ac-icon"><i class="fas fa-headset"></i></div>
+                    <div class="ac-text">
                         <h4>استفسارات وتفاصيل</h4>
-                        <span>تحدث مع خدمة العملاء مباشرة</span>
+                        <p>تحدث مع الدعم الفني</p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-left" style="color:#555;"></i>
@@ -259,23 +255,23 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)">
-            <i class="fas fa-map-marked-alt"></i>
+    <div class="nav-bar">
+        <div class="nav-link active" onclick="switchSection('home', this)">
+            <i class="fas fa-home"></i>
             <span>الرئيسية</span>
         </div>
-        <div class="nav-item" onclick="switchTab('services', this)">
+        <div class="nav-link" onclick="switchSection('services', this)">
             <i class="fas fa-crown"></i>
-            <span>خدمات VIP</span>
+            <span>الخدمات</span>
         </div>
-        <div class="nav-item" onclick="switchTab('requests', this)">
-            <i class="fas fa-tasks"></i>
+        <div class="nav-link" onclick="switchSection('requests', this)">
+            <i class="fas fa-list-ul"></i>
             <span>الطلبات</span>
         </div>
     </div>
 
     <script>
-        // ⚠️ إعدادات Firebase الحقيقية
+        // ⚠️ Firebase Config
         const firebaseConfig = {
           apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
           authDomain: "barah-realestate-c7095.firebaseapp.com",
@@ -296,7 +292,6 @@
                         const name = user.displayName ? user.displayName.split(' ')[0] : 'عزيزي';
                         document.getElementById('userNameDisplay').innerText = `أهلاً سموّك، ${name}`;
                     } else {
-                        // طرد غير المشتركين
                         window.location.href = 'index.html'; 
                     }
                 });
@@ -305,27 +300,28 @@
             }
         });
 
-        // 2. التنقل بين القوائم
-        function switchTab(tabId, navElement) {
-            // إخفاء كل المحتوى
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            // إزالة التنشيط من كل الأزرار
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        // 2. التبديل بين القوائم
+        function switchSection(sectionId, btnElement) {
+            // إخفاء كل السكاشن
+            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+            // إزالة التنشيط من الأزرار
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
 
-            // تفعيل المطلوب
-            document.getElementById('tab-' + tabId).classList.add('active');
-            navElement.classList.add('active');
+            // تفعيل المختار
+            document.getElementById('section-' + sectionId).classList.add('active');
+            btnElement.classList.add('active');
         }
 
         // 3. فلتر الخريطة (شكلي)
-        function filterMap(type, btn) {
-            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        function toggleMapMode(btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // تأثير بصري بسيط على الخريطة
+            // حركة بسيطة للخريطة
             const map = document.querySelector('.map-board');
-            map.style.opacity = '0.7';
-            setTimeout(() => map.style.opacity = '1', 300);
+            map.style.transform = 'rotateX(20deg) scale(0.95)';
+            setTimeout(() => {
+                map.style.transform = 'rotateX(30deg) scale(0.9)';
+            }, 300);
         }
     </script>
 </body>
