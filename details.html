@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARAH ESTATE | التفاصيل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; }
+        body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
+        
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
+        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+        
+        /* Slider */
+        .slider { height: 50vh; background: #000; border-radius: 20px; overflow: hidden; position: relative; border: 1px solid #333; }
+        .slide-img { width: 100%; height: 100%; object-fit: contain; display: none; }
+        .slide-img.active { display: block; animation: fade 0.5s; }
+        .arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2rem; color: var(--gold); cursor: pointer; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px; }
+        .left { left: 10px; } .right { right: 10px; }
+        @keyframes fade { from{opacity:0.5} to{opacity:1} }
+
+        .header-info { margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        .price-tag { color: var(--gold); font-size: 2.5rem; font-weight: 900; }
+        .main-title { font-size: 1.8rem; margin: 10px 0; }
+        
+        .specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 30px 0; text-align: center; }
+        .spec-box { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; }
+        .spec-box i { font-size: 1.5rem; color: var(--gold); margin-bottom: 10px; display: block; }
+
+        .desc { line-height: 1.8; color: #ccc; background: var(--card); padding: 20px; border-radius: 10px; }
+        
+        .amenities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        .am-tag { background: #222; padding: 8px 20px; border-radius: 50px; border: 1px solid #444; color: var(--gold); }
+
+        .actions { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--gold); }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-align: center; text-decoration: none; color: #fff; }
+        .wa { background: #25D366; } .call { background: var(--gold); color: #000; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
+        <div class="nav-links"><a href="listings.html">رجوع للمعرض</a></div>
+    </nav>
+
+    <div class="container" id="content">
+        <p style="text-align:center;">جاري تحميل التفاصيل...</p>
+    </div>
+
+    <div class="actions" id="actions" style="display:none;">
+        <a href="#" class="btn wa" id="btnWa"><i class="fab fa-whatsapp"></i> واتساب</a>
+        <a href="#" class="btn call" id="btnCall"><i class="fas fa-phone"></i> اتصال</a>
+    </div>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const id = new URLSearchParams(window.location.search).get('id');
+        let currentSlide = 0;
+
+        if(id){
+            db.collection("apartments").doc(id).get().then(doc => {
+                if(doc.exists){
+                    const d = doc.data();
+                    const imgs = d.images && d.images.length ? d.images : ['https://via.placeholder.com/800'];
+                    
+                    let slidesHtml = '';
+                    imgs.forEach((src, i) => slidesHtml += `<img src="${src}" class="slide-img ${i===0?'active':''}">`);
+                    
+                    const amHtml = d.amenities ? d.amenities.map(a=>`<div class="am-tag"><i class="fas fa-check"></i> ${a}</div>`).join('') : '';
+
+                    document.getElementById('content').innerHTML = `
+                        <div class="slider">
+                            ${slidesHtml}
+                            <div class="arrow left" onclick="move(-1)">❮</div>
+                            <div class="arrow right" onclick="move(1)">❯</div>
+                        </div>
+                        <div class="header-info">
+                            <div class="price-tag">${d.price.toLocaleString()} EGP</div>
+                            <h1 class="main-title">${d.title}</h1>
+                            <div style="color:#aaa"><i class="fas fa-map-marker-alt"></i> ${d.district}</div>
+                        </div>
+                        <div class="specs">
+                            <div class="spec-box"><i class="fas fa-bed"></i>${d.rooms} غرف</div>
+                            <div class="spec-box"><i class="fas fa-bath"></i>${d.bathrooms} حمام</div>
+                            <div class="spec-box"><i class="fas fa-ruler-combined"></i>${d.area} م²</div>
+                            <div class="spec-box"><i class="fas fa-layer-group"></i>الدور ${d.floor}</div>
+                        </div>
+                        <h3>الوصف</h3>
+                        <div class="desc">${d.description}</div>
+                        <h3>المميزات</h3>
+                        <div class="amenities">${amHtml}</div>
+                    `;
+
+                    // تفعيل أزرار الاتصال
+                    document.getElementById('actions').style.display = 'flex';
+                    const phone = d.marketerPhone || '20110557821';
+                    document.getElementById('btnWa').href = `https://wa.me/${phone}?text=استفسار بخصوص: ${d.title}`;
+                    document.getElementById('btnCall').href = `tel:${phone}`;
+                }
+            });
+        }
+
+        function move(n) {
+            const slides = document.querySelectorAll('.slide-img');
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+    </script>
+    
+    <script src="main.js"></script>
+</body>
+</html>

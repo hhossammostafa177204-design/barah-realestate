@@ -3,427 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARAH ELITE | البحث المتقدم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>BARAH ESTATE | المعرض</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --gold-primary: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.2);
-            --bg-dark: #0f1215;
-            --card-dark: #1a1d23;
-            --text-main: #ffffff;
-            --input-bg: #22252b;
-        }
-        body { font-family: 'Tajawal'; background: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; overflow-x: hidden; }
-
-        /* --- Header & Nav --- */
-        header {
-            background: linear-gradient(180deg, #000 0%, #111 100%); 
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--gold-primary); position: sticky; top: 0; z-index: 900;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-        }
-        .brand-name { margin: 0; color: var(--gold-primary); font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; }
-        .vip-status-text { font-size: 0.8rem; color: #777; display:block; }
+        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; }
+        body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
         
-        /* زر القائمة الجانبية */
-        .menu-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
-        .menu-btn:hover { color: var(--gold-primary); }
-
-        /* --- Sidebar Menu (قائمة الخدمات المجانية) --- */
-        .sidebar {
-            position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-            background: #111; border-left: 1px solid var(--gold-primary);
-            z-index: 1000; transition: 0.4s ease; padding: 20px;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.8); display: flex; flex-direction: column;
+        /* Navbar */
+        .navbar { 
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(15, 18, 21, 0.95); padding: 15px 50px; 
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px);
         }
-        .sidebar.active { right: 0; }
-        .close-sidebar { align-self: flex-end; font-size: 1.5rem; cursor: pointer; color: #aaa; margin-bottom: 30px; }
-        .sidebar-title { color: var(--gold-primary); font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
+        .logo span { color: #fff; }
+        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; transition: 0.3s; font-weight: bold; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+        /* Search Bar */
+        .search-container { background: #15181e; padding: 30px; border-bottom: 1px solid #333; }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
         
-        .free-service-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; color: #ddd; font-size: 0.95rem; }
-        .free-service-item i { color: #58a6ff; width: 25px; text-align: center; } /* لون أزرق للخدمات المجانية */
+        .input-group { background: #222; border: 1px solid #444; border-radius: 10px; padding: 10px; display: flex; align-items: center; }
+        .input-group i { color: var(--gold); margin-left: 10px; }
+        select { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-family: 'Tajawal'; font-size: 1rem; }
+        select option { background: #222; }
+
+        .btn-search {
+            background: var(--gold); color: #000; border: none; padding: 10px; border-radius: 10px;
+            font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-search:hover { background: #b5952f; transform: scale(1.02); }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 50px; max-width: 1400px; margin: 0 auto; }
         
-        .upgrade-box { 
-            margin-top: auto; background: linear-gradient(45deg, #D4AF37, #b38728); 
-            padding: 15px; border-radius: 10px; text-align: center; color: #000; 
-            font-weight: bold; box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        /* Card */
+        .card { 
+            background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); 
+            transition: 0.4s; text-decoration: none; color: inherit; display: block; position: relative;
         }
-        .upgrade-box a { color: #000; text-decoration: underline; }
-
-        /* Overlay */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999; display: none; }
-        .overlay.active { display: block; }
-
-        /* --- Filter Section --- */
-        .filter-container { margin: 30px auto; max-width: 1200px; padding: 0 20px; }
-        .filter-card {
-            background: var(--card-dark); border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 20px; padding: 25px; position: relative; overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-        }
-        .filter-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(90deg, transparent, var(--gold-primary), transparent); }
-
-        .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .filter-title { color: var(--gold-primary); font-size: 1.2rem; font-weight: bold; }
+        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         
-        .filter-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; align-items: end; }
-        .filter-group { position: relative; }
-        .filter-label { display: block; color: #ccc; font-size: 0.85rem; margin-bottom: 8px; font-weight: bold; }
-        .filter-input {
-            width: 100%; padding: 12px 15px; background: var(--input-bg);
-            border: 1px solid #444; border-radius: 10px; color: #fff;
-            font-family: 'Tajawal'; font-size: 0.95rem; outline: none; box-sizing: border-box;
-        }
-        .filter-input:focus { border-color: var(--gold-primary); box-shadow: 0 0 10px var(--gold-glow); }
-        option { background: #222; }
-
-        /* أزرار البحث والمسح */
-        .filter-actions { display: flex; gap: 10px; grid-column: 1 / -1; margin-top: 10px; }
+        .img-wrap { height: 250px; overflow: hidden; position: relative; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .card:hover .card-img { transform: scale(1.1); }
         
-        .search-btn {
-            flex: 4; background: linear-gradient(45deg, #D4AF37, #aa8c2c);
-            color: #000; border: none; padding: 12px; border-radius: 10px;
-            cursor: pointer; font-weight: bold; font-size: 1rem;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: 0.3s;
-        }
-        .search-btn:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--gold-glow); }
+        .badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: var(--gold); padding: 5px 12px; border-radius: 50px; font-weight: bold; border: 1px solid var(--gold); font-size: 0.8rem; }
 
-        .reset-btn {
-            flex: 1; background: #333; color: #aaa; border: 1px solid #444;
-            padding: 12px; border-radius: 10px; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .reset-btn:hover { color: #fff; background: #444; }
-
-        /* --- Grid & Cards --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 40px; }
-        .units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; }
-        .unit-card { background: var(--card-dark); border-radius: 15px; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; transition: 0.3s; }
-        .unit-card:hover { transform: translateY(-5px); border-color: var(--gold-primary); }
-        .card-badge { position: absolute; top: 15px; right: 15px; background: var(--gold-primary); color: #000; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.85rem; z-index: 2; }
-        .secret-badge { position: absolute; top: 15px; left: 15px; background: linear-gradient(45deg, #8B0000, #ff0000); color: #fff; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.8rem; z-index: 2; display: flex; align-items: center; gap: 5px; }
-        .unit-img { width: 100%; height: 240px; object-fit: cover; border-bottom: 1px solid var(--gold-primary); }
         .card-body { padding: 20px; }
-        .price { color: var(--gold-primary); font-size: 1.5rem; font-weight: 800; }
-        .title { font-size: 1.2rem; margin: 5px 0 10px; font-weight: bold; }
-        .location { color: #888; font-size: 0.9rem; margin-bottom: 15px; display: block; }
-        .specs { display: flex; justify-content: space-between; background: #222; padding: 10px; border-radius: 8px; margin-bottom: 15px; color: #ccc; font-size: 0.9rem; }
-        .specs i { color: var(--gold-primary); margin-left: 5px; }
-        .actions { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 12px; border-radius: 8px; text-decoration: none; text-align: center; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.9rem; }
-        .btn-wa { background: #25D366; color: #fff; }
-        .btn-vip { border: 1px solid var(--gold-primary); color: var(--gold-primary); }
-        .btn-vip:hover { background: var(--gold-primary); color: #000; }
+        .price { color: var(--gold); font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
+        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .details { color: #888; display: flex; gap: 15px; font-size: 0.9rem; border-top: 1px solid #333; padding-top: 15px; margin-top: 10px; }
+        .details span { display: flex; align-items: center; gap: 5px; }
+        .details i { color: var(--gold); }
 
-        /* Video Modal */
-        .cinema-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-        .video-box { width: 90%; max-width: 900px; aspect-ratio: 16/9; border: 2px solid #333; border-radius: 15px; overflow: hidden; background: #000; }
-        .close-video { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 3rem; cursor: pointer; }
-        .video-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem; color: rgba(255,255,255,0.8); cursor: pointer; z-index: 3; transition: 0.3s; }
-        .video-overlay:hover { color: #ff0000; transform: translate(-50%, -50%) scale(1.1); }
-
-        /* Back Button */
-        .back-floating-btn { position: fixed; top: 25px; right: 25px; width: 50px; height: 50px; background: rgba(0, 0, 0, 0.8); color: #D4AF37; border: 2px solid #D4AF37; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; z-index: 99999; font-size: 1.2rem; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); backdrop-filter: blur(5px); }
-        .back-floating-btn:hover { transform: scale(1.1); background: #D4AF37; color: #000; box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
-        @media (max-width: 768px) { .back-floating-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1rem; } }
     </style>
-
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
 
-    <header>
-        <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-        
-        <div>
-            <h2 class="brand-name">BARAH ELITE</h2>
-            <span id="vipStatus" class="vip-status-text">جاري التحقق...</span>
+    <nav class="navbar">
+        <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
+        <div class="nav-links">
+            <a href="index.html">الرئيسية</a>
+            <a href="listings.html" class="active">المعرض</a>
+            <a href="contact.html">تواصل معنا</a>
         </div>
-        
-        <div style="width: 20px;"></div> </header>
+    </nav>
 
-    <a href="javascript:history.back()" class="back-floating-btn" title="رجوع"><i class="fas fa-arrow-right"></i></a>
-
-    <div class="overlay" onclick="toggleSidebar()"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="close-sidebar" onclick="toggleSidebar()">&times;</div>
-        <div class="sidebar-title"><i class="fas fa-gift"></i> باقة الخدمات المجانية</div>
-        
-        <div class="free-service-item">
-            <i class="fas fa-search"></i>
-            <span>محرك بحث عقاري متطور</span>
-        </div>
-        <div class="free-service-item">
-            <i class="fas fa-images"></i>
-            <span>صور بجودة عالية (HD)</span>
-        </div>
-        <div class="free-service-item">
-            <i class="fab fa-whatsapp"></i>
-            <span>تواصل مباشر مع الوكلاء</span>
-        </div>
-        <div class="free-service-item">
-            <i class="fas fa-map-marked-alt"></i>
-            <span>خرائط المواقع العامة</span>
-        </div>
-        <div class="free-service-item">
-            <i class="fas fa-calculator"></i>
-            <span>معرفة متوسط الأسعار</span>
-        </div>
-
-        <div class="upgrade-box">
-            <p style="margin:0 0 5px 0;">هل تريد المزيد؟</p>
-            <span style="font-size:0.8rem; display:block; margin-bottom:10px;">احصل على ليموزين، وحدات سيكرت، ومدير حساب.</span>
-            <a href="index.html">اشترك في VIP الآن</a>
-        </div>
-    </div>
-
-    <div class="filter-container">
-        <div class="filter-card">
-            <div class="filter-header">
-                <div class="filter-title"><i class="fas fa-sliders-h"></i> تصفية متقدمة</div>
-                <div id="countResults" style="color:#777; font-size:0.9rem;">جاري التحميل...</div>
+    <div class="search-container">
+        <div class="search-grid">
+            
+            <div class="input-group">
+                <i class="fas fa-exchange-alt"></i>
+                <select id="type" onchange="updatePrice()">
+                    <option value="all">نوع العرض (الكل)</option>
+                    <option value="sale">تمليك</option>
+                    <option value="rent">إيجار</option>
+                </select>
             </div>
 
-            <div class="filter-wrapper">
-                <div class="filter-group">
-                    <label class="filter-label"><i class="fas fa-exchange-alt"></i> نوع العملية</label>
-                    <select id="fType" class="filter-input">
-                        <option value="all">الكل</option>
-                        <option value="sale">تمليك</option>
-                        <option value="rent">إيجار</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label"><i class="fas fa-building"></i> نوع العقار</label>
-                    <select id="fUnitType" class="filter-input">
-                        <option value="all">كل الأنواع</option>
-                        <option value="شقة">شقة</option>
-                        <option value="فيلا">فيلا</option>
-                        <option value="دوبلكس">دوبلكس</option>
-                        <option value="بنتهاوس">بنتهاوس</option>
-                        <option value="توين هاوس">توين هاوس</option>
-                        <option value="مكتب">مكتب إداري</option>
-                        <option value="محل">محل تجاري</option>
-                        <option value="أرض">أرض</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label"><i class="fas fa-map-marker-alt"></i> المنطقة</label>
-                    <select id="fDistrict" class="filter-input">
-                        <option value="all">كل المناطق</option>
-                        <option value="الحي الأول">الحي الأول</option>
-                        <option value="الحي الثاني">الحي الثاني</option>
-                        <option value="الحي الثالث">الحي الثالث</option>
-                        <option value="الحي الرابع">الحي الرابع</option>
-                        <option value="الحي الخامس">الحي الخامس</option>
-                        <option value="الحي السادس">الحي السادس</option>
-                        <option value="الحي السابع">الحي السابع</option>
-                        <option value="الحي الثامن">الحي الثامن</option>
-                        <option value="الحي التاسع">الحي التاسع (VIP)</option>
-                        <option value="جمعية عرابي">جمعية أحمد عرابي</option>
-                        <option value="جولف سيتي">جولف سيتي</option>
-                        <option value="العبور الجديدة">العبور الجديدة</option>
-                        <option value="المنطقة الترفيهية">المنطقة الترفيهية</option>
-                        <option value="إسكان عائلي">إسكان عائلي</option>
-                        <option value="إسكان الشباب">إسكان الشباب</option>
-                        <option value="بيت الوطن">بيت الوطن</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label"><i class="fas fa-money-bill-wave"></i> السعر (من)</label>
-                    <input type="number" id="fMinPrice" class="filter-input" placeholder="أقل سعر">
-                </div>
-                <div class="filter-group">
-                    <label class="filter-label"><i class="fas fa-money-bill-wave"></i> السعر (إلى)</label>
-                    <input type="number" id="fMaxPrice" class="filter-input" placeholder="أقصى سعر">
-                </div>
-
-                <div class="filter-actions">
-                    <button class="search-btn" onclick="applyFilters()">
-                        <i class="fas fa-search"></i> بحث الآن
-                    </button>
-                    <button class="reset-btn" onclick="resetFilters()">
-                        <i class="fas fa-undo"></i>
-                    </button>
-                </div>
-
+            <div class="input-group">
+                <i class="fas fa-building"></i>
+                <select id="unit">
+                    <option value="all">نوع العقار (الكل)</option>
+                    <option value="شقة">شقة</option>
+                    <option value="فيلا">فيلا</option>
+                    <option value="دوبلكس">دوبلكس</option>
+                    <option value="بنتهاوس">بنتهاوس</option>
+                    <option value="توين هاوس">توين هاوس</option>
+                    <option value="مكتب">مكتب إداري</option>
+                    <option value="محل">محل تجاري</option>
+                    <option value="أرض">أرض</option>
+                </select>
             </div>
+
+            <div class="input-group">
+                <i class="fas fa-map-marker-alt"></i>
+                <select id="dist">
+                    <option value="all">جميع المناطق</option>
+                    <option value="الحي التاسع">الحي التاسع (VIP)</option>
+                    <option value="جولف سيتي">جولف سيتي</option>
+                    <option value="جمعية عرابي">جمعية أحمد عرابي</option>
+                    <option value="الحي الأول">الحي الأول</option>
+                    <option value="الحي الثاني">الحي الثاني</option>
+                    <option value="الحي الثالث">الحي الثالث</option>
+                    <option value="الحي الرابع">الحي الرابع</option>
+                    <option value="الحي الخامس">الحي الخامس</option>
+                    <option value="الحي السادس">الحي السادس</option>
+                    <option value="الحي السابع">الحي السابع</option>
+                    <option value="الحي الثامن">الحي الثامن</option>
+                    <option value="العبور الجديدة">العبور الجديدة</option>
+                    <option value="بيت الوطن">بيت الوطن</option>
+                    <option value="المنطقة الترفيهية">المنطقة الترفيهية</option>
+                    <option value="إسكان عائلي">إسكان عائلي</option>
+                    <option value="إسكان الشباب">إسكان الشباب</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-money-bill"></i>
+                <select id="price"><option value="all">السعر</option></select>
+            </div>
+            
+            <button class="btn-search" onclick="filter()">بحث <i class="fas fa-search"></i></button>
         </div>
     </div>
 
-    <div class="container">
-        <div class="units-grid" id="grid">
-            <p style="color:#gold; text-align:center; width:100%;">جاري تحميل الوحدات...</p>
-        </div>
-    </div>
-
-    <div id="videoModal" class="cinema-modal">
-        <span class="close-video" onclick="closeVideo()">&times;</span>
-        <div class="video-box">
-            <iframe id="ytFrame" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
+    <div class="grid" id="grid">
+        <p style="text-align:center; grid-column:1/-1;">جاري التحميل...</p>
     </div>
 
     <script>
-        // ⚠️ Firebase Config
-        const firebaseConfig = {
-          apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
-          authDomain: "barah-realestate-c7095.firebaseapp.com",
-          projectId: "barah-realestate-c7095",
-          storageBucket: "barah-realestate-c7095.firebasestorage.app",
-          messagingSenderId: "491079034147",
-          appId: "1:491079034147:web:c7d985a6387dfa75a8d896"
-        };
+        const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const auth = firebase.auth();
-        const MAIN_PHONE = "201000000000";
 
-        let allUnits = [];
-        let isCurrentUserVIP = false;
+        let allData = [];
 
-        // 1. Sidebar Logic
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.querySelector('.overlay').classList.toggle('active');
+        function updatePrice() {
+            const t = document.getElementById('type').value;
+            const p = document.getElementById('price');
+            p.innerHTML = '<option value="all">السعر (الكل)</option>';
+            if(t==='rent') {
+                p.innerHTML+=`<option value="0-5000">أقل من 5000</option><option value="5000-10000">5000 - 10000</option><option value="10000-999999">أكثر من 10000</option>`;
+            } else if(t==='sale') {
+                p.innerHTML+=`<option value="0-1000000">أقل من مليون</option><option value="1000000-3000000">1 - 3 مليون</option><option value="3000000-999999999">أكثر من 3 مليون</option>`;
+            }
         }
 
-        // 2. Auth Check
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('customers').doc(user.uid).get().then(doc => {
-                    isCurrentUserVIP = (doc.exists && doc.data().isVIP === true);
-                    updateUserStatusText(isCurrentUserVIP);
-                    fetchAllUnits();
-                });
-            } else {
-                isCurrentUserVIP = false;
-                updateUserStatusText(false);
-                fetchAllUnits();
-            }
+        db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
+            allData = [];
+            snap.forEach(d => { let item=d.data(); item.id=d.id; allData.push(item); });
+            render(allData);
         });
 
-        function updateUserStatusText(vip) {
-            const el = document.getElementById('vipStatus');
-            if(vip) {
-                el.innerText = "👑 مرحباً بك في قسم النخبة";
-                el.style.color = "#D4AF37";
-            } else {
-                el.innerText = "عضوية زوار (الوحدات العامة)";
-                el.style.color = "#777";
-            }
-        }
+        function render(list) {
+            const g = document.getElementById('grid');
+            g.innerHTML = "";
+            if(list.length===0) { g.innerHTML="<p style='text-align:center; grid-column:1/-1'>لا توجد نتائج</p>"; return; }
+            list.forEach(u => {
+                const img = u.images?u.images[0]:'https://via.placeholder.com/300';
+                
+                // تحديد الأيقونة حسب نوع العقار (جمالي)
+                let icon = 'fas fa-building';
+                if(u.unitType === 'فيلا' || u.unitType === 'توين هاوس') icon = 'fas fa-home';
+                if(u.unitType === 'أرض') icon = 'fas fa-vector-square';
+                if(u.unitType === 'مكتب' || u.unitType === 'محل') icon = 'fas fa-briefcase';
 
-        // 3. Fetch Units
-        function fetchAllUnits() {
-            db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
-                allUnits = [];
-                snap.forEach(doc => {
-                    allUnits.push(doc.data());
-                });
-                applyFilters(); // Apply immediately on load
-            });
-        }
-
-        // 4. Apply Filters (Triggered by Search Button)
-        function applyFilters() {
-            const type = document.getElementById('fType').value;
-            const unitType = document.getElementById('fUnitType').value;
-            const district = document.getElementById('fDistrict').value;
-            const minPrice = Number(document.getElementById('fMinPrice').value);
-            const maxPrice = Number(document.getElementById('fMaxPrice').value);
-
-            const grid = document.getElementById('grid');
-            grid.innerHTML = "";
-
-            let count = 0;
-
-            allUnits.forEach(d => {
-                if (d.visibility === 'private' && !isCurrentUserVIP) return;
-
-                if (type !== 'all' && d.type !== type) return;
-                if (district !== 'all' && d.district !== district) return;
-                if (minPrice > 0 && d.price < minPrice) return;
-                if (maxPrice > 0 && d.price > maxPrice) return;
-
-                if (unitType !== 'all') {
-                    const textToSearch = (d.title + " " + d.description).toLowerCase();
-                    if (!textToSearch.includes(unitType)) return;
-                }
-
-                count++;
-                renderCard(d, grid);
-            });
-
-            document.getElementById('countResults').innerText = `تم العثور على ${count} وحدة`;
-            if(count === 0) grid.innerHTML = "<p style='text-align:center; color:#777; width:100%;'>لا توجد نتائج مطابقة لبحثك.</p>";
-        }
-
-        function renderCard(d, container) {
-            const img = (d.images && d.images.length) ? d.images[0] : 'https://via.placeholder.com/400';
-            const vidBtn = d.youtube ? `<div class="video-overlay" onclick="openVideo('${d.youtube}')"><i class="far fa-play-circle"></i></div>` : '';
-            const secretBadgeHTML = (d.visibility === 'private') ? `<span class="secret-badge"><i class="fas fa-user-secret"></i> SECRET VIP</span>` : '';
-            const phone = d.marketerPhone || MAIN_PHONE;
-            const msg = `مرحباً، بخصوص الوحدة: ${d.title} (كود: ${d.marketer})`;
-
-            container.innerHTML += `
-                <div class="unit-card">
-                    <span class="card-badge">${d.type === 'rent' ? 'إيجار' : 'تمليك'}</span>
-                    ${secretBadgeHTML}
-                    <div style="position:relative">
-                        <img src="${img}" class="unit-img">
-                        ${vidBtn}
+                g.innerHTML += `
+                <a href="details.html?id=${u.id}" class="card">
+                    <div class="img-wrap">
+                        <span class="badge">${u.type==='sale'?'تمليك':'إيجار'}</span>
+                        <img src="${img}" class="card-img">
                     </div>
                     <div class="card-body">
-                        <div class="price">${d.price.toLocaleString()} EGP</div>
-                        <div class="title">${d.title}</div>
-                        <span class="location"><i class="fas fa-map-marker-alt"></i> ${d.district}</span>
-                        <div class="specs">
-                            <span class="spec"><i class="fas fa-bed"></i> ${d.rooms}</span>
-                            <span class="spec"><i class="fas fa-bath"></i> ${d.bathrooms}</span>
-                            <span class="spec"><i class="fas fa-vector-square"></i> ${d.area} م²</span>
-                        </div>
-                        <div class="specs" style="margin-top:5px; background:transparent; padding:0;">
-                             <span class="spec" style="font-size:0.8rem; color:#aaa;">الدور: ${d.floor}</span>
-                             <span class="spec" style="font-size:0.8rem; color:#aaa;">${d.finishing}</span>
-                        </div>
-                        <div class="actions">
-                            <a href="https://wa.me/${phone}?text=${encodeURIComponent(msg)}" target="_blank" class="btn btn-wa"><i class="fab fa-whatsapp"></i> حجز</a>
-                            <a href="https://wa.me/${phone}?text=${encodeURIComponent(msg + ' - طلب VIP')}" target="_blank" class="btn btn-vip"><i class="fas fa-car-side"></i> VIP</a>
+                        <div class="price">${u.price.toLocaleString()} EGP</div>
+                        <div class="title">${u.title}</div>
+                        <div class="details">
+                            <span><i class="fas fa-map-marker-alt"></i> ${u.district}</span>
+                            <span><i class="${icon}"></i> ${u.unitType || 'وحدة'}</span>
+                            <span><i class="fas fa-ruler-combined"></i> ${u.area}م</span>
                         </div>
                     </div>
-                </div>
-            `;
+                </a>`;
+            });
         }
 
-        function resetFilters() {
-            document.getElementById('fType').value = 'all';
-            document.getElementById('fUnitType').value = 'all';
-            document.getElementById('fDistrict').value = 'all';
-            document.getElementById('fMinPrice').value = '';
-            document.getElementById('fMaxPrice').value = '';
-            applyFilters();
-        }
-
-        function openVideo(url) {
-            let id = url.split('v=')[1] || url.split('/').pop();
-            if(id.includes('&')) id = id.split('&')[0];
-            document.getElementById('ytFrame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            document.getElementById('videoModal').style.display = 'flex';
-        }
-        function closeVideo() {
-            document.getElementById('videoModal').style.display = 'none';
-            document.getElementById('ytFrame').src = "";
+        function filter() {
+            const t=document.getElementById('type').value, u=document.getElementById('unit').value, d=document.getElementById('dist').value, p=document.getElementById('price').value;
+            const res = allData.filter(x => {
+                let matchP = true;
+                if(p!=='all') { const [min,max]=p.split('-').map(Number); matchP = x.price>=min && x.price<=max; }
+                return (t==='all'||x.type===t) && (u==='all'||x.unitType===u) && (d==='all'||x.district===d) && matchP;
+            });
+            render(res);
         }
     </script>
+    
+    <script src="main.js"></script>
 </body>
 </html>
