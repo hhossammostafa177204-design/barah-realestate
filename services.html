@@ -3,221 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARAH | خدماتنا</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>BARAH ESTATE | خدماتنا</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --gold-primary: #D4AF37;
-            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            --bg-dark: #0f1215;
-            --card-dark: #1a1d23;
-            --text-main: #ffffff;
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --bg: #0f1215;
+            --card: #1a1d23;
         }
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
+            background: var(--bg);
+            color: #fff;
+            margin: 0; padding: 0;
             overflow-x: hidden;
         }
 
-        /* --- Navbar --- */
-        nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 30px; background: rgba(0,0,0,0.9); border-bottom: 1px solid #333;
-            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
-        }
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--gold-primary); letter-spacing: 1px; text-decoration: none; }
-        .nav-links a { color: #fff; text-decoration: none; margin-left: 20px; font-weight: bold; transition: 0.3s; }
-        .nav-links a:hover { color: var(--gold-primary); }
-
-        /* --- Hero Section --- */
+        /* الهيدر الرئيسي للصورة */
         .page-header {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), var(--bg-dark)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            height: 40vh;
+            background: linear-gradient(rgba(0,0,0,0.7), var(--bg)), url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1920&auto=format&fit=crop');
             background-size: cover; background-position: center;
-            padding: 80px 20px; text-align: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; border-bottom: 2px solid var(--gold);
         }
-        .page-header h1 { font-size: 3rem; color: var(--gold-primary); margin-bottom: 10px; }
-        .page-header p { color: #aaa; font-size: 1.2rem; max-width: 600px; margin: 0 auto; }
 
-        /* --- Services Grid --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
-        
-        .services-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        .page-header h1 { font-size: 3.5rem; color: var(--gold); margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .page-header p { color: #ccc; font-size: 1.2rem; max-width: 600px; margin-top: 10px; }
+
+        /* شبكة الخدمات */
+        .services-container {
+            max-width: 1200px; margin: -50px auto 50px auto; padding: 20px;
+            position: relative; z-index: 2;
+        }
+
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
         }
 
         .service-card {
-            background: var(--card-dark); border: 1px solid #333; border-radius: 15px;
-            padding: 30px; text-align: center; transition: 0.4s; position: relative;
-            overflow: hidden; display: flex; flex-direction: column; align-items: center;
+            background: var(--card); padding: 40px 30px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05); text-align: center;
+            transition: all 0.4s ease; position: relative; overflow: hidden;
+        }
+
+        .service-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--gold); transform: scaleX(0); transition: 0.4s; transform-origin: left;
         }
 
         .service-card:hover {
             transform: translateY(-10px);
-            border-color: var(--gold-primary);
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border-color: rgba(212, 175, 55, 0.3);
         }
+
+        .service-card:hover::before { transform: scaleX(1); }
 
         .icon-box {
-            width: 80px; height: 80px; background: rgba(212, 175, 55, 0.1);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px; transition: 0.4s;
-        }
-        .icon-box i { font-size: 2.5rem; color: var(--gold-primary); }
-
-        .service-card:hover .icon-box { background: var(--gold-primary); transform: rotateY(180deg); }
-        .service-card:hover .icon-box i { color: #000; }
-
-        .service-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
-        .service-desc { color: #999; line-height: 1.6; margin-bottom: 30px; font-size: 0.95rem; }
-
-        /* --- Golden WhatsApp Button Design --- */
-        .order-btn {
-            margin-top: auto;
-            padding: 12px 35px;
-            background: linear-gradient(45deg, #D4AF37, #b38728); /* تدرج ذهبي فخم */
-            color: #000; /* نص أسود للتباين */
-            border: none;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-            transition: all 0.3s ease;
+            width: 80px; height: 80px; margin: 0 auto 25px auto;
+            background: rgba(212, 175, 55, 0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: var(--gold); border: 1px solid var(--gold);
+            transition: 0.4s;
         }
 
-        .order-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
-            background: linear-gradient(45deg, #ffd700, #d4af37); /* ذهبي أفتح عند اللمس */
-        }
-        
-        .order-btn i { font-size: 1.2rem; }
-
-        /* --- VIP Card Special Design --- */
-        .service-card.vip-special {
-            border: 2px solid var(--gold-primary);
-            background: linear-gradient(180deg, #1a1d23 0%, #292415 100%);
-        }
-        .vip-badge {
-            position: absolute; top: 15px; right: 15px; background: var(--gold-primary);
-            color: #000; font-size: 0.7rem; font-weight: bold; padding: 3px 10px; border-radius: 20px;
+        .service-card:hover .icon-box {
+            background: var(--gold); color: #000; transform: rotateY(360deg);
         }
 
-        /* زر الرجوع العائم */
-        .back-floating-btn {
-            position: fixed; top: 25px; right: 25px; width: 50px; height: 50px;
-            background: rgba(0, 0, 0, 0.8); color: #D4AF37; border: 2px solid #D4AF37;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; z-index: 99999; font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+        h3 { font-size: 1.5rem; margin-bottom: 15px; }
+        p { color: #aaa; line-height: 1.6; font-size: 0.95rem; }
+
+        /* قسم التواصل السفلي */
+        .cta-section {
+            background: #111; padding: 60px 20px; text-align: center; border-top: 1px solid #333;
         }
-        .back-floating-btn:hover { transform: scale(1.1); background: #D4AF37; color: #000; box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
-        @media (max-width: 768px) { .back-floating-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1rem; } }
+        .cta-btn {
+            display: inline-block; margin-top: 20px; padding: 15px 50px;
+            background: var(--gold); color: #000; text-decoration: none;
+            font-weight: bold; border-radius: 50px; font-size: 1.2rem;
+            transition: 0.3s;
+        }
+        .cta-btn:hover { background: #fff; transform: scale(1.05); }
 
     </style>
 </head>
 <body>
 
-    <a href="javascript:history.back()" class="back-floating-btn" title="رجوع"><i class="fas fa-arrow-right"></i></a>
+    <div class="page-header">
+        <h1>خدمات النخبة</h1>
+        <p>نقدم لك حلولاً عقارية متكاملة تضمن لك الاستثمار الأمثل والراحة التامة.</p>
+    </div>
 
-    <nav>
-        <a href="index.html" class="logo">BARAH</a>
-        <div class="nav-links">
-            <a href="index.html">الرئيسية</a>
-            <a href="listings.html">العقارات</a>
-            <a href="#" style="color:var(--gold-primary)">خدماتنا</a>
-        </div>
-    </nav>
-
-    <section class="page-header">
-        <h1>خدماتنا المتكاملة</h1>
-        <p>أكثر من مجرد شركة عقارية. نقدم لك حلولاً شاملة تبدأ من الاستشارة وتنتهي بتسليم المفتاح، بمعايير فخامة لا تقبل المنافسة.</p>
-    </section>
-
-    <div class="container">
-        <div class="services-grid">
-
+    <div class="services-container">
+        <div class="grid">
+            
             <div class="service-card">
-                <div class="icon-box"><i class="fas fa-bullhorn"></i></div>
-                <h3 class="service-title">التسويق العقاري</h3>
-                <p class="service-desc">
-                    نستخدم أحدث تقنيات التصوير والذكاء الاصطناعي لعرض عقارك على صفوة المجتمع لضمان أسرع بيع.
-                </p>
-                <a href="https://wa.me/201000000000?text=مرحباً، أرغب في طلب خدمة التسويق العقاري" target="_blank" class="order-btn">
-                    <i class="fab fa-whatsapp"></i> اطلب خدمتك
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="icon-box"><i class="fas fa-paint-roller"></i></div>
-                <h3 class="service-title">تشطيبات وديكور</h3>
-                <p class="service-desc">
-                    حول وحدتك إلى قصر. فريقنا الهندسي يقدم لك تصميمات 3D وتشطيبات "الترا سوبر لوكس".
-                </p>
-                <a href="https://wa.me/201000000000?text=مرحباً، أرغب في طلب خدمة التشطيب والديكور" target="_blank" class="order-btn">
-                    <i class="fab fa-whatsapp"></i> اطلب خدمتك
-                </a>
-            </div>
-
-            <div class="service-card">
-                <div class="icon-box"><i class="fas fa-gavel"></i></div>
-                <h3 class="service-title">الاستشارات القانونية</h3>
-                <p class="service-desc">
-                    نتولى عنك مراجعة كافة العقود، تسلسل الملكية، والتسجيل في الشهر العقاري وجهاز المدينة.
-                </p>
-                <a href="https://wa.me/201000000000?text=مرحباً، أرغب في طلب استشارة قانونية عقارية" target="_blank" class="order-btn">
-                    <i class="fab fa-whatsapp"></i> اطلب خدمتك
-                </a>
-            </div>
-
-            <div class="service-card vip-special">
-                <span class="vip-badge">للنخبة فقط</span>
-                <div class="icon-box"><i class="fas fa-car-side"></i></div>
-                <h3 class="service-title">خدمة الانتقالات VIP</h3>
-                <p class="service-desc">
-                    نوفر لك سيارة خاصة (ليموزين) تنقلك من منزلك لمعاينة الوحدات برفقة مستشار عقاري خاص.
-                </p>
-                <a href="https://wa.me/201000000000?text=مرحباً، أرغب في طلب خدمة الانتقالات VIP" target="_blank" class="order-btn">
-                    <i class="fab fa-whatsapp"></i> اطلب خدمتك
-                </a>
+                <div class="icon-box"><i class="fas fa-handshake"></i></div>
+                <h3>الوساطة العقارية</h3>
+                <p>نربط بين البائع والمشتري باحترافية تامة، لضمان صفقات ناجحة وعادلة للطرفين في أرقى أحياء العبور.</p>
             </div>
 
             <div class="service-card">
                 <div class="icon-box"><i class="fas fa-key"></i></div>
-                <h3 class="service-title">إدارة الأملاك</h3>
-                <p class="service-desc">
-                    ندير وحدتك بالكامل (تأجير، صيانة، تحصيل إيجارات) ونحول لك العائد وأنت في مكانك.
-                </p>
-                <a href="https://wa.me/201000000000?text=مرحباً، أرغب في طلب خدمة إدارة الأملاك" target="_blank" class="order-btn">
-                    <i class="fab fa-whatsapp"></i> اطلب خدمتك
-                </a>
+                <h3>خدمات الإيجار الراقي</h3>
+                <p>نوفر وحدات للإيجار (مفروش / فارغ) بمواصفات VIP للعائلات والشركات، مع توثيق العقود.</p>
             </div>
 
             <div class="service-card">
                 <div class="icon-box"><i class="fas fa-chart-line"></i></div>
-                <h3 class="service-title">التقييم العقاري</h3>
-                <p class="service-desc">
-                    نقدم تقارير معتمدة لسعر المتر في منطقتك بناءً على تحليلات دقيقة للسوق لضمان حقك.
-                </p>
-                <a href="https://wa.me/201000000000?text=مرحباً، أرغب في طلب خدمة التقييم العقاري" target="_blank" class="order-btn">
-                    <i class="fab fa-whatsapp"></i> اطلب خدمتك
-                </a>
+                <h3>الاستشارات والاستثمار</h3>
+                <p>دراسات سوق دقيقة تساعدك على اختيار العقار الأمثل للاستثمار وتحقيق أعلى عائد مادي.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box"><i class="fas fa-file-contract"></i></div>
+                <h3>التوثيق القانوني</h3>
+                <p>فريق قانوني مختص لمراجعة كافة الأوراق والعقود لضمان حقك وتسهيل إجراءات التسجيل.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box"><i class="fas fa-paint-roller"></i></div>
+                <h3>التشطيبات والديكور</h3>
+                <p>نستلم وحدتك "طوب أحمر" ونسلمك إياها "الترا سوبر لوكس" بأحدث التصاميم العالمية.</p>
+            </div>
+
+            <div class="service-card">
+                <div class="icon-box"><i class="fas fa-bullhorn"></i></div>
+                <h3>التسويق العقاري</h3>
+                <p>نستخدم أحدث تقنيات التصوير والإعلانات الموجهة لعرض عقارك على الشريحة المستهدفة بدقة.</p>
             </div>
 
         </div>
     </div>
 
+    <div class="cta-section">
+        <h2 style="color:var(--gold)">هل أنت جاهز للبدء؟</h2>
+        <p>تواصل معنا الآن ودعنا نتولى باقي التفاصيل.</p>
+        <a href="contact.html" class="cta-btn">تواصل معنا الآن</a>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARAH ESTATE | تواصل معنا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; }
+        body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
+        
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
+        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; }
+        .nav-links a.active { color: var(--gold); }
+
+        .container { max-width: 800px; margin: 50px auto; padding: 20px; text-align: center; }
+        h1 { color: var(--gold); margin-bottom: 40px; font-size: 2.5rem; }
+        
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        
+        .box { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #333; transition: 0.3s; }
+        .box:hover { border-color: var(--gold); transform: translateY(-10px); }
+        .box i { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
+        .box h3 { margin-bottom: 10px; }
+        .box a { color: #fff; text-decoration: none; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
+        <div class="nav-links">
+            <a href="index.html">الرئيسية</a>
+            <a href="listings.html">المعرض</a>
+            <a href="contact.html" class="active">تواصل معنا</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>تواصل مع النخبة</h1>
+        <div class="contact-grid">
+            <div class="box">
+                <i class="fab fa-whatsapp"></i>
+                <h3>واتساب</h3>
+                <a href="https://wa.me/20110557821" target="_blank">0110557821</a>
+            </div>
+            <div class="box">
+                <i class="fas fa-phone-alt"></i>
+                <h3>اتصال هاتفي</h3>
+                <a href="tel:0110557821">0110557821</a>
+            </div>
+            <div class="box">
+                <i class="fas fa-map-marked-alt"></i>
+                <h3>مقر الشركة</h3>
+                <p>العبور - الحي التاسع</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

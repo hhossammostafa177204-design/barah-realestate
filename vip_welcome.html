@@ -6,322 +6,98 @@
     <title>BARAH ELITE | القصر الملكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        /* --- التصميم الأساسي الفخم (أسود وذهبي) --- */
-        :root {
-            --gold-primary: #D4AF37;
-            --gold-gradient: linear-gradient(135deg, #D4AF37, #FEE140, #D4AF37);
-            --bg-deep: #000000;
-            --card-bg: #111111;
-            --nav-bg: rgba(10, 10, 10, 0.95);
-        }
+        :root { --gold: #D4AF37; --bg: #050505; --nav: rgba(15,15,15,0.95); }
+        body { margin:0; padding:0; font-family:'Tajawal'; background:var(--bg); color:#fff; padding-bottom:90px; overflow-x:hidden; }
         
-        body { 
-            margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; 
-            background: var(--bg-deep); color: #fff; overflow-x: hidden; 
-            padding-bottom: 90px; /* مسافة للشريط السفلي */
-        }
-
-        /* --- 1. الرسالة الترحيبية الراقية --- */
-        .header-welcome {
-            padding: 40px 20px 20px; text-align: center;
-            background: radial-gradient(circle at top, #1a1a1a, #000);
-        }
-        .royal-title {
-            font-size: 2.2rem; font-weight: 800; margin: 0;
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-        }
-        .royal-subtitle { color: #888; font-size: 0.9rem; margin-top: 5px; letter-spacing: 1px; }
-
-        /* --- نظام التبويبات (Tabs) --- */
-        .tab-section { display: none; padding: 0 20px; animation: fadeIn 0.5s ease; }
-        .tab-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ============ القائمة الأولى: الرئيسية (فلاتر + خريطة 3D) ============ */
+        .header { padding:30px 20px; text-align:center; background:linear-gradient(180deg, #000, transparent); }
+        .welcome { font-size:2rem; font-weight:800; color:var(--gold); margin:0; text-shadow:0 0 20px rgba(212,175,55,0.3); }
         
-        /* الفلاتر */
-        .filter-bar {
-            display: flex; background: #1a1a1a; border-radius: 50px; padding: 5px;
-            margin: 20px auto; max-width: 90%; border: 1px solid #333;
-        }
-        .filter-btn {
-            flex: 1; padding: 12px; border: none; background: transparent; color: #666;
-            border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s;
-        }
-        .filter-btn.active { 
-            background: var(--gold-primary); color: #000; 
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); 
-        }
+        .tab-content { display:none; padding:0 20px; animation:fadeIn 0.6s; }
+        .tab-content.active { display:block; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
-        /* الخريطة 3D */
-        .map-3d-wrapper {
-            position: relative; width: 100%; height: 450px;
-            perspective: 1000px; /* السر في الـ 3D */
-            margin-top: 30px; margin-bottom: 20px;
-        }
-        .map-board {
-            width: 100%; height: 100%;
-            /* صورة خريطة داكنة لتعطي واقعية */
-            background: url('https://media.wired.com/photos/59269cd37034dc5f91becd32/master/pass/GoogleMapTA.jpg') center/cover;
-            border-radius: 20px; border: 2px solid #333;
-            transform: rotateX(30deg) scale(0.9); /* إمالة الخريطة لتصبح مسطحة */
-            box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 0 5px rgba(212, 175, 55, 0.1);
-            filter: grayscale(100%) contrast(1.2) brightness(0.6);
-            transition: 0.5s; position: relative;
-        }
-        .map-3d-wrapper:hover .map-board { transform: rotateX(0deg) scale(1); filter: grayscale(50%) brightness(0.8); }
+        /* القائمة 1 */
+        .map-3d { position:relative; height:400px; margin:20px 0; perspective:1000px; }
+        .map-board { width:100%; height:100%; background:url('https://media.wired.com/photos/59269cd37034dc5f91becd32/master/pass/GoogleMapTA.jpg') center/cover; border-radius:20px; border:2px solid #333; transform:rotateX(20deg) scale(0.95); filter:grayscale(100%) brightness(0.6); transition:0.5s; }
+        .map-3d:hover .map-board { transform:rotateX(0deg); filter:grayscale(0%); }
+        .btn-main { display:block; padding:15px; background:var(--gold); color:#000; text-align:center; border-radius:15px; text-decoration:none; font-weight:bold; margin-top:20px; }
 
-        /* العلامات الحمراء */
-        .red-marker {
-            position: absolute; width: 20px; height: 20px; background: #ff0000;
-            border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 20px #ff0000;
-            z-index: 10; animation: pulse 2s infinite; cursor: pointer;
-        }
-        .red-marker::after {
-            content: attr(data-loc); position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.8); color: #fff; padding: 5px 10px; border-radius: 5px;
-            font-size: 0.7rem; white-space: nowrap; opacity: 0; transition: 0.3s; pointer-events: none;
-            border: 1px solid var(--gold-primary);
-        }
-        .red-marker:hover::after { opacity: 1; bottom: 30px; }
+        /* القائمة 2 */
+        .grid { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+        .card { background:#111; border:1px solid #333; padding:20px; border-radius:15px; text-align:center; }
+        .card i { font-size:2rem; color:var(--gold); margin-bottom:10px; }
 
-        /* مواقع العلامات */
-        .loc1 { top: 40%; left: 30%; } /* الحي التاسع */
-        .loc2 { top: 60%; left: 70%; } /* عرابي */
-        .loc3 { top: 30%; left: 60%; } /* جولف */
-        .loc4 { top: 50%; left: 45%; } /* العبور الجديدة */
+        /* القائمة 3 */
+        .req-btn { display:flex; align-items:center; background:#111; padding:15px; margin-bottom:10px; border-radius:10px; text-decoration:none; color:#fff; border-right:3px solid #333; }
+        .req-btn:hover { border-color:var(--gold); background:#222; }
+        .req-icon { width:40px; height:40px; background:rgba(212,175,55,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--gold); margin-left:15px; }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
-
-        /* ============ القائمة الثانية: خدمات VIP ============ */
-        .vip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .vip-card {
-            background: linear-gradient(145deg, #151515, #0a0a0a);
-            border: 1px solid #333; border-radius: 20px; padding: 25px 15px;
-            text-align: center; transition: 0.3s;
-        }
-        .vip-card:hover { border-color: var(--gold-primary); transform: translateY(-5px); }
-        .vc-icon { font-size: 2rem; color: var(--gold-primary); margin-bottom: 10px; }
-        .vc-title { color: #fff; font-weight: bold; font-size: 1rem; margin-bottom: 5px; }
-        .vc-desc { color: #777; font-size: 0.8rem; }
-
-        /* ============ القائمة الثالثة: مركز الطلبات (Action Center) ============ */
-        .action-list { display: flex; flex-direction: column; gap: 15px; }
-        .action-btn {
-            display: flex; align-items: center; justify-content: space-between;
-            background: #1a1a1a; padding: 20px; border-radius: 15px;
-            text-decoration: none; border-right: 4px solid #333; transition: 0.3s;
-        }
-        .action-btn:hover { background: #222; border-right-color: var(--gold-primary); padding-right: 25px; }
-        
-        .ac-content { display: flex; align-items: center; gap: 15px; }
-        .ac-icon { 
-            width: 50px; height: 50px; background: rgba(212, 175, 55, 0.1); 
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            color: var(--gold-primary); font-size: 1.4rem;
-        }
-        .ac-text h4 { margin: 0; color: #fff; font-size: 1.1rem; }
-        .ac-text p { margin: 3px 0 0; color: #666; font-size: 0.8rem; }
-
-        /* ============ الشريط السفلي (Navigation) ============ */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
-            background: var(--nav-bg); backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255,255,255,0.1);
-            display: flex; justify-content: space-around; align-items: center;
-            z-index: 1000;
-        }
-        .nav-link {
-            display: flex; flex-direction: column; align-items: center;
-            color: #555; text-decoration: none; font-size: 0.8rem; transition: 0.3s;
-            cursor: pointer; width: 70px;
-        }
-        .nav-link i { font-size: 1.5rem; margin-bottom: 5px; transition: 0.3s; }
-        
-        .nav-link.active { color: var(--gold-primary); }
-        .nav-link.active i { transform: translateY(-5px); text-shadow: 0 0 15px var(--gold-primary); }
-
+        /* الشريط السفلي */
+        .nav { position:fixed; bottom:0; width:100%; height:70px; background:var(--nav); display:flex; justify-content:space-around; align-items:center; border-top:1px solid #333; z-index:999; }
+        .nav-item { color:#555; text-align:center; font-size:0.7rem; cursor:pointer; }
+        .nav-item i { font-size:1.4rem; display:block; margin-bottom:3px; }
+        .nav-item.active { color:var(--gold); }
     </style>
-
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
+    <div class="header"><h1 class="welcome" id="userTitle">أهلاً بك</h1><p style="color:#777; margin:5px 0;">BARAH ELITE</p></div>
 
-    <div class="header-welcome">
-        <h1 class="royal-title" id="userNameDisplay">أهلاً بك</h1>
-        <div class="royal-sub">عضوية النخبة | BARAH ELITE</div>
+    <div id="tab-home" class="tab-content active">
+        <div class="map-3d"><div class="map-board"></div></div>
+        <a href="listings.html" class="btn-main">تصفح جميع العقارات</a>
     </div>
 
-    <div id="section-home" class="tab-section active">
-        
-        <div class="filter-bar">
-            <button class="filter-btn active" onclick="toggleMapMode(this)">الكل</button>
-            <button class="filter-btn" onclick="toggleMapMode(this)"><i class="fas fa-crown"></i> وحدات VIP</button>
-        </div>
-
-        <div class="map-3d-wrapper">
-            <div class="map-board">
-                <div class="red-marker loc1" data-loc="الحي التاسع"></div>
-                <div class="red-marker loc2" data-loc="جمعية عرابي"></div>
-                <div class="red-marker loc3" data-loc="جولف سيتي"></div>
-                <div class="red-marker loc4" data-loc="العبور الجديدة"></div>
-            </div>
-        </div>
-
-        <a href="listings.html" style="display:block; text-align:center; color:#fff; text-decoration:underline;">
-            اضغط هنا لتصفح جميع الوحدات بالتفصيل
-        </a>
-    </div>
-
-    <div id="section-services" class="tab-section">
-        <h3 style="color:var(--gold-primary); margin-bottom:20px;">خدماتك الخاصة</h3>
-        <div class="vip-grid">
-            <div class="vip-card">
-                <i class="fas fa-car vc-icon"></i>
-                <div class="vc-title">ليموزين</div>
-                <div class="vc-desc">انتقالات خاصة للمعاينة</div>
-            </div>
-            <div class="vip-card">
-                <i class="fas fa-user-tie vc-icon"></i>
-                <div class="vc-title">مستشار خاص</div>
-                <div class="vc-desc">مدير حسابك الشخصي</div>
-            </div>
-            <div class="vip-card">
-                <i class="fas fa-gavel vc-icon"></i>
-                <div class="vc-title">قانوني</div>
-                <div class="vc-desc">مراجعة وتسجيل العقود</div>
-            </div>
-            <div class="vip-card">
-                <i class="fas fa-chart-line vc-icon"></i>
-                <div class="vc-title">تحليل سوق</div>
-                <div class="vc-desc">تقارير أسعار حصرية</div>
-            </div>
+    <div id="tab-services" class="tab-content">
+        <h3 style="color:var(--gold); text-align:center;">الخدمات</h3>
+        <div class="grid">
+            <div class="card"><i class="fas fa-car"></i><div>ليموزين</div></div>
+            <div class="card"><i class="fas fa-user-tie"></i><div>مستشار</div></div>
+            <div class="card"><i class="fas fa-gavel"></i><div>قانوني</div></div>
+            <div class="card"><i class="fas fa-key"></i><div>إدارة أملاك</div></div>
         </div>
     </div>
 
-    <div id="section-requests" class="tab-section">
-        <h3 style="color:var(--gold-primary); margin-bottom:20px;">إدارة طلباتك</h3>
-        <div class="action-list">
-            
-            <a href="https://wa.me/20110557821?text=مرحباً، بصفتي عضو VIP أرغب في عرض وحدتي للبيع/الإيجار" target="_blank" class="action-btn">
-                <div class="ac-content">
-                    <div class="ac-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                    <div class="ac-text">
-                        <h4>اعرض وحدتك</h4>
-                        <p>استثمر عقارك معنا</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-left" style="color:#555;"></i>
-            </a>
-
-            <a href="https://wa.me/20110557821?text=مرحباً، أرغب في طلب وحدة بمواصفات خاصة جداً" target="_blank" class="action-btn">
-                <div class="ac-content">
-                    <div class="ac-icon"><i class="fas fa-search-location"></i></div>
-                    <div class="ac-text">
-                        <h4>اطلب وحدتك</h4>
-                        <p>ابحث عن مواصفات خاصة</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-left" style="color:#555;"></i>
-            </a>
-
-            <a href="https://wa.me/20110557821?text=مرحباً، مهتم بخدمات التشطيب والديكور" target="_blank" class="action-btn">
-                <div class="ac-content">
-                    <div class="ac-icon"><i class="fas fa-paint-roller"></i></div>
-                    <div class="ac-text">
-                        <h4>طلب تشطيب</h4>
-                        <p>باقات VIP حصرية</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-left" style="color:#555;"></i>
-            </a>
-
-            <a href="https://wa.me/20110557821?text=عندي استفسار بخصوص..." target="_blank" class="action-btn">
-                <div class="ac-content">
-                    <div class="ac-icon"><i class="fas fa-headset"></i></div>
-                    <div class="ac-text">
-                        <h4>استفسارات وتفاصيل</h4>
-                        <p>تحدث مع الدعم الفني</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-left" style="color:#555;"></i>
-            </a>
-
-        </div>
+    <div id="tab-requests" class="tab-content">
+        <h3 style="color:var(--gold); text-align:center;">الطلبات</h3>
+        <a href="https://wa.me/20110557821?text=اعرض وحدتي" class="req-btn"><div class="req-icon"><i class="fas fa-home"></i></div><div><h4>اعرض وحدتك</h4><small>للبيع أو الإيجار</small></div></a>
+        <a href="https://wa.me/20110557821?text=اطلب وحدة" class="req-btn"><div class="req-icon"><i class="fas fa-search"></i></div><div><h4>اطلب وحدتك</h4><small>مواصفات خاصة</small></div></a>
+        <a href="https://wa.me/20110557821?text=طلب تشطيب" class="req-btn"><div class="req-icon"><i class="fas fa-paint-roller"></i></div><div><h4>تشطيبات</h4><small>باقات فاخرة</small></div></a>
+        <a href="https://wa.me/20110557821?text=استفسار" class="req-btn"><div class="req-icon"><i class="fas fa-headset"></i></div><div><h4>دعم فني</h4><small>تحدث معنا</small></div></a>
     </div>
 
-    <div class="nav-bar">
-        <div class="nav-link active" onclick="switchSection('home', this)">
-            <i class="fas fa-home"></i>
-            <span>الرئيسية</span>
-        </div>
-        <div class="nav-link" onclick="switchSection('services', this)">
-            <i class="fas fa-crown"></i>
-            <span>الخدمات</span>
-        </div>
-        <div class="nav-link" onclick="switchSection('requests', this)">
-            <i class="fas fa-list-ul"></i>
-            <span>الطلبات</span>
-        </div>
+    <div class="nav">
+        <div class="nav-item active" onclick="sw(this,'home')"><i class="fas fa-home"></i>الرئيسية</div>
+        <div class="nav-item" onclick="sw(this,'services')"><i class="fas fa-crown"></i>الخدمات</div>
+        <div class="nav-item" onclick="sw(this,'requests')"><i class="fas fa-tasks"></i>الطلبات</div>
     </div>
 
     <script>
-        // ⚠️ Firebase Config
+        // 🔥 كود المشروع الجديد
         const firebaseConfig = {
-          apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU",
-          authDomain: "barah-realestate-c7095.firebaseapp.com",
-          projectId: "barah-realestate-c7095",
-          storageBucket: "barah-realestate-c7095.firebasestorage.app",
-          messagingSenderId: "491079034147",
-          appId: "1:491079034147:web:c7d985a6387dfa75a8d896"
+            apiKey: "AIzaSyBbhybhto4kPZhdVUjpXoJa-l5Ql09qiYA",
+            authDomain: "barah-project.firebaseapp.com",
+            projectId: "barah-project",
+            storageBucket: "barah-project.firebasestorage.app",
+            messagingSenderId: "733946508060",
+            appId: "1:733946508060:web:ce99a5431363d22d8e40d9"
         };
+
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.firestore();
 
-        // 1. التحقق من المستخدم
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                db.collection('customers').doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().isVIP) {
-                        const name = user.displayName ? user.displayName.split(' ')[0] : 'عزيزي';
-                        document.getElementById('userNameDisplay').innerText = `أهلاً سموّك، ${name}`;
-                    } else {
-                        window.location.href = 'index.html'; 
-                    }
-                });
-            } else {
-                window.location.href = 'index.html';
-            }
+        firebase.auth().onAuthStateChanged(u=>{
+            if(u) document.getElementById('userTitle').innerText=`أهلاً، ${u.displayName.split(' ')[0]}`; 
+            else location.href='index.html'
         });
-
-        // 2. التبديل بين القوائم
-        function switchSection(sectionId, btnElement) {
-            // إخفاء كل السكاشن
-            document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
-            // إزالة التنشيط من الأزرار
-            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-
-            // تفعيل المختار
-            document.getElementById('section-' + sectionId).classList.add('active');
-            btnElement.classList.add('active');
-        }
-
-        // 3. فلتر الخريطة (شكلي)
-        function toggleMapMode(btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            // حركة بسيطة للخريطة
-            const map = document.querySelector('.map-board');
-            map.style.transform = 'rotateX(20deg) scale(0.95)';
-            setTimeout(() => {
-                map.style.transform = 'rotateX(30deg) scale(0.9)';
-            }, 300);
+        
+        function sw(e,t){
+            document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+            document.getElementById('tab-'+t).classList.add('active'); e.classList.add('active');
         }
     </script>
 </body>
