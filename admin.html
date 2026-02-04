@@ -13,6 +13,11 @@
         .container { background: var(--card-dark); padding: 30px; border-radius: 15px; border: 1px solid #333; max-width: 800px; margin: 0 auto; }
         input, select, textarea { width: 100%; background: #222; border: 1px solid #444; color: #fff; padding: 12px; margin-bottom: 15px; border-radius: 8px; outline: none; box-sizing: border-box; font-family: 'Tajawal'; }
         .submit-btn { width: 100%; padding: 15px; background: var(--gold-primary); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        
+        .amenities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .amenity-box { background: #222; border: 1px solid #333; border-radius: 10px; padding: 15px 5px; text-align: center; cursor: pointer; color: #777; transition: 0.3s; font-size: 0.9rem; }
+        .amenity-box.active { border-color: var(--gold-primary); color: var(--gold-primary); background: rgba(212, 175, 55, 0.1); font-weight: bold; }
+        
         .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 
@@ -46,7 +51,7 @@
             <option value="أرض">أرض</option>
         </select>
 
-        <input type="text" id="title" placeholder="عنوان الإعلان (مثال: شقة للبيع في الحي التاسع)">
+        <input type="text" id="title" placeholder="عنوان الإعلان">
         <input type="number" id="price" placeholder="السعر (جنية)">
         
         <select id="district">
@@ -75,6 +80,28 @@
             <input type="number" id="floor" placeholder="الدور">
         </div>
 
+        <div class="input-wrapper">
+            <select id="finishing">
+                <option value="">نوع التشطيب</option>
+                <option value="بدون تشطيب">طوب أحمر</option>
+                <option value="نص تشطيب">نص تشطيب</option>
+                <option value="سوبر لوكس">سوبر لوكس</option>
+                <option value="الترا سوبر لوكس">💎 الترا سوبر لوكس</option>
+            </select>
+        </div>
+
+        <p style="color:#aaa; margin-bottom:10px;">المميزات:</p>
+        <div class="amenities-grid">
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="أسانسير"><i class="fas fa-elevator"></i> أسانسير</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="جراج"><i class="fas fa-car"></i> جراج</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="حديقة"><i class="fas fa-tree"></i> حديقة</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="مسبح"><i class="fas fa-swimming-pool"></i> مسبح</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="غاز"><i class="fas fa-fire"></i> غاز</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="أمن"><i class="fas fa-user-shield"></i> أمن</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="تكييف"><i class="fas fa-snowflake"></i> تكييف</div>
+            <div class="amenity-box" onclick="toggleAm(this)" data-val="شرفة"><i class="fas fa-door-open"></i> شرفة</div>
+        </div>
+
         <textarea id="desc" rows="4" placeholder="وصف تفصيلي للعقار..."></textarea>
         
         <div style="border: 2px dashed #444; padding: 20px; text-align: center; margin-bottom: 20px;">
@@ -82,29 +109,41 @@
             <input type="file" id="images" multiple accept="image/*">
         </div>
 
-        <input type="text" id="phone" placeholder="رقم للتواصل (اختياري) - الافتراضي رقم الشركة">
+        <div class="input-wrapper" style="border: 1px solid #ff0000; background: rgba(255,0,0,0.05); padding: 5px; border-radius: 8px; margin-bottom: 15px;">
+            <input type="text" id="youtube" placeholder="رابط فيديو يوتيوب (اختياري)" style="margin:0; border:none;">
+        </div>
+
+        <input type="text" id="locationLink" placeholder="رابط الموقع GPS (اختياري)">
+        <input type="text" id="phone" placeholder="رقم للتواصل (اختياري)">
 
         <button class="submit-btn" onclick="upload()">نشر الوحدة</button>
         <p id="status" style="text-align:center; margin-top:10px;"></p>
     </div>
 
     <script>
-        // إعدادات فايربيس
         const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // تسجيل الدخول البسيط
+        let selectedAmenities = [];
+
         function checkLogin() {
             if(document.getElementById('adminPass').value === 'AHE123') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
+            } else { alert('خطأ في كلمة المرور'); }
+        }
+
+        function toggleAm(el) {
+            el.classList.toggle('active');
+            const val = el.getAttribute('data-val');
+            if(selectedAmenities.includes(val)) {
+                selectedAmenities = selectedAmenities.filter(x => x !== val);
             } else {
-                alert('كلمة المرور غير صحيحة');
+                selectedAmenities.push(val);
             }
         }
 
-        // دالة الرفع
         async function upload() {
             const status = document.getElementById('status');
             const files = document.getElementById('images').files;
@@ -115,30 +154,20 @@
             status.innerText = "جاري رفع الصور...";
             status.style.color = "#D4AF37";
 
-            // 🔥 مفتاح API الخاص بك 🔥
             const apiKey = "2b382d98a074d27c5304c08340d339ac";
             let imageUrls = [];
 
             try {
-                // رفع الصور صورة صورة
                 for(let i=0; i<files.length; i++) {
                     const formData = new FormData();
                     formData.append("image", files[i]);
-                    
-                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-                        method: "POST",
-                        body: formData
-                    });
-                    
+                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, { method: "POST", body: formData });
                     const data = await response.json();
-                    if(data.success) {
-                        imageUrls.push(data.data.url);
-                    }
+                    if(data.success) imageUrls.push(data.data.url);
                 }
 
                 status.innerText = "جاري حفظ البيانات...";
 
-                // حفظ البيانات في فايربيس
                 await db.collection("apartments").add({
                     type: document.getElementById('type').value,
                     unitType: document.getElementById('unitType').value,
@@ -149,8 +178,12 @@
                     bathrooms: document.getElementById('bathrooms').value,
                     area: document.getElementById('area').value,
                     floor: document.getElementById('floor').value,
+                    finishing: document.getElementById('finishing').value,
+                    amenities: selectedAmenities,
                     description: document.getElementById('desc').value,
-                    images: imageUrls, // هنا بنحفظ روابط الصور
+                    images: imageUrls,
+                    youtube: document.getElementById('youtube').value, // 🔥 حفظ رابط اليوتيوب
+                    locationPrivate: document.getElementById('locationLink').value,
                     marketerPhone: document.getElementById('phone').value || "20110557821",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });

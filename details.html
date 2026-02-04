@@ -28,7 +28,6 @@
         .desc { line-height: 1.8; color: #ccc; background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
         .amenities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
         .am-tag { background: #222; padding: 10px 25px; border-radius: 50px; border: 1px solid var(--gold); color: #fff; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        .am-tag i { color: var(--gold); }
         .actions { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--gold); }
         .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-align: center; text-decoration: none; color: #fff; }
         .wa { background: #25D366; } .call { background: var(--gold); color: #000; }
@@ -64,10 +63,36 @@
                     let slidesHtml = '';
                     imgs.forEach((src, i) => slidesHtml += `<img src="${src}" class="slide-img ${i===0?'active':''}">`);
                     
-                    // 🔥 كود عرض المميزات المحسن 🔥
                     let amHtml = '<p style="color:#777">لا توجد مميزات إضافية مسجلة.</p>';
                     if (d.amenities && d.amenities.length > 0) {
                         amHtml = d.amenities.map(a => `<div class="am-tag"><i class="fas fa-check-circle"></i> ${a}</div>`).join('');
+                    }
+
+                    // 🔥🔥🔥 كود استخراج وعرض فيديو اليوتيوب 🔥🔥🔥
+                    let videoHtml = '';
+                    if(d.youtube) {
+                        let videoId = '';
+                        if(d.youtube.includes('v=')) {
+                            videoId = d.youtube.split('v=')[1];
+                            const ampersandPosition = videoId.indexOf('&');
+                            if(ampersandPosition != -1) {
+                                videoId = videoId.substring(0, ampersandPosition);
+                            }
+                        } else if(d.youtube.includes('youtu.be/')) {
+                            videoId = d.youtube.split('youtu.be/')[1];
+                        }
+
+                        if(videoId) {
+                            videoHtml = `
+                                <h3 style="color:var(--gold); margin-top:30px;">فيديو الوحدة</h3>
+                                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:15px; border:1px solid #333;">
+                                    <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" 
+                                        src="https://www.youtube.com/embed/${videoId}" 
+                                        frameborder="0" allowfullscreen>
+                                    </iframe>
+                                </div>
+                            `;
+                        }
                     }
 
                     document.getElementById('content').innerHTML = `
@@ -81,6 +106,7 @@
                         </div>
                         <h3 style="color:var(--gold)">الوصف</h3><div class="desc">${d.description}</div>
                         <h3 style="color:var(--gold)">المميزات والخدمات</h3><div class="amenities">${amHtml}</div>
+                        ${videoHtml}
                         <div style="height:100px;"></div>`;
 
                     document.getElementById('actions').style.display = 'flex';
