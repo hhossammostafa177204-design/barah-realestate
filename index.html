@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BARAH ESTATE | الرئيسية</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
             --gold: #D4AF37;
             --gold-glow: rgba(212, 175, 55, 0.4);
             --bg: #0f1215;
+            --card-bg: #1a1d23;
         }
 
         body {
@@ -20,102 +21,258 @@
             font-family: 'Tajawal', sans-serif;
             background: var(--bg);
             color: #fff;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        /* الخلفية */
+        /* --- 1. قسم الهيدر (الشاشة الكاملة) --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
         .bg-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
+        
+        /* 🔥🔥🔥 التعديل هنا: جعلنا الخلفية شفافة جداً في الأعلى 🔥🔥🔥 */
         .bg-container::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+            /* تم تغيير rgba(0,0,0,0.2) إلى transparent لتوضيح السماء والفيلا */
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8) 80%, var(--bg) 100%);
         }
+        
         .bg-img {
             width: 100%; height: 100%; object-fit: cover;
             animation: zoomBg 20s infinite alternate;
         }
         @keyframes zoomBg { from { transform: scale(1); } to { transform: scale(1.1); } }
 
-        /* الناف بار */
+        /* الناف بار - تعديل بسيط لزيادة وضوح اللوجو مع الخلفية الفاتحة */
         .navbar {
+            position: absolute; top: 0; width: 100%;
             padding: 20px 50px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 10;
+            z-index: 10; box-sizing: border-box;
         }
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; text-decoration: none; text-shadow: 0 2px 15px rgba(0,0,0,0.9); }
         .logo span { color: #fff; }
         
         .nav-btn {
-            text-decoration: none; color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);
+            text-decoration: none; color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.4);
             padding: 10px 25px; border-radius: 50px; transition: 0.3s;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px); background: rgba(0,0,0,0.2);
         }
         .nav-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* المحتوى الرئيسي */
-        .hero-content {
-            flex: 1;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; z-index: 10; padding: 20px;
-        }
-
+        /* نصوص الهيدر - زيادة الظل عشان الكلام يبقى واضح فوق الخلفية الفاتحة */
         h1 {
-            font-size: 4.5rem; margin: 0; font-weight: 900;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            font-size: 4rem; margin: 0; font-weight: 900;
+            text-shadow: 0 5px 25px rgba(0,0,0,1);
+            line-height: 1.2;
         }
         h1 span { color: var(--gold); }
         
         .slogan {
-            font-size: 1.5rem; color: #ddd; margin: 20px 0 40px 0; max-width: 600px;
-            line-height: 1.6; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            font-size: 1.3rem; color: #fff; margin: 20px 0 40px 0; max-width: 600px;
+            line-height: 1.6; text-shadow: 0 2px 15px rgba(0,0,0,1); font-weight: 500;
         }
 
-        /* الزر الرئيسي */
         .cta-btn {
-            padding: 18px 60px; font-size: 1.3rem; font-weight: bold;
+            padding: 18px 60px; font-size: 1.2rem; font-weight: bold;
             text-decoration: none; border-radius: 50px; transition: 0.3s;
             display: flex; align-items: center; gap: 15px;
             background: var(--gold); color: #000;
             box-shadow: 0 0 20px var(--gold-glow);
         }
-        .cta-btn:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 40px var(--gold-glow); 
-            background: #fff; 
+        .cta-btn:hover { transform: translateY(-5px); background: #fff; }
+
+        /* --- 2. قسم الاختصارات والخدمات --- */
+        .features-section {
+            padding: 60px 20px;
+            max-width: 1200px; margin: -80px auto 0 auto;
+            position: relative; z-index: 5;
         }
 
-        /* الفوتر */
-        .footer { padding: 20px; text-align: center; color: #aaa; font-size: 0.9rem; z-index: 10; }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: rgba(26, 29, 35, 0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px; border-radius: 20px;
+            text-align: center; text-decoration: none; color: #fff;
+            transition: 0.4s; backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.15);
+        }
+
+        .feature-icon {
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: rgba(212, 175, 55, 0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.3); transition: 0.4s;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--gold); color: #000; transform: rotateY(360deg);
+        }
+
+        .feature-card h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
+        .feature-card p { color: #aaa; font-size: 0.9rem; line-height: 1.5; margin: 0; }
+
+        /* --- 3. قسم الفيديو التعريفي --- */
+        .video-section {
+            padding: 60px 20px;
+            max-width: 1000px; margin: 0 auto;
+            text-align: center;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+            background: #000;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .section-title {
+            font-size: 2.5rem; color: var(--gold);
+            margin-bottom: 20px; font-weight: 900;
+        }
+        
+        .section-desc {
+            color: #ccc; margin-bottom: 40px; font-size: 1.1rem;
+            max-width: 700px; margin-left: auto; margin-right: auto;
+        }
+
+        /* --- 4. بانر اعرض عقارك --- */
+        .sell-banner {
+            margin: 80px 20px;
+            background: linear-gradient(45deg, #111, #222);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            position: relative; overflow: hidden;
+        }
+        
+        .sell-banner h2 { color: var(--gold); margin-bottom: 15px; font-size: 2rem; }
+        .sell-banner p { color: #ccc; margin-bottom: 30px; font-size: 1.1rem; }
+        
+        .sell-btn {
+            display: inline-block; padding: 15px 40px;
+            border: 2px solid var(--gold); color: var(--gold);
+            text-decoration: none; border-radius: 50px; font-weight: bold;
+            transition: 0.3s;
+        }
+        .sell-btn:hover { background: var(--gold); color: #000; }
+
+        .footer { padding: 30px; text-align: center; color: #777; font-size: 0.9rem; border-top: 1px solid #222; }
 
         @media (max-width: 768px) {
-            h1 { font-size: 3rem; }
-            .navbar { padding: 15px 20px; }
-            .cta-btn { padding: 15px 40px; font-size: 1.1rem; }
+            .navbar { padding: 20px; }
+            h1 { font-size: 2.8rem; }
+            .hero { height: 80vh; }
+            .features-section { margin-top: -50px; }
+            .section-title { font-size: 2rem; }
+            .sell-banner { padding: 30px 20px; }
+            .sell-banner h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-container">
-        <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?q=80&w=1920&auto=format&fit=crop" class="bg-img">
+    <div class="hero">
+        <div class="bg-container">
+            <img src="https://images.unsplash.com/photo-1600596542815-2250c3dce799?q=80&w=1920&auto=format&fit=crop" class="bg-img">
+        </div>
+
+        <nav class="navbar">
+            <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
+            <a href="contact.html" class="nav-btn">اتصل بنا</a>
+        </nav>
+
+        <div style="z-index: 2;">
+            <h1>رفاهية <span>السكن</span></h1>
+            <div class="slogan">بوابة النخبة لأرقى العقارات في مدينة العبور. حيث تلتقي الفخامة بالموقع الاستراتيجي.</div>
+            <a href="listings.html" class="cta-btn" style="margin: 0 auto; width: fit-content;">
+                تصفح الوحدات <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
     </div>
 
-    <nav class="navbar">
-        <div class="logo">BARAH <span>ESTATE</span></div>
-        <a href="contact.html" class="nav-btn">اتصل بنا</a>
-    </nav>
+    <div class="features-section">
+        <div class="features-grid">
+            
+            <a href="listings.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-search"></i></div>
+                <h3>ابحث عن عقارك</h3>
+                <p>تصفح مئات الوحدات السكنية والتجارية مع خيارات تصفية متقدمة.</p>
+            </a>
 
-    <div class="hero-content">
-        <h1>رفاهية <span>السكن</span></h1>
-        <div class="slogan">نجمع لك أرقى الفرص العقارية في مدينة العبور. وحدات سكنية وتجارية بتصاميم عالمية ومواقع استراتيجية.</div>
+            <a href="https://wa.me/20110557821?text=مرحباً، أرغب في عرض عقاري للبيع/الإيجار" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-home"></i></div>
+                <h3>اعرض وحدتك</h3>
+                <p>هل تمتلك عقاراً؟ اعرضه معنا ليصل إلى آلاف المهتمين بالنخبة.</p>
+            </a>
+
+            <a href="services.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-star"></i></div>
+                <h3>خدماتنا</h3>
+                <p>تعرف على باقة خدماتنا من تشطيبات، توثيق قانوني، واستشارات.</p>
+            </a>
+
+            <a href="contact.html" class="feature-card">
+                <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                <h3>تواصل معنا</h3>
+                <p>فريقنا جاهز للرد على استفساراتك طوال أيام الأسبوع.</p>
+            </a>
+
+        </div>
+    </div>
+
+    <div class="video-section">
+        <h2 class="section-title">من نحن؟</h2>
+        <p class="section-desc">تعرف على رؤية "براح العقارية" وكيف نساعدك في العثور على منزل أحلامك أو استثمارك الناجح في مدينة العبور.</p>
         
-        <a href="listings.html" class="cta-btn">
-            تصفح الوحدات <i class="fas fa-arrow-left"></i>
-        </a>
+        <div class="video-wrapper">
+            <iframe 
+                src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&controls=1&rel=0" 
+                title="BARAH Estate Video" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <div class="sell-banner">
+        <h2>استثمارك يبدأ من هنا</h2>
+        <p>سواء كنت تبحث عن السكن أو الاستثمار، نحن نوفر لك أفضل الفرص بعوائد مجزية.</p>
+        <a href="https://wa.me/20110557821" class="sell-btn">تحدث مع مستشار عقاري</a>
     </div>
 
     <div class="footer">
