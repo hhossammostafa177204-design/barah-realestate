@@ -24,7 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 1. قسم الهيدر (الشاشة الكاملة) --- */
+        /* --- 1. قسم الهيدر --- */
         .hero {
             height: 100vh;
             position: relative;
@@ -40,47 +40,54 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
         
-        /* 🔥🔥🔥 التعديل هنا: جعلنا الخلفية شفافة جداً في الأعلى 🔥🔥🔥 */
+        /* 🔥🔥🔥 التعديل الجذري: شيلنا اللون الأسود تماماً من فوق 🔥🔥🔥 */
         .bg-container::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* تم تغيير rgba(0,0,0,0.2) إلى transparent لتوضيح السماء والفيلا */
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8) 80%, var(--bg) 100%);
+            /* تدرج شفاف تماماً يظهر الصورة بطبيعتها، ويغمق خفيف جداً من تحت فقط */
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
         }
         
         .bg-img {
             width: 100%; height: 100%; object-fit: cover;
+            /* شلنا أي فلتر كان بيغمق الصورة */
+            filter: brightness(1.1) contrast(1.1); /* تفتيح وزيادة وضوح بسيطة */
             animation: zoomBg 20s infinite alternate;
         }
         @keyframes zoomBg { from { transform: scale(1); } to { transform: scale(1.1); } }
 
-        /* الناف بار - تعديل بسيط لزيادة وضوح اللوجو مع الخلفية الفاتحة */
+        /* الناف بار */
         .navbar {
             position: absolute; top: 0; width: 100%;
             padding: 20px 50px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 10; box-sizing: border-box;
+            /* خلفية خفيفة جداً للقائمة عشان اللوجو يبان */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent);
         }
-        .logo { font-size: 1.8rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; text-decoration: none; text-shadow: 0 2px 15px rgba(0,0,0,0.9); }
+        .logo { font-size: 1.8rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; text-decoration: none; text-shadow: 0 2px 10px #000; }
         .logo span { color: #fff; }
         
         .nav-btn {
-            text-decoration: none; color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.4);
+            text-decoration: none; color: #fff; font-weight: bold; border: 1px solid rgba(255,255,255,0.6);
             padding: 10px 25px; border-radius: 50px; transition: 0.3s;
-            backdrop-filter: blur(10px); background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px); background: rgba(0,0,0,0.3);
+            text-shadow: 0 2px 5px #000;
         }
         .nav-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        /* نصوص الهيدر - زيادة الظل عشان الكلام يبقى واضح فوق الخلفية الفاتحة */
+        /* نصوص الهيدر - زودنا الضل الأسود عشان الكلام يبان فوق الفيلا الفاتحة */
         h1 {
             font-size: 4rem; margin: 0; font-weight: 900;
-            text-shadow: 0 5px 25px rgba(0,0,0,1);
+            text-shadow: 2px 2px 20px #000000; /* ضل قوي */
             line-height: 1.2;
         }
-        h1 span { color: var(--gold); }
+        h1 span { color: var(--gold); text-shadow: 2px 2px 20px rgba(0,0,0,0.8); }
         
         .slogan {
-            font-size: 1.3rem; color: #fff; margin: 20px 0 40px 0; max-width: 600px;
-            line-height: 1.6; text-shadow: 0 2px 15px rgba(0,0,0,1); font-weight: 500;
+            font-size: 1.4rem; color: #fff; margin: 20px 0 40px 0; max-width: 600px;
+            line-height: 1.6; 
+            text-shadow: 2px 2px 10px #000000; /* ضل قوي للقراءة */
+            font-weight: 600;
         }
 
         .cta-btn {
@@ -88,11 +95,11 @@
             text-decoration: none; border-radius: 50px; transition: 0.3s;
             display: flex; align-items: center; gap: 15px;
             background: var(--gold); color: #000;
-            box-shadow: 0 0 20px var(--gold-glow);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); /* ضل للزرار */
         }
         .cta-btn:hover { transform: translateY(-5px); background: #fff; }
 
-        /* --- 2. قسم الاختصارات والخدمات --- */
+        /* --- باقي الأقسام كما هي --- */
         .features-section {
             padding: 60px 20px;
             max-width: 1200px; margin: -80px auto 0 auto;
@@ -135,7 +142,7 @@
         .feature-card h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
         .feature-card p { color: #aaa; font-size: 0.9rem; line-height: 1.5; margin: 0; }
 
-        /* --- 3. قسم الفيديو التعريفي --- */
+        /* --- قسم الفيديو --- */
         .video-section {
             padding: 60px 20px;
             max-width: 1000px; margin: 0 auto;
@@ -154,21 +161,13 @@
         }
         
         .video-wrapper iframe {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
 
-        .section-title {
-            font-size: 2.5rem; color: var(--gold);
-            margin-bottom: 20px; font-weight: 900;
-        }
-        
-        .section-desc {
-            color: #ccc; margin-bottom: 40px; font-size: 1.1rem;
-            max-width: 700px; margin-left: auto; margin-right: auto;
-        }
+        .section-title { font-size: 2.5rem; color: var(--gold); margin-bottom: 20px; font-weight: 900; }
+        .section-desc { color: #ccc; margin-bottom: 40px; font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto; }
 
-        /* --- 4. بانر اعرض عقارك --- */
+        /* --- بانر اعرض عقارك --- */
         .sell-banner {
             margin: 80px 20px;
             background: linear-gradient(45deg, #111, #222);
@@ -226,38 +225,32 @@
 
     <div class="features-section">
         <div class="features-grid">
-            
             <a href="listings.html" class="feature-card">
                 <div class="feature-icon"><i class="fas fa-search"></i></div>
                 <h3>ابحث عن عقارك</h3>
                 <p>تصفح مئات الوحدات السكنية والتجارية مع خيارات تصفية متقدمة.</p>
             </a>
-
             <a href="https://wa.me/20110557821?text=مرحباً، أرغب في عرض عقاري للبيع/الإيجار" class="feature-card">
                 <div class="feature-icon"><i class="fas fa-home"></i></div>
                 <h3>اعرض وحدتك</h3>
                 <p>هل تمتلك عقاراً؟ اعرضه معنا ليصل إلى آلاف المهتمين بالنخبة.</p>
             </a>
-
             <a href="services.html" class="feature-card">
                 <div class="feature-icon"><i class="fas fa-star"></i></div>
                 <h3>خدماتنا</h3>
                 <p>تعرف على باقة خدماتنا من تشطيبات، توثيق قانوني، واستشارات.</p>
             </a>
-
             <a href="contact.html" class="feature-card">
                 <div class="feature-icon"><i class="fas fa-headset"></i></div>
                 <h3>تواصل معنا</h3>
                 <p>فريقنا جاهز للرد على استفساراتك طوال أيام الأسبوع.</p>
             </a>
-
         </div>
     </div>
 
     <div class="video-section">
         <h2 class="section-title">من نحن؟</h2>
         <p class="section-desc">تعرف على رؤية "براح العقارية" وكيف نساعدك في العثور على منزل أحلامك أو استثمارك الناجح في مدينة العبور.</p>
-        
         <div class="video-wrapper">
             <iframe 
                 src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=0&controls=1&rel=0" 
