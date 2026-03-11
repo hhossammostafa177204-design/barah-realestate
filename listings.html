@@ -9,10 +9,10 @@
     <style>
         :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; --danger: #ff4444; --info: #33b5e5; }
         body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
-        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); box-sizing: border-box; }
         .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
         .logo span { color: #fff; }
-        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; cursor: pointer; }
+        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .nav-links a.active, .nav-links a:hover { color: var(--gold); }
         
         .search-container { background: #15181e; padding: 30px; border-bottom: 1px solid #333; }
@@ -47,6 +47,8 @@
         .details { color: #888; display: flex; gap: 15px; font-size: 0.9rem; border-top: 1px solid #333; padding-top: 15px; margin-top: 10px; }
         .details span { display: flex; align-items: center; gap: 5px; }
         .details i { color: var(--gold); }
+
+        @media (max-width: 768px) { .navbar { padding: 15px 20px; } .grid { padding: 20px; } }
     </style>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -56,8 +58,8 @@
         <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
         <div class="nav-links">
             <a href="index.html">الرئيسية</a>
-            <a href="listings.html" class="active" onclick="filter()">المعرض</a>
-            <a onclick="showWishlist()"><i class="fas fa-heart" style="color:var(--danger)"></i> المفضلة</a>
+            <a href="listings.html" class="active">المعرض</a>
+            <a href="favorites.html"><i class="fas fa-heart" style="color:var(--danger)"></i> المفضلة</a>
             <a href="contact.html">تواصل معنا</a>
         </div>
     </nav>
@@ -96,23 +98,26 @@
             render(allData);
         });
 
+        // دالة إضافة وحذف العقار من المفضلة وحفظه في الجهاز
         function toggleWishlist(e, id) {
             e.preventDefault(); // منع فتح صفحة التفاصيل
             const index = wishlist.indexOf(id);
-            if(index > -1) { wishlist.splice(index, 1); e.currentTarget.classList.remove('active'); e.currentTarget.innerHTML = '<i class="far fa-heart"></i>'; }
-            else { wishlist.push(id); e.currentTarget.classList.add('active'); e.currentTarget.innerHTML = '<i class="fas fa-heart"></i>'; }
+            if(index > -1) { 
+                wishlist.splice(index, 1); 
+                e.currentTarget.classList.remove('active'); 
+                e.currentTarget.innerHTML = '<i class="far fa-heart"></i>'; 
+            } else { 
+                wishlist.push(id); 
+                e.currentTarget.classList.add('active'); 
+                e.currentTarget.innerHTML = '<i class="fas fa-heart"></i>'; 
+            }
             localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
         }
 
-        function showWishlist() {
-            const res = allData.filter(x => wishlist.includes(x.id));
-            render(res, true);
-        }
-
-        function render(list, isWishlist = false) {
+        function render(list) {
             const g = document.getElementById('grid');
             g.innerHTML = "";
-            if(list.length===0) { g.innerHTML=`<p style='text-align:center; grid-column:1/-1; font-size:1.2rem; color:#aaa;'>${isWishlist ? 'لا توجد عقارات في المفضلة بعد.' : 'لا توجد نتائج مطابقة للبحث.'}</p>`; return; }
+            if(list.length===0) { g.innerHTML=`<p style='text-align:center; grid-column:1/-1; font-size:1.2rem; color:#aaa;'>لا توجد نتائج مطابقة للبحث.</p>`; return; }
             
             list.forEach(u => {
                 const img = (u.images && u.images.length > 0) ? u.images[0] : 'https://via.placeholder.com/300';
@@ -136,7 +141,7 @@
                         ${statusHtml}
                         <span class="badge">${u.type==='sale'?'تمليك':'إيجار'}</span>
                         <img src="${img}" class="card-img" loading="lazy">
-                        <div class="wishlist-btn ${heartClass}" onclick="toggleWishlist(event, '${u.id}')"><i class="${heartIcon}"></i></div>
+                        <div class="wishlist-btn ${heartClass}" onclick="toggleWishlist(event, '${u.id}')" title="أضف للمفضلة"><i class="${heartIcon}"></i></div>
                     </div>
                     <div class="card-body">
                         <div class="price">${Number(u.price).toLocaleString()} EGP</div>
