@@ -10,21 +10,34 @@
         :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; }
         body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
         
-        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; }
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;}
         .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
-        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; }
-        .nav-links a.active { color: var(--gold); }
+        .logo span { color: #fff; }
+        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; transition: 0.3s;}
+        .nav-links a.active, .nav-links a:hover { color: var(--gold); }
 
-        .container { max-width: 800px; margin: 50px auto; padding: 20px; text-align: center; }
+        .container { max-width: 900px; margin: 50px auto; padding: 20px; text-align: center; }
         h1 { color: var(--gold); margin-bottom: 40px; font-size: 2.5rem; }
         
-        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 50px; }
         
         .box { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #333; transition: 0.3s; }
         .box:hover { border-color: var(--gold); transform: translateY(-10px); }
         .box i { font-size: 3rem; color: var(--gold); margin-bottom: 20px; }
         .box h3 { margin-bottom: 10px; }
         .box a { color: #fff; text-decoration: none; font-size: 1.2rem; }
+        .box p { margin: 0; font-size: 1.2rem; color: #ccc; }
+
+        /* --- تنسيقات فورم الواتساب الذكي --- */
+        .smart-form { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #333; max-width: 600px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: right; }
+        .smart-form h3 { color: var(--gold); text-align: center; margin-top: 0; margin-bottom: 30px; font-size: 1.8rem; }
+        .smart-form .input-group { margin-bottom: 20px; }
+        .smart-form input, .smart-form select, .smart-form textarea { width: 100%; padding: 15px; background: #111; border: 1px solid #333; color: #fff; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; outline: none; transition: 0.3s; font-size: 1rem; }
+        .smart-form input:focus, .smart-form select:focus, .smart-form textarea:focus { border-color: var(--gold); }
+        .smart-form .btn-wa-submit { width: 100%; padding: 15px; background: #25D366; color: #fff; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s; font-family: 'Tajawal'; margin-top: 10px;}
+        .smart-form .btn-wa-submit:hover { background: #1ebe5d; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2); }
+
+        @media (max-width: 768px) { .navbar { padding: 15px 20px; } }
     </style>
 </head>
 <body>
@@ -34,12 +47,14 @@
         <div class="nav-links">
             <a href="index.html">الرئيسية</a>
             <a href="listings.html">المعرض</a>
+            <a href="favorites.html"><i class="fas fa-heart" style="color:var(--danger)"></i> المفضلة</a>
             <a href="contact.html" class="active">تواصل معنا</a>
         </div>
     </nav>
 
     <div class="container">
         <h1>تواصل مع النخبة</h1>
+        
         <div class="contact-grid">
             <div class="box">
                 <i class="fab fa-whatsapp"></i>
@@ -57,8 +72,50 @@
                 <p>العبور - الحي التاسع</p>
             </div>
         </div>
+
+        <div class="smart-form">
+            <h3><i class="fab fa-whatsapp"></i> أرسل طلبك مباشرة</h3>
+            <div class="input-group">
+                <input type="text" id="clientName" placeholder="الاسم الكريم" required>
+            </div>
+            <div class="input-group">
+                <select id="requestType">
+                    <option value="" disabled selected>اختر نوع الطلب...</option>
+                    <option value="شراء عقار">أريد شراء عقار</option>
+                    <option value="بيع عقار">أريد عرض عقاري للبيع</option>
+                    <option value="استفسار عام">استفسار عام</option>
+                    <option value="طلب تشطيب">طلب خدمات تشطيب</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <textarea id="clientDetails" rows="4" placeholder="اكتب تفاصيل طلبك (مثال: أبحث عن فيلا في الحي التاسع بحدود 5 مليون)..."></textarea>
+            </div>
+            <button onclick="sendToWhatsApp()" class="btn-wa-submit">
+                إرسال عبر واتساب <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+
     </div>
 
+    <script>
+        function sendToWhatsApp() {
+            const name = document.getElementById('clientName').value.trim();
+            const type = document.getElementById('requestType').value;
+            const details = document.getElementById('clientDetails').value.trim();
+            
+            if(!name) { alert("برجاء إدخال الاسم الكريم!"); return; }
+            if(!type) { alert("برجاء اختيار نوع الطلب!"); return; }
+
+            // تنسيق الرسالة لتبدو احترافية على الواتساب
+            const message = `مرحباً براح العقارية،%0A%0A*الاسم:* ${name}%0A*نوع الطلب:* ${type}%0A*التفاصيل:* ${details || 'لا توجد تفاصيل إضافية'}%0A%0Aتم الإرسال من نموذج التواصل بالموقع.`;
+            
+            // رقم الإدارة الخاص بكم
+            const adminPhone = "20110557821"; 
+            
+            // فتح الواتساب
+            window.open(`https://wa.me/${adminPhone}?text=${message}`, '_blank');
+        }
+    </script>
     <script src="main.js"></script>
 </body>
 </html>
