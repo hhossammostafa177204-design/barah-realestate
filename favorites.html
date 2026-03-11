@@ -4,8 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BARAH ESTATE | المفضلة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --bg-body: #f8f9fa;
+            --bg-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-muted: #6c757d;
+            --border-color: #e0e0e0;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; padding-top: 75px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* --- الناف بار --- */
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: var(--bg-white); border-bottom: 1px solid var(--border-color); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-size: 1.6rem; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 0.5px; }
+        .logo span { color: var(--text-dark); font-weight: 800; }
+        .nav-links { display: flex; align-items: center; gap: 20px; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+        .btn-add { background: var(--text-dark); color: #fff !important; padding: 8px 20px; border-radius: 50px; font-weight: 700; transition: 0.3s; border: 2px solid var(--text-dark); }
+        .btn-add:hover { background: var(--bg-white); color: var(--text-dark) !important; }
+
+        /* --- رأس الصفحة --- */
+        .page-header { background: var(--bg-white); padding: 30px 50px; border-bottom: 1px solid var(--border-color); }
+        .page-header h1 { margin: 0; font-size: 1.8rem; color: var(--text-dark); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .page-header p { margin: 5px 0 0 0; color: var(--text-muted); font-size: 1rem; }
+
+        /* --- شبكة الكروت (نفس المعرض) --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 40px 50px; max-width: 1400px; margin: 0 auto; flex: 1; width: 100%; box-sizing: border-box; }
+        
+        .card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: 0.2s; position: relative; }
+        .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #ccc; transform: translateY(-2px); }
+
+        .card-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; background: #eee; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .card:hover .card-img { transform: scale(1.05); }
+        
+        .badge-type { position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 0.8rem; }
+        
+        /* زر الحذف */
+        .remove-btn { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); border: none; color: var(--danger); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10; }
+        .remove-btn:hover { background: var(--danger); color: #fff; }
+
+        .card-body { padding: 15px; display: flex; flex-direction: column; flex: 1; }
+        .card-price { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); margin: 0 0 5px 0; }
+        .card-title { font-size: 1.05rem; font-weight: 500; color: #444; margin: 0 0 10px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; height: 42px; }
+        
+        .card-specs { display: flex; gap: 15px; margin-bottom: 15px; color: var(--text-dark); font-weight: 600; font-size: 0.9rem; }
+        .card-specs span { display: flex; align-items: center; gap: 5px; }
+        .card-specs i { color: var(--text-muted); font-size: 1rem; }
+
+        .card-footer { border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted); }
+        .card-location { display: flex; align-items: center; gap: 5px; }
+
+        /* --- حالة فارغة --- */
+        .empty-state { text-align: center; grid-column: 1/-1; padding: 60px 20px; background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 8px; }
+        .empty-state i { font-size: 4rem; color: #ddd; margin-bottom: 15px; }
+        .empty-state h2 { color: var(--text-dark); margin-bottom: 10px; font-size: 1.5rem; }
+        .empty-state p { color: var(--text-muted); margin-bottom: 25px; }
+        .btn-main { background: var(--gold); color: #000; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 800; font-size: 1.1rem; transition: 0.2s; display: inline-block; }
+        .btn-main:hover { background: #b5952f; }
+
+        @media (max-width: 768px) { 
+            .navbar { padding: 15px 20px; } .nav-text { display: none; }
+            .page-header { padding: 20px; } .grid { padding: 20px; }
+        }
+    </style>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
@@ -16,18 +85,18 @@
         <div class="nav-links">
             <a href="index.html">الرئيسية</a>
             <a href="listings.html">المعرض</a>
-            <a href="favorites.html" class="active"><i class="fas fa-heart" style="color:var(--danger)"></i> المفضلة</a>
-            <a href="contact.html">تواصل معنا</a>
+            <a href="favorites.html" class="active"><i class="fas fa-heart" style="color:var(--danger)"></i> <span class="nav-text">المفضلة</span></a>
+            <a href="contact.html" class="btn-add"><i class="fas fa-plus"></i> <span class="nav-text">أضف عقارك</span></a>
         </div>
     </nav>
 
     <div class="page-header">
-        <h1><i class="fas fa-heart" style="color:var(--danger)"></i> عقاراتك المفضلة</h1>
+        <h1><i class="fas fa-heart" style="color:var(--danger)"></i> الإعلانات المفضلة</h1>
         <p>قائمة بالعقارات التي قمت بحفظها للرجوع إليها لاحقاً</p>
     </div>
 
     <div class="grid" id="favoritesGrid">
-        <p style="text-align:center; grid-column:1/-1; font-size:1.2rem; color:var(--gold);">جاري تحميل مفضلتك <i class="fas fa-spinner fa-spin"></i></p>
+        <p style="text-align:center; grid-column:1/-1; color:var(--text-muted);">جاري تحميل مفضلتك <i class="fas fa-spinner fa-spin"></i></p>
     </div>
 
     <script>
@@ -41,66 +110,84 @@
         function showEmptyState() {
             grid.innerHTML = `
                 <div class="empty-state">
-                    <i class="fas fa-heart-broken"></i>
-                    <h2>لم تقم بحفظ أي عقارات بعد!</h2>
-                    <p>تصفح المعرض الآن واحفظ العقارات التي تناسبك لسهولة الوصول إليها.</p>
-                    <a href="listings.html" class="btn-main">تصفح المعرض الآن</a>
+                    <i class="far fa-heart"></i>
+                    <h2>لا توجد إعلانات في المفضلة</h2>
+                    <p>قم بتصفح المعرض واحفظ العقارات التي تناسبك لمقارنتها لاحقاً.</p>
+                    <a href="listings.html" class="btn-main">تصفح العقارات الآن</a>
                 </div>
             `;
         }
 
         function loadFavorites() {
             if(wishlist.length === 0) { showEmptyState(); return; }
+            
             const promises = wishlist.map(id => db.collection("apartments").doc(id).get());
             
             Promise.all(promises).then(docs => {
                 grid.innerHTML = "";
                 let hasValidItems = false;
+
                 docs.forEach(doc => {
                     if(doc.exists) {
                         hasValidItems = true;
                         const u = doc.data(); const id = doc.id;
-                        const img = (u.images && u.images.length > 0) ? u.images[0] : 'https://via.placeholder.com/300';
-                        let icon = 'fas fa-building';
-                        if(u.unitType === 'فيلا' || u.unitType === 'توين هاوس') icon = 'fas fa-home';
-                        if(u.unitType === 'أرض') icon = 'fas fa-vector-square';
+                        const img = (u.images && u.images.length > 0) ? u.images[0] : 'https://via.placeholder.com/400x300';
+                        
+                        const rooms = u.rooms ? `${u.rooms}` : '-';
+                        const baths = u.bathrooms ? `${u.bathrooms}` : '-';
+                        const area = u.area ? `${u.area}` : '-';
 
                         grid.innerHTML += `
                         <a href="details.html?id=${id}" class="card" id="card-${id}">
-                            <div class="img-wrap">
-                                <span class="badge">${u.type==='sale'?'تمليك':'إيجار'}</span>
-                                <img src="${img}" class="card-img" loading="lazy">
-                                <button class="remove-btn" onclick="removeFromWishlist(event, '${id}')" title="حذف من المفضلة"><i class="fas fa-trash-alt"></i></button>
+                            <div class="card-img-wrap">
+                                <span class="badge-type">${u.type==='sale'?'للبيع':'للإيجار'}</span>
+                                <img src="${img}" class="card-img" loading="lazy" alt="${u.title}">
+                                <button class="remove-btn" onclick="removeFromWishlist(event, '${id}')" title="حذف من المفضلة">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                             <div class="card-body">
-                                <div class="price">${Number(u.price).toLocaleString()} EGP</div>
-                                <div class="title">${u.title}</div>
-                                <div class="details">
-                                    <span><i class="fas fa-map-marker-alt"></i> ${u.district}</span>
-                                    <span><i class="${icon}"></i> ${u.unitType||'وحدة'}</span>
-                                    <span><i class="fas fa-ruler-combined"></i> ${u.area}م</span>
+                                <h3 class="card-price">${Number(u.price).toLocaleString()} ج.م</h3>
+                                <p class="card-title">${u.title}</p>
+                                <div class="card-specs">
+                                    <span title="غرف"><i class="fas fa-bed"></i> ${rooms}</span>
+                                    <span title="حمامات"><i class="fas fa-bath"></i> ${baths}</span>
+                                    <span title="مساحة"><i class="fas fa-ruler-combined"></i> ${area}م²</span>
+                                </div>
+                                <div class="card-footer">
+                                    <span class="card-location"><i class="fas fa-map-marker-alt"></i> ${u.district}</span>
+                                    <span>مُضاف حديثاً</span>
                                 </div>
                             </div>
                         </a>`;
                     } else {
+                        // تنظيف اللوكال ستوريدج لو العقار اتمسح من الإدارة
                         wishlist = wishlist.filter(itemId => itemId !== doc.id);
                         localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
                     }
                 });
+
                 if(!hasValidItems) showEmptyState();
-            }).catch(error => { grid.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:red;'>حدث خطأ أثناء تحميل البيانات.</p>"; });
+            }).catch(error => {
+                grid.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:red;'>حدث خطأ أثناء تحميل البيانات.</p>";
+            });
         }
 
         function removeFromWishlist(event, id) {
             event.preventDefault(); 
             wishlist = wishlist.filter(itemId => itemId !== id);
             localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
+            
             const card = document.getElementById(`card-${id}`);
-            card.style.transform = 'scale(0)'; card.style.opacity = '0';
-            setTimeout(() => { card.remove(); if(wishlist.length === 0) showEmptyState(); }, 300);
+            card.style.transform = 'scale(0.8)'; card.style.opacity = '0';
+            
+            setTimeout(() => {
+                card.remove();
+                if(wishlist.length === 0) showEmptyState();
+            }, 200);
         }
+
         window.onload = loadFavorites;
     </script>
-    <script src="main.js"></script>
 </body>
 </html>

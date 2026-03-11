@@ -3,124 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARAH ESTATE | تفاصيل العقار</title>
+    <title>BARAH ESTATE | تفاصيل الإعلان</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --gold: #D4AF37;
-            --bg-body: #f8f9fa;
-            --bg-white: #ffffff;
-            --text-dark: #1a1a1a;
-            --text-muted: #6c757d;
-            --border-color: #e0e0e0;
-            --danger: #e74c3c;
-            --success: #25D366;
-            --info: #3498db;
+            --dz-red: #e00000; /* لون دوبيزل الأحمر */
+            --dz-red-hover: #c20000;
+            --dz-bg: #f2f4f5; /* لون خلفية دوبيزل */
+            --dz-white: #ffffff;
+            --dz-text-dark: #002f34; /* لون خطوط دوبيزل الكحلي الغامق */
+            --dz-text-muted: #406367;
+            --dz-border: #ccd5d6;
         }
 
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; padding-top: 75px; padding-bottom: 80px; }
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--dz-bg); color: var(--dz-text-dark); margin: 0; padding-top: 70px; padding-bottom: 80px; }
 
         /* --- الناف بار --- */
-        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: var(--bg-white); border-bottom: 1px solid var(--border-color); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo { font-size: 1.6rem; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 0.5px; }
-        .logo span { color: var(--text-dark); font-weight: 800; }
-        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
-        .nav-links a:hover { color: var(--gold); }
-
-        /* --- الحاوية الأساسية --- */
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: var(--dz-white); border-bottom: 1px solid var(--dz-border); padding: 10px 50px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .logo { font-size: 1.5rem; font-weight: 900; color: var(--dz-text-dark); text-decoration: none; }
+        .logo span { color: var(--dz-red); }
+        .nav-links a { text-decoration: none; color: var(--dz-text-dark); font-weight: 700; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
         
-        .breadcrumb { margin-bottom: 20px; font-size: 0.95rem; }
-        .breadcrumb a { color: var(--text-muted); text-decoration: none; font-weight: 600; }
-        .breadcrumb a:hover { color: var(--gold); }
-        .breadcrumb i { color: var(--text-muted); margin: 0 10px; font-size: 0.8rem; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .breadcrumb { font-size: 0.85rem; color: var(--dz-text-muted); margin-bottom: 15px; }
+        .breadcrumb a { color: var(--dz-text-dark); text-decoration: none; font-weight: 600; }
 
-        /* --- الصناديق البيضاء (Blocks) --- */
-        .content-block { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        /* --- تقسيمة دوبيزل (عمودين) --- */
+        .ad-layout { display: flex; gap: 20px; align-items: flex-start; }
+        .ad-main { flex: 1; min-width: 0; }
+        .ad-sidebar { width: 350px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
 
-        /* --- معرض الصور (Slider) --- */
-        .slider-wrapper { position: relative; width: 100%; height: 500px; border-radius: 12px; overflow: hidden; background: #000; margin-bottom: 25px; }
-        .slide-img { width: 100%; height: 100%; object-fit: contain; display: none; }
-        .slide-img.active { display: block; animation: fade 0.4s; }
-        .arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2rem; color: #fff; cursor: pointer; padding: 15px 20px; background: rgba(0,0,0,0.4); border-radius: 8px; z-index: 5; transition: 0.2s; }
-        .arrow:hover { background: rgba(0,0,0,0.7); color: var(--gold); }
-        .left { left: 15px; } .right { right: 15px; }
-        @keyframes fade { from{opacity:0.8} to{opacity:1} }
+        /* --- الصناديق البيضاء --- */
+        .box { background: var(--dz-white); border: 1px solid var(--dz-border); border-radius: 4px; padding: 20px; }
 
-        /* --- بيانات العقار الأساسية --- */
-        .main-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
-        .price-tag { font-size: 2.2rem; font-weight: 900; color: var(--text-dark); margin: 0 0 5px 0; }
-        .type-tag { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
-        .property-title { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); margin: 10px 0; line-height: 1.4; }
-        .property-location { color: var(--text-muted); font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        /* --- معرض الصور (Gallery) --- */
+        .gallery-container { background: #000; border-radius: 4px; overflow: hidden; margin-bottom: 20px; position: relative; }
+        .main-image-wrap { width: 100%; height: 450px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .main-image { max-width: 100%; max-height: 100%; object-fit: contain; }
         
-        /* أزرار المشاركة */
-        .share-group { display: flex; gap: 10px; }
-        .share-btn { width: 45px; height: 45px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-body); display: flex; justify-content: center; align-items: center; color: var(--text-dark); font-size: 1.2rem; cursor: pointer; transition: 0.2s; text-decoration: none;}
-        .share-btn:hover { background: var(--border-color); }
+        /* أسهم التقليب */
+        .gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--dz-text-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
+        .gallery-arrow.right { right: 15px; }
+        .gallery-arrow.left { left: 15px; }
 
-        /* --- المواصفات (الجدول السريع) --- */
-        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; text-align: center; }
-        .spec-item { padding: 15px; background: var(--bg-body); border-radius: 8px; border: 1px solid var(--border-color); }
-        .spec-item i { font-size: 1.5rem; color: var(--text-muted); margin-bottom: 10px; display: block; }
-        .spec-value { font-weight: 800; font-size: 1.1rem; color: var(--text-dark); }
-        .spec-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+        /* الصور المصغرة */
+        .thumbnails { display: flex; gap: 10px; padding: 10px; overflow-x: auto; background: var(--dz-white); border: 1px solid var(--dz-border); border-top: none; border-radius: 0 0 4px 4px; margin-top: -20px; margin-bottom: 20px;}
+        .thumb-img { width: 80px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: 0.6; transition: 0.2s; border: 2px solid transparent; }
+        .thumb-img.active { opacity: 1; border-color: var(--dz-red); }
 
-        /* --- العناوين الفرعية --- */
-        .section-title { font-size: 1.3rem; font-weight: 800; color: var(--text-dark); border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-bottom: 20px; display: inline-block; }
+        /* --- السايد بار (مربع السعر والعنوان) --- */
+        .price-box { margin-bottom: 15px; }
+        .price-row { display: flex; justify-content: space-between; align-items: flex-start; }
+        .ad-price { font-size: 2rem; font-weight: 900; color: var(--dz-text-dark); margin: 0 0 10px 0; }
         
-        .desc-text { line-height: 1.9; font-size: 1.05rem; color: #444; white-space: pre-wrap; }
-        
-        /* --- المميزات --- */
-        .amenities-list { display: flex; flex-wrap: wrap; gap: 10px; }
-        .am-badge { background: var(--bg-body); border: 1px solid var(--border-color); padding: 8px 15px; border-radius: 50px; font-weight: 600; font-size: 0.95rem; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
-        .am-badge i { color: var(--gold); }
+        .ad-actions { display: flex; gap: 10px; }
+        .action-icon { background: none; border: none; font-size: 1.5rem; color: var(--dz-text-dark); cursor: pointer; transition: 0.2s; }
+        .action-icon:hover { color: var(--dz-red); }
 
-        /* --- حالة العقار (مباع) --- */
-        .status-alert { padding: 15px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; text-align: center; margin-bottom: 20px; border: 2px solid; }
-        .sold-alert { background: #fdf3f2; border-color: var(--danger); color: var(--danger); }
-        .rented-alert { background: #f0f8ff; border-color: var(--info); color: var(--info); }
+        .ad-title { font-size: 1.1rem; font-weight: 500; margin: 0 0 15px 0; line-height: 1.5; }
+        .ad-location { font-size: 0.9rem; color: var(--dz-text-muted); display: flex; justify-content: space-between; align-items: center; }
 
-        /* --- الشريط السفلي للاتصال السريع --- */
-        .contact-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-white); border-top: 1px solid var(--border-color); padding: 15px; display: flex; gap: 15px; z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); box-sizing: border-box;}
-        .contact-btn { flex: 1; padding: 15px; border-radius: 8px; font-weight: 800; font-size: 1.1rem; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; border: none; font-family: 'Tajawal'; cursor: pointer;}
-        .btn-wa { background: var(--success); color: #fff; }
-        .btn-wa:hover { background: #20ba56; }
-        .btn-call { background: var(--text-dark); color: #fff; }
-        .btn-call:hover { background: #000; }
+        /* --- السايد بار (معلومات المعلن) --- */
+        .seller-title { font-size: 1.2rem; font-weight: 800; margin: 0 0 15px 0; }
+        .seller-info { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .seller-avatar { width: 60px; height: 60px; border-radius: 50%; background: var(--dz-bg); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--dz-text-muted); }
+        .seller-name { font-weight: 800; font-size: 1.1rem; margin: 0; }
+        .seller-date { font-size: 0.85rem; color: var(--dz-text-muted); margin: 5px 0 0 0; }
 
-        /* --- الإشعار الذكي (مُعدل للتصميم الفاتح) --- */
-        .social-proof-toast {
-            position: fixed; bottom: 100px; right: -400px; background: var(--bg-white);
-            border: 1px solid var(--border-color); border-right: 4px solid var(--danger);
-            color: var(--text-dark); padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 15px;
-            z-index: 9999; transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); max-width: 320px;
-        }
-        .social-proof-toast.show { right: 20px; }
-        .social-proof-icon { font-size: 1.5rem; color: #ff9800; animation: pulse 2s infinite; }
-        .social-proof-text { font-size: 0.95rem; line-height: 1.4; font-weight: 600; }
-        .social-proof-text strong { color: var(--danger); font-weight: 900; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        .btn-full { width: 100%; padding: 12px; border-radius: 4px; font-weight: 800; font-size: 1.1rem; text-align: center; cursor: pointer; transition: 0.2s; border: 2px solid; display: flex; justify-content: center; align-items: center; gap: 10px; font-family: 'Tajawal'; text-decoration: none;}
+        .btn-call { background: var(--dz-text-dark); color: var(--dz-white); border-color: var(--dz-text-dark); margin-bottom: 10px; }
+        .btn-call:hover { background: #001a1d; }
+        .btn-chat { background: var(--dz-white); color: var(--dz-text-dark); border-color: var(--dz-text-dark); }
+        .btn-chat:hover { border-width: 3px; }
 
-        /* --- عقارات مشابهة --- */
-        .similar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .sim-card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; display: block; transition: 0.2s; }
-        .sim-card:hover { border-color: #ccc; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .sim-img { width: 100%; height: 150px; object-fit: cover; }
-        .sim-body { padding: 15px; }
-        .sim-price { font-weight: 900; font-size: 1.1rem; color: var(--text-dark); }
-        .sim-title { font-size: 0.9rem; color: var(--text-muted); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* --- المواصفات (التفاصيل) --- */
+        .details-title { font-size: 1.5rem; font-weight: 800; margin: 0 0 20px 0; border-bottom: 1px solid var(--dz-border); padding-bottom: 15px; }
+        .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .spec-row { display: flex; justify-content: space-between; border-bottom: 1px solid var(--dz-border); padding-bottom: 10px; font-size: 0.95rem; }
+        .spec-label { color: var(--dz-text-muted); }
+        .spec-value { font-weight: 700; color: var(--dz-text-dark); }
 
-        @media (max-width: 768px) {
-            .navbar { padding: 15px 20px; }
-            .nav-text { display: none; }
-            .slider-wrapper { height: 300px; }
-            .price-tag { font-size: 1.8rem; }
-            .property-title { font-size: 1.3rem; }
-            .social-proof-toast { bottom: 90px; right: 0; left: 0; margin: 0 auto; width: 90%; max-width: none; transform: translateY(150%); transition: transform 0.5s ease; }
-            .social-proof-toast.show { right: 0; transform: translateY(0); }
+        /* --- الوصف --- */
+        .desc-text { line-height: 1.8; font-size: 1.05rem; white-space: pre-wrap; color: var(--dz-text-dark); }
+
+        /* --- موبايل ريسبونسيف --- */
+        .mobile-contact-bar { display: none; }
+        @media (max-width: 900px) {
+            .ad-layout { flex-direction: column; }
+            .ad-sidebar { width: 100%; order: -1; } /* رفع السعر فوق في الموبايل */
+            .main-image-wrap { height: 300px; }
+            .specs-grid { grid-template-columns: 1fr; }
+            .mobile-contact-bar { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--dz-white); padding: 10px 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; box-sizing: border-box; gap: 10px; border-top: 1px solid var(--dz-border);}
+            .seller-box .btn-full { display: none; } /* إخفاء الزراير من المربع في الموبايل لأنها تحت */
+            body { padding-bottom: 80px; }
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -130,23 +106,16 @@
     
     <nav class="navbar">
         <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
-        <div class="nav-links">
-            <a href="listings.html"><i class="fas fa-arrow-right"></i> <span class="nav-text">رجوع للمعرض</span></a>
-        </div>
+        <div class="nav-links"><a href="listings.html"><i class="fas fa-arrow-right"></i> العودة للبحث</a></div>
     </nav>
 
     <div class="container" id="content">
-        <p style="text-align:center; font-size:1.2rem; color:var(--text-muted); margin-top:50px;">جاري تحميل بيانات العقار <i class="fas fa-spinner fa-spin"></i></p>
+        <p style="text-align:center; font-size:1.2rem; color:var(--dz-text-muted); margin-top:50px;">جاري تحميل الإعلان...</p>
     </div>
 
-    <div class="contact-bar" id="actions" style="display:none;">
-        <a href="#" class="contact-btn btn-wa" id="btnWa"><i class="fab fa-whatsapp"></i> واتساب</a>
-        <a href="#" class="contact-btn btn-call" id="btnCall"><i class="fas fa-phone-alt"></i> اتصال</a>
-    </div>
-
-    <div id="socialProof" class="social-proof-toast">
-        <div class="social-proof-icon" id="spIcon"><i class="fas fa-fire"></i></div>
-        <div class="social-proof-text" id="socialProofMsg">...</div>
+    <div class="mobile-contact-bar" id="mobileActions" style="display:none;">
+        <a href="#" class="btn-full btn-call" id="btnCallMob" style="margin:0;"><i class="fas fa-phone-alt"></i> اتصال</a>
+        <a href="#" class="btn-full btn-chat" id="btnWaMob" style="margin:0;"><i class="fab fa-whatsapp"></i> محادثة</a>
     </div>
 
     <script>
@@ -155,185 +124,131 @@
         const db = firebase.firestore();
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        let currentSlide = 0; let currentDistrict = '';
+        let currentSlide = 0;
+        let imagesArray = [];
 
         if(id){
             db.collection("apartments").doc(id).get().then(doc => {
                 if(doc.exists){
-                    const d = doc.data(); currentDistrict = d.district;
+                    const d = doc.data(); 
                     
-                    // الصور
-                    const imgs = d.images && d.images.length ? d.images : ['https://via.placeholder.com/800x600'];
-                    let slidesHtml = '';
-                    imgs.forEach((src, i) => slidesHtml += `<img src="${src}" class="slide-img ${i===0?'active':''}" loading="lazy">`);
-                    
-                    // المميزات
-                    let amHtml = '<p style="color:var(--text-muted);">لا توجد مميزات إضافية مسجلة.</p>';
-                    if (d.amenities && d.amenities.length > 0) { amHtml = d.amenities.map(a => `<div class="am-badge"><i class="fas fa-check-circle"></i> ${a}</div>`).join(''); }
+                    // إعداد الصور
+                    imagesArray = d.images && d.images.length ? d.images : ['https://via.placeholder.com/800x600'];
+                    let thumbsHtml = '';
+                    imagesArray.forEach((src, i) => {
+                        thumbsHtml += `<img src="${src}" class="thumb-img ${i===0?'active':''}" onclick="setSlide(${i})" id="thumb-${i}">`;
+                    });
 
-                    // الفيديو
-                    let videoHtml = '';
-                    if(d.youtube) {
-                        let videoId = '';
-                        if(d.youtube.includes('v=')) { videoId = d.youtube.split('v=')[1].split('&')[0]; } 
-                        else if(d.youtube.includes('youtu.be/')) { videoId = d.youtube.split('youtu.be/')[1].split('?')[0]; }
-                        if(videoId) {
-                            videoHtml = `
-                                <div class="content-block">
-                                    <h3 class="section-title">فيديو العقار</h3>
-                                    <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; border:1px solid var(--border-color);">
-                                        <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    }
+                    // بيانات الموبايل للزراير
+                    const phone = d.marketerPhone || '20110557821';
+                    const waLink = `https://wa.me/${phone}?text=مرحباً، أستفسر بخصوص إعلان: ${d.title} %0Aالرابط: ${window.location.href}`;
+                    const callLink = `tel:${phone}`;
 
-                    // حالة العقار
-                    let statusBox = '';
-                    if(d.status === 'sold') statusBox = `<div class="status-alert sold-alert"><i class="fas fa-times-circle"></i> عذراً، هذا العقار تم بيعه بالكامل.</div>`;
-                    else if(d.status === 'rented') statusBox = `<div class="status-alert rented-alert"><i class="fas fa-info-circle"></i> عذراً، هذا العقار تم تأجيره.</div>`;
+                    // تاريخ النشر (تقريبي أو لو موجود)
+                    const postDate = "مُضاف حديثاً";
 
-                    // روابط المشاركة
-                    const currentUrl = encodeURIComponent(window.location.href);
-                    const shareText = encodeURIComponent(`شاهد هذا العقار من براح العقارية: ${d.title}`);
-
-                    // بناء هيكل الصفحة
                     document.getElementById('content').innerHTML = `
                         <div class="breadcrumb">
-                            <a href="index.html">الرئيسية</a> <i class="fas fa-chevron-left"></i>
-                            <a href="listings.html">عقارات العبور</a> <i class="fas fa-chevron-left"></i>
-                            <span>${d.title}</span>
+                            <a href="index.html">الرئيسية</a> > <a href="listings.html">عقارات العبور</a> > ${d.district}
                         </div>
 
-                        ${statusBox}
-
-                        <div class="slider-wrapper">
-                            ${slidesHtml}
-                            <div class="arrow left" onclick="move(-1)"><i class="fas fa-chevron-left"></i></div>
-                            <div class="arrow right" onclick="move(1)"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-
-                        <div class="content-block">
-                            <div class="main-header">
-                                <div>
-                                    <h2 class="price-tag">${Number(d.price).toLocaleString()} ج.م <span class="type-tag">(${d.type==='sale'?'للبيع':'للإيجار'})</span></h2>
-                                    <h1 class="property-title">${d.title}</h1>
-                                    <div class="property-location"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> مدينة العبور - ${d.district}</div>
+                        <div class="ad-layout">
+                            
+                            <div class="ad-sidebar">
+                                <div class="box price-box">
+                                    <div class="price-row">
+                                        <h2 class="ad-price">${Number(d.price).toLocaleString()} ج.م</h2>
+                                        <div class="ad-actions">
+                                            <button onclick="copyLink()" class="action-icon" title="مشاركة"><i class="fas fa-share-alt"></i></button>
+                                            <button class="action-icon" title="حفظ"><i class="far fa-heart"></i></button>
+                                        </div>
+                                    </div>
+                                    <p class="ad-title">${d.title}</p>
+                                    <div class="ad-location">
+                                        <span><i class="fas fa-map-marker-alt"></i> العبور - ${d.district}</span>
+                                        <span>${postDate}</span>
+                                    </div>
                                 </div>
-                                <div class="share-group">
-                                    <button onclick="copyLink()" class="share-btn" title="نسخ الرابط"><i class="fas fa-link"></i></button>
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${currentUrl}" target="_blank" class="share-btn" style="color:#1877F2; border-color:#1877F2;" title="فيسبوك"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="https://wa.me/?text=${shareText}%0A${currentUrl}" target="_blank" class="share-btn" style="color:#25D366; border-color:#25D366;" title="واتساب"><i class="fab fa-whatsapp"></i></a>
+
+                                <div class="box seller-box">
+                                    <h3 class="seller-title">معلومات المعلن</h3>
+                                    <div class="seller-info">
+                                        <div class="seller-avatar"><i class="fas fa-user-tie"></i></div>
+                                        <div>
+                                            <p class="seller-name">براح العقارية</p>
+                                            <p class="seller-date">عضو منذ 2024</p>
+                                        </div>
+                                    </div>
+                                    <a href="${callLink}" class="btn-full btn-call"><i class="fas fa-phone-alt"></i> أظهر الرقم</a>
+                                    <a href="${waLink}" target="_blank" class="btn-full btn-chat"><i class="fab fa-whatsapp"></i> محادثة واتساب</a>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="content-block">
-                            <h3 class="section-title">المواصفات</h3>
-                            <div class="specs-grid">
-                                <div class="spec-item"><i class="fas fa-ruler-combined"></i><div class="spec-value">${d.area || '-'} م²</div><div class="spec-label">المساحة</div></div>
-                                <div class="spec-item"><i class="fas fa-bed"></i><div class="spec-value">${d.rooms || '-'}</div><div class="spec-label">غرف النوم</div></div>
-                                <div class="spec-item"><i class="fas fa-bath"></i><div class="spec-value">${d.bathrooms || '-'}</div><div class="spec-label">الحمامات</div></div>
-                                <div class="spec-item"><i class="fas fa-layer-group"></i><div class="spec-value">${d.floor || '-'}</div><div class="spec-label">الطابق</div></div>
-                                <div class="spec-item"><i class="fas fa-paint-roller"></i><div class="spec-value" style="font-size:0.9rem;">${d.finishing || 'غير محدد'}</div><div class="spec-label">التشطيب</div></div>
+                            <div class="ad-main">
+                                <div class="gallery-container">
+                                    <div class="main-image-wrap">
+                                        <button class="gallery-arrow right" onclick="move(-1)"><i class="fas fa-chevron-right"></i></button>
+                                        <img src="${imagesArray[0]}" id="mainImg" class="main-image">
+                                        <button class="gallery-arrow left" onclick="move(1)"><i class="fas fa-chevron-left"></i></button>
+                                    </div>
+                                </div>
+                                <div class="thumbnails">${thumbsHtml}</div>
+
+                                <div class="box" style="margin-bottom: 20px;">
+                                    <h3 class="details-title">التفاصيل</h3>
+                                    <div class="specs-grid">
+                                        <div class="spec-row"><span class="spec-label">نوع العقار</span><span class="spec-value">${d.unitType || 'غير محدد'}</span></div>
+                                        <div class="spec-row"><span class="spec-label">نوع العرض</span><span class="spec-value">${d.type === 'sale' ? 'للبيع' : 'للإيجار'}</span></div>
+                                        <div class="spec-row"><span class="spec-label">المساحة</span><span class="spec-value">${d.area || '-'} م²</span></div>
+                                        <div class="spec-row"><span class="spec-label">غرف النوم</span><span class="spec-value">${d.rooms || '-'}</span></div>
+                                        <div class="spec-row"><span class="spec-label">الحمامات</span><span class="spec-value">${d.bathrooms || '-'}</span></div>
+                                        <div class="spec-row"><span class="spec-label">الطابق (الدور)</span><span class="spec-value">${d.floor || '-'}</span></div>
+                                        <div class="spec-row"><span class="spec-label">التشطيب</span><span class="spec-value">${d.finishing || 'غير محدد'}</span></div>
+                                        <div class="spec-row"><span class="spec-label">طريقة الدفع</span><span class="spec-value">كاش / تقسيط</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="box">
+                                    <h3 class="details-title">وصف العقار</h3>
+                                    <div class="desc-text">${d.description}</div>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="content-block">
-                            <h3 class="section-title">الوصف</h3>
-                            <div class="desc-text">${d.description}</div>
-                        </div>
-
-                        <div class="content-block">
-                            <h3 class="section-title">المميزات والخدمات</h3>
-                            <div class="amenities-list">${amHtml}</div>
-                        </div>
-
-                        ${videoHtml}
-
-                        <div class="content-block">
-                            <h3 class="section-title">عقارات مشابهة في ${d.district}</h3>
-                            <div class="similar-grid" id="similarGrid"><p style="color:var(--text-muted);">جاري البحث...</p></div>
                         </div>
                     `;
 
-                    // إظهار أزرار الاتصال إذا كان متاحاً
+                    // تفعيل زراير الموبايل الثابتة تحت
                     if(!d.status || d.status === 'available') {
-                        document.getElementById('actions').style.display = 'flex';
-                        const phone = d.marketerPhone || '20110557821';
-                        document.getElementById('btnWa').href = `https://wa.me/${phone}?text=مرحباً، أستفسر بخصوص الإعلان: ${d.title} %0Aالرابط: ${window.location.href}`;
-                        document.getElementById('btnCall').href = `tel:${phone}`;
-                    } else {
-                        document.getElementById('content').style.paddingBottom = "0";
+                        document.getElementById('mobileActions').style.display = 'flex';
+                        document.getElementById('btnWaMob').href = waLink;
+                        document.getElementById('btnCallMob').href = callLink;
                     }
 
-                    loadSimilarProperties(); 
-                    triggerSocialProof(currentDistrict);
-
                 } else {
-                    document.getElementById('content').innerHTML = "<div class='content-block' style='text-align:center; color:var(--danger);'><h2>عذراً، هذا الإعلان غير موجود أو تم حذفه.</h2></div>";
+                    document.getElementById('content').innerHTML = "<div class='box' style='text-align:center;'><h2>عذراً، هذا الإعلان لم يعد متوفراً.</h2></div>";
                 }
             });
         }
 
-        // تحريك الصور
+        // التحكم في معرض الصور
+        function setSlide(index) {
+            currentSlide = index;
+            document.getElementById('mainImg').src = imagesArray[currentSlide];
+            document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+            document.getElementById(`thumb-${currentSlide}`).classList.add('active');
+        }
+
         function move(n) {
-            const slides = document.querySelectorAll('.slide-img');
-            if(slides.length === 0) return;
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + n + slides.length) % slides.length;
-            slides[currentSlide].classList.add('active');
+            let nextIndex = currentSlide + n;
+            if (nextIndex >= imagesArray.length) nextIndex = 0;
+            if (nextIndex < 0) nextIndex = imagesArray.length - 1;
+            setSlide(nextIndex);
         }
 
-        // نسخ الرابط
-        function copyLink() { navigator.clipboard.writeText(window.location.href).then(() => { alert("تم نسخ رابط الإعلان!"); }); }
-        
-        // العقارات المشابهة
-        function loadSimilarProperties() {
-            db.collection("apartments").where("district", "==", currentDistrict).limit(4).get().then(snap => {
-                let html = '';
-                snap.forEach(doc => {
-                    if(doc.id !== id) { 
-                        const d = doc.data(); 
-                        const img = (d.images && d.images.length) ? d.images[0] : 'https://via.placeholder.com/250';
-                        html += `
-                            <a href="details.html?id=${doc.id}" class="sim-card">
-                                <img src="${img}" class="sim-img" loading="lazy">
-                                <div class="sim-body">
-                                    <div class="sim-price">${Number(d.price).toLocaleString()} ج.م</div>
-                                    <div class="sim-title">${d.title}</div>
-                                </div>
-                            </a>
-                        `;
-                    }
-                });
-                document.getElementById('similarGrid').innerHTML = html || '<p style="color:var(--text-muted); font-size:0.9rem;">لا توجد عقارات أخرى مسجلة في هذه المنطقة حالياً.</p>';
-            });
-        }
-
-        // الإشعار الذكي (Social Proof)
-        function triggerSocialProof(districtName) {
-            const toast = document.getElementById('socialProof');
-            const msgEl = document.getElementById('socialProofMsg');
-            const iconEl = document.getElementById('spIcon');
-            
-            function showToast() {
-                const randomViewers = Math.floor(Math.random() * 4) + 2; 
-                const randomHours = Math.floor(Math.random() * 24) + 1; 
-                const messages = [
-                    { msg: `🔥 <strong>${randomViewers} أشخاص</strong> يتصفحون هذا العقار الآن!`, icon: '<i class="fas fa-fire" style="color:#ff9800"></i>' },
-                    { msg: `⚡ تم حجز <strong>معاينة</strong> لهذه الوحدة اليوم.`, icon: '<i class="fas fa-calendar-check" style="color:var(--success)"></i>' },
-                    { msg: `👀 هذا العقار يلقى اهتماماً كبيراً في <strong>${districtName || 'هذه المنطقة'}</strong>.`, icon: '<i class="fas fa-eye" style="color:var(--info)"></i>' },
-                    { msg: `📈 تم بيع وحدة مشابهة منذ <strong>${randomHours} ساعة</strong>.`, icon: '<i class="fas fa-chart-line" style="color:var(--gold)"></i>' }
-                ];
-                const r = messages[Math.floor(Math.random() * messages.length)];
-                iconEl.innerHTML = r.icon; msgEl.innerHTML = r.msg;
-                toast.classList.add('show'); 
-                setTimeout(() => { toast.classList.remove('show'); }, 5000);
-            }
-            setTimeout(showToast, 4000); 
-            setInterval(showToast, 25000);
+        function copyLink() { 
+            navigator.clipboard.writeText(window.location.href).then(() => { 
+                alert("تم نسخ رابط الإعلان للمشاركة!"); 
+            }); 
         }
     </script>
 </body>
