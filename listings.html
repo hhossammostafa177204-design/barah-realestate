@@ -3,114 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARAH ESTATE | المعرض</title>
+    <title>BARAH ESTATE | جميع العقارات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --bg-body: #f8f9fa;
+            --bg-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-muted: #6c757d;
+            --border-color: #e0e0e0;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; padding-top: 75px; }
+
+        /* --- الناف بار (شريط علوي أبيض نظيف) --- */
+        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: var(--bg-white); border-bottom: 1px solid var(--border-color); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-size: 1.6rem; font-weight: 900; color: var(--gold); text-decoration: none; letter-spacing: 0.5px; }
+        .logo span { color: var(--text-dark); font-weight: 800; }
+        
+        .nav-links { display: flex; align-items: center; gap: 20px; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; gap: 5px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+        .btn-add { background: var(--text-dark); color: #fff !important; padding: 8px 20px; border-radius: 50px; font-weight: 700; transition: 0.3s; border: 2px solid var(--text-dark); }
+        .btn-add:hover { background: var(--bg-white); color: var(--text-dark) !important; }
+
+        /* --- شريط الفلاتر والبحث --- */
+        .search-container { background: var(--bg-white); padding: 20px 50px; border-bottom: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; max-width: 1400px; margin: 0 auto; }
+        .input-group { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 15px; display: flex; align-items: center; background: var(--bg-body); transition: 0.2s; }
+        .input-group:focus-within { border-color: var(--gold); background: var(--bg-white); }
+        .input-group i { color: var(--text-muted); margin-left: 10px; }
+        select { background: transparent; border: none; color: var(--text-dark); width: 100%; outline: none; font-family: 'Tajawal'; font-size: 0.95rem; cursor: pointer; font-weight: 600; }
+        
+        .btn-search { background: var(--gold); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; font-family: 'Tajawal'; font-size: 1rem; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-search:hover { background: #b5952f; }
+
+        /* --- معلومات النتائج --- */
+        .results-info { max-width: 1400px; margin: 20px auto 0; padding: 0 50px; font-weight: 700; color: var(--text-dark); font-size: 1.2rem; }
+
+        /* --- شبكة العقارات (كروت دوبيزل) --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px 50px 50px 50px; max-width: 1400px; margin: 0 auto; }
+        
+        .card { background: var(--bg-white); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: 0.2s; position: relative; }
+        .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-color: #ccc; transform: translateY(-2px); }
+
+        .card-img-wrap { position: relative; width: 100%; aspect-ratio: 4/3; background: #eee; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .card:hover .card-img { transform: scale(1.05); }
+        
+        /* العلامات */
+        .badge-type { position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 0.8rem; z-index: 2; }
+        .badge-status { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 4px; font-weight: 700; font-size: 0.8rem; z-index: 2; color: #fff; }
+        .sold { background: var(--danger); }
+        .rented { background: var(--info); }
+        
+        /* زر المفضلة */
+        .wishlist-btn { position: absolute; bottom: 10px; left: 10px; background: rgba(255,255,255,0.9); border: none; color: var(--text-muted); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10; }
+        .wishlist-btn:hover { color: var(--danger); transform: scale(1.1); }
+        .wishlist-btn.active { color: var(--danger); }
+
+        .card-body { padding: 15px; display: flex; flex-direction: column; flex: 1; }
+        .card-price { font-size: 1.5rem; font-weight: 900; color: var(--text-dark); margin: 0 0 5px 0; }
+        .card-title { font-size: 1.05rem; font-weight: 500; color: #444; margin: 0 0 10px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; height: 42px; }
+        
+        .card-specs { display: flex; gap: 15px; margin-bottom: 15px; color: var(--text-dark); font-weight: 600; font-size: 0.9rem; }
+        .card-specs span { display: flex; align-items: center; gap: 5px; }
+        .card-specs i { color: var(--text-muted); font-size: 1rem; }
+
+        .card-footer { border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted); }
+        .card-location { display: flex; align-items: center; gap: 5px; }
+
+        /* موبايل ريسبونسيف */
+        @media (max-width: 768px) { 
+            .navbar { padding: 15px 20px; } 
+            .nav-text { display: none; }
+            .search-container { padding: 15px 20px; }
+            .results-info { padding: 0 20px; }
+            .grid { padding: 20px; }
+            .search-grid { grid-template-columns: 1fr; }
+        }
+    </style>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
+
     <nav class="navbar">
         <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
         <div class="nav-links">
             <a href="index.html">الرئيسية</a>
             <a href="listings.html" class="active">المعرض</a>
-            <a href="favorites.html"><i class="fas fa-heart" style="color:var(--danger)"></i> المفضلة</a>
-            <a href="contact.html">تواصل معنا</a>
+            <a href="favorites.html"><i class="far fa-heart"></i> <span class="nav-text">المفضلة</span></a>
+            <a href="contact.html" class="btn-add"><i class="fas fa-plus"></i> <span class="nav-text">أضف عقارك</span></a>
         </div>
     </nav>
 
     <div class="search-container">
         <div class="search-grid">
-            <div class="input-group"><i class="fas fa-exchange-alt"></i><select id="type" onchange="updatePrice()"><option value="all">نوع العرض (الكل)</option><option value="sale">تمليك</option><option value="rent">إيجار</option></select></div>
-            <div class="input-group"><i class="fas fa-building"></i><select id="unit"><option value="all">نوع العقار (الكل)</option><option value="شقة">شقة</option><option value="فيلا">فيلا</option><option value="دوبلكس">دوبلكس</option><option value="بنتهاوس">بنتهاوس</option><option value="توين هاوس">توين هاوس</option><option value="مكتب">مكتب إداري</option><option value="محل">محل تجاري</option><option value="أرض">أرض</option></select></div>
-            <div class="input-group"><i class="fas fa-map-marker-alt"></i><select id="dist"><option value="all">جميع المناطق</option><option value="الحي التاسع">الحي التاسع (VIP)</option><option value="جولف سيتي">جولف سيتي</option><option value="جمعية عرابي">جمعية عرابي</option><option value="الحي الأول">الحي الأول</option><option value="الحي الثاني">الحي الثاني</option><option value="الحي الثالث">الحي الثالث</option><option value="الحي الرابع">الحي الرابع</option><option value="الحي الخامس">الحي الخامس</option><option value="الحي السادس">الحي السادس</option><option value="الحي السابع">الحي السابع</option><option value="الحي الثامن">الحي الثامن</option><option value="العبور الجديدة">العبور الجديدة</option><option value="بيت الوطن">بيت الوطن</option></select></div>
-            <div class="input-group"><i class="fas fa-money-bill"></i><select id="price"><option value="all">السعر</option></select></div>
-            <button class="btn-search" onclick="filter()">بحث <i class="fas fa-search"></i></button>
+            <div class="input-group">
+                <i class="fas fa-exchange-alt"></i>
+                <select id="type" onchange="updatePrice()">
+                    <option value="all">نوع العرض (الكل)</option>
+                    <option value="sale">للبيع</option>
+                    <option value="rent">للإيجار</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-building"></i>
+                <select id="unit">
+                    <option value="all">نوع العقار (الكل)</option>
+                    <option value="شقة">شقة</option>
+                    <option value="فيلا">فيلا</option>
+                    <option value="دوبلكس">دوبلكس</option>
+                    <option value="بنتهاوس">بنتهاوس</option>
+                    <option value="توين هاوس">توين هاوس</option>
+                    <option value="مكتب">مكتب إداري</option>
+                    <option value="محل">محل تجاري</option>
+                    <option value="أرض">أرض</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-map-marker-alt"></i>
+                <select id="dist">
+                    <option value="all">جميع أحياء العبور</option>
+                    <option value="الحي التاسع">الحي التاسع (VIP)</option>
+                    <option value="جولف سيتي">جولف سيتي</option>
+                    <option value="جمعية عرابي">جمعية عرابي</option>
+                    <option value="الحي الأول">الحي الأول</option>
+                    <option value="الحي الثاني">الحي الثاني</option>
+                    <option value="الحي الثالث">الحي الثالث</option>
+                    <option value="الحي الرابع">الحي الرابع</option>
+                    <option value="الحي الخامس">الحي الخامس</option>
+                    <option value="الحي السادس">الحي السادس</option>
+                    <option value="الحي السابع">الحي السابع</option>
+                    <option value="الحي الثامن">الحي الثامن</option>
+                    <option value="العبور الجديدة">العبور الجديدة</option>
+                    <option value="بيت الوطن">بيت الوطن</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-money-bill"></i>
+                <select id="price">
+                    <option value="all">السعر (الكل)</option>
+                </select>
+            </div>
+            <button class="btn-search" onclick="filter()"><i class="fas fa-search"></i> بحث</button>
         </div>
     </div>
 
-    <div class="grid" id="grid"><p style="text-align:center; grid-column:1/-1;">جاري تحميل العقارات...</p></div>
+    <div class="results-info" id="resultsCount">
+        جاري البحث عن عقارات...
+    </div>
+
+    <div class="grid" id="grid">
+        <p style="text-align:center; grid-column:1/-1; color:var(--text-muted);">جاري التحميل <i class="fas fa-spinner fa-spin"></i></p>
+    </div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        
         let allData = [];
         let wishlist = JSON.parse(localStorage.getItem('barah_wishlist')) || [];
 
+        // تحديث السعر بناء على البيع أو الإيجار
         function updatePrice() {
             const t = document.getElementById('type').value;
             const p = document.getElementById('price');
             p.innerHTML = '<option value="all">السعر (الكل)</option>';
-            if(t==='rent') p.innerHTML+=`<option value="0-5000">أقل من 5000</option><option value="5000-10000">5000 - 10000</option><option value="10000-999999">أكثر من 10000</option>`;
-            else if(t==='sale') p.innerHTML+=`<option value="0-1000000">أقل من مليون</option><option value="1000000-3000000">1 - 3 مليون</option><option value="3000000-999999999">أكثر من 3 مليون</option>`;
+            if(t==='rent') {
+                p.innerHTML+=`<option value="0-5000">أقل من 5,000</option><option value="5000-10000">5,000 - 10,000</option><option value="10000-999999">أكثر من 10,000</option>`;
+            } else if(t==='sale') {
+                p.innerHTML+=`<option value="0-1000000">أقل من مليون</option><option value="1000000-3000000">1 - 3 مليون</option><option value="3000000-999999999">أكثر من 3 مليون</option>`;
+            }
         }
 
+        // جلب البيانات من الداتا بيز
         db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
             allData = [];
             snap.forEach(d => { let item=d.data(); item.id=d.id; allData.push(item); });
             render(allData);
         });
 
+        // زر المفضلة
         function toggleWishlist(e, id) {
-            e.preventDefault(); 
+            e.preventDefault(); // منع فتح العقار عند الضغط على القلب
             const index = wishlist.indexOf(id);
-            if(index > -1) { wishlist.splice(index, 1); e.currentTarget.classList.remove('active'); e.currentTarget.innerHTML = '<i class="far fa-heart"></i>'; }
-            else { wishlist.push(id); e.currentTarget.classList.add('active'); e.currentTarget.innerHTML = '<i class="fas fa-heart"></i>'; }
+            const btn = e.currentTarget;
+            if(index > -1) { 
+                wishlist.splice(index, 1); 
+                btn.classList.remove('active'); 
+                btn.innerHTML = '<i class="far fa-heart"></i>'; 
+            } else { 
+                wishlist.push(id); 
+                btn.classList.add('active'); 
+                btn.innerHTML = '<i class="fas fa-heart"></i>'; 
+            }
             localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
         }
 
+        // عرض الإعلانات
         function render(list) {
             const g = document.getElementById('grid');
+            const countEl = document.getElementById('resultsCount');
             g.innerHTML = "";
-            if(list.length===0) { g.innerHTML=`<p style='text-align:center; grid-column:1/-1; font-size:1.2rem; color:#aaa;'>لا توجد نتائج مطابقة للبحث.</p>`; return; }
+            
+            countEl.innerHTML = `تم العثور على <span>${list.length}</span> إعلانات`;
+
+            if(list.length===0) { 
+                g.innerHTML=`<p style='text-align:center; grid-column:1/-1; font-size:1.1rem; color:var(--text-muted); padding: 50px 0;'>لم نتمكن من العثور على عقارات مطابقة لبحثك. جرب تغيير الفلاتر.</p>`; 
+                return; 
+            }
             
             list.forEach(u => {
-                const img = (u.images && u.images.length > 0) ? u.images[0] : 'https://via.placeholder.com/300';
-                let icon = 'fas fa-building';
-                if(u.unitType === 'فيلا' || u.unitType === 'توين هاوس') icon = 'fas fa-home';
-                if(u.unitType === 'أرض') icon = 'fas fa-vector-square';
+                const img = (u.images && u.images.length > 0) ? u.images[0] : 'https://via.placeholder.com/400x300';
                 
+                // حالة العقار (مباع / إيجار)
                 let statusHtml = ''; let opacityStyle = '';
-                if(u.status === 'sold') { statusHtml = '<span class="status-badge sold-badge">تم البيع 🔴</span>'; opacityStyle = 'opacity: 0.7; filter: grayscale(50%);'; }
-                else if(u.status === 'rented') { statusHtml = '<span class="status-badge rented-badge">تم الإيجار 🔵</span>'; opacityStyle = 'opacity: 0.8;'; }
+                if(u.status === 'sold') { statusHtml = '<span class="badge-status sold">مباع</span>'; opacityStyle = 'opacity: 0.6; filter: grayscale(50%);'; }
+                else if(u.status === 'rented') { statusHtml = '<span class="badge-status rented">تم الإيجار</span>'; opacityStyle = 'opacity: 0.8;'; }
 
+                // حالة المفضلة
                 const isFav = wishlist.includes(u.id);
                 const heartClass = isFav ? 'active' : '';
                 const heartIcon = isFav ? 'fas fa-heart' : 'far fa-heart';
 
+                // معالجة البيانات الفارغة
+                const rooms = u.rooms ? `${u.rooms}` : '-';
+                const baths = u.bathrooms ? `${u.bathrooms}` : '-';
+                const area = u.area ? `${u.area}` : '-';
+
                 g.innerHTML += `
                 <a href="details.html?id=${u.id}" class="card" style="${opacityStyle}">
-                    <div class="img-wrap">
+                    <div class="card-img-wrap">
                         ${statusHtml}
-                        <span class="badge">${u.type==='sale'?'تمليك':'إيجار'}</span>
-                        <img src="${img}" class="card-img" loading="lazy">
-                        <div class="wishlist-btn ${heartClass}" onclick="toggleWishlist(event, '${u.id}')" title="أضف للمفضلة"><i class="${heartIcon}"></i></div>
+                        <span class="badge-type">${u.type==='sale'?'للبيع':'للإيجار'}</span>
+                        <img src="${img}" class="card-img" loading="lazy" alt="${u.title}">
+                        <button class="wishlist-btn ${heartClass}" onclick="toggleWishlist(event, '${u.id}')" title="حفظ"><i class="${heartIcon}"></i></button>
                     </div>
                     <div class="card-body">
-                        <div class="price">${Number(u.price).toLocaleString()} EGP</div>
-                        <div class="title">${u.title}</div>
-                        <div class="details">
-                            <span><i class="fas fa-map-marker-alt"></i> ${u.district}</span>
-                            <span><i class="${icon}"></i> ${u.unitType||'وحدة'}</span>
-                            <span><i class="fas fa-ruler-combined"></i> ${u.area}م</span>
+                        <h3 class="card-price">${Number(u.price).toLocaleString()} ج.م</h3>
+                        <p class="card-title">${u.title}</p>
+                        
+                        <div class="card-specs">
+                            <span title="غرف"><i class="fas fa-bed"></i> ${rooms}</span>
+                            <span title="حمامات"><i class="fas fa-bath"></i> ${baths}</span>
+                            <span title="مساحة"><i class="fas fa-ruler-combined"></i> ${area}م²</span>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <span class="card-location"><i class="fas fa-map-marker-alt"></i> ${u.district}</span>
+                            <span>مُضاف حديثاً</span>
                         </div>
                     </div>
                 </a>`;
             });
         }
 
+        // دالة البحث (الفلتر)
         function filter() {
-            const t=document.getElementById('type').value, u=document.getElementById('unit').value, d=document.getElementById('dist').value, p=document.getElementById('price').value;
+            const t=document.getElementById('type').value, 
+                  u=document.getElementById('unit').value, 
+                  d=document.getElementById('dist').value, 
+                  p=document.getElementById('price').value;
+            
             const res = allData.filter(x => {
                 let matchP = true;
-                if(p!=='all') { const [min,max]=p.split('-').map(Number); matchP = x.price>=min && x.price<=max; }
-                return (t==='all'||x.type===t) && (u==='all'||x.unitType===u) && (d==='all'||x.district===d) && matchP;
+                if(p!=='all') { 
+                    const [min,max]=p.split('-').map(Number); 
+                    matchP = x.price>=min && x.price<=max; 
+                }
+                return (t==='all'||x.type===t) && 
+                       (u==='all'||x.unitType===u) && 
+                       (d==='all'||x.district===d) && 
+                       matchP;
             });
             render(res);
         }
     </script>
-    <script src="main.js"></script>
 </body>
 </html>
