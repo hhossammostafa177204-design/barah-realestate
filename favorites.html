@@ -4,52 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BARAH ESTATE | المفضلة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; --danger: #ff4444; }
-        body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); box-sizing: border-box; }
-        .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
-        .logo span { color: #fff; }
-        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; transition: 0.3s; }
-        .nav-links a:hover, .nav-links a.active { color: var(--gold); }
-        
-        .page-header { text-align: center; padding: 40px 20px; border-bottom: 1px solid #333; background: linear-gradient(to bottom, #111, var(--bg)); }
-        .page-header h1 { color: var(--gold); margin: 0; font-size: 2.5rem; }
-        .page-header p { color: #aaa; margin-top: 10px; }
-
-        /* شبكة الكروت (نفس تصميم المعرض) */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 50px; max-width: 1400px; margin: 0 auto; flex: 1; width: 100%; box-sizing: border-box;}
-        .card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; text-decoration: none; color: inherit; display: block; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .img-wrap { height: 250px; overflow: hidden; position: relative; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .card:hover .card-img { transform: scale(1.1); }
-        
-        .badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: var(--gold); padding: 5px 12px; border-radius: 50px; font-weight: bold; border: 1px solid var(--gold); font-size: 0.8rem; z-index: 2; }
-        
-        /* زر الحذف من المفضلة */
-        .remove-btn { position: absolute; bottom: 15px; left: 15px; background: rgba(255, 68, 68, 0.9); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .remove-btn:hover { background: #ff0000; transform: scale(1.1); }
-
-        .card-body { padding: 20px; }
-        .price { color: var(--gold); font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
-        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .details { color: #888; display: flex; gap: 15px; font-size: 0.9rem; border-top: 1px solid #333; padding-top: 15px; margin-top: 10px; }
-        .details span { display: flex; align-items: center; gap: 5px; }
-        .details i { color: var(--gold); }
-
-        .empty-state { text-align: center; grid-column: 1/-1; padding: 50px 20px; }
-        .empty-state i { font-size: 5rem; color: #333; margin-bottom: 20px; }
-        .empty-state h2 { color: #fff; margin-bottom: 10px; }
-        .empty-state p { color: #aaa; margin-bottom: 30px; }
-        .btn-main { background: var(--gold); color: #000; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; transition: 0.3s; display: inline-block; }
-        .btn-main:hover { background: #fff; transform: translateY(-3px); }
-
-        @media (max-width: 768px) { .navbar { padding: 15px 20px; } .grid { padding: 20px; } }
-    </style>
+    <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
@@ -82,7 +38,6 @@
         let wishlist = JSON.parse(localStorage.getItem('barah_wishlist')) || [];
         const grid = document.getElementById('favoritesGrid');
 
-        // دالة لعرض الشاشة الفارغة
         function showEmptyState() {
             grid.innerHTML = `
                 <div class="empty-state">
@@ -94,27 +49,18 @@
             `;
         }
 
-        // دالة لجلب العقارات المحفوظة
         function loadFavorites() {
-            if(wishlist.length === 0) {
-                showEmptyState();
-                return;
-            }
-
-            // جلب البيانات من الداتا بيز بناءً على الآي دي المحفوظ
+            if(wishlist.length === 0) { showEmptyState(); return; }
             const promises = wishlist.map(id => db.collection("apartments").doc(id).get());
             
             Promise.all(promises).then(docs => {
                 grid.innerHTML = "";
                 let hasValidItems = false;
-
                 docs.forEach(doc => {
                     if(doc.exists) {
                         hasValidItems = true;
-                        const u = doc.data();
-                        const id = doc.id;
+                        const u = doc.data(); const id = doc.id;
                         const img = (u.images && u.images.length > 0) ? u.images[0] : 'https://via.placeholder.com/300';
-                        
                         let icon = 'fas fa-building';
                         if(u.unitType === 'فيلا' || u.unitType === 'توين هاوس') icon = 'fas fa-home';
                         if(u.unitType === 'أرض') icon = 'fas fa-vector-square';
@@ -124,9 +70,7 @@
                             <div class="img-wrap">
                                 <span class="badge">${u.type==='sale'?'تمليك':'إيجار'}</span>
                                 <img src="${img}" class="card-img" loading="lazy">
-                                <button class="remove-btn" onclick="removeFromWishlist(event, '${id}')" title="حذف من المفضلة">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <button class="remove-btn" onclick="removeFromWishlist(event, '${id}')" title="حذف من المفضلة"><i class="fas fa-trash-alt"></i></button>
                             </div>
                             <div class="card-body">
                                 <div class="price">${Number(u.price).toLocaleString()} EGP</div>
@@ -139,39 +83,22 @@
                             </div>
                         </a>`;
                     } else {
-                        // لو العقار اتمسح من الإدارة، نشيله تلقائي من مفضلة العميل
                         wishlist = wishlist.filter(itemId => itemId !== doc.id);
                         localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
                     }
                 });
-
                 if(!hasValidItems) showEmptyState();
-            }).catch(error => {
-                grid.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:red;'>حدث خطأ أثناء تحميل البيانات.</p>";
-            });
+            }).catch(error => { grid.innerHTML = "<p style='text-align:center; grid-column:1/-1; color:red;'>حدث خطأ أثناء تحميل البيانات.</p>"; });
         }
 
-        // دالة الحذف من المفضلة
         function removeFromWishlist(event, id) {
-            event.preventDefault(); // عشان الكارت ما يفتحش صفحة التفاصيل
-            
-            // تحديث LocalStorage
+            event.preventDefault(); 
             wishlist = wishlist.filter(itemId => itemId !== id);
             localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
-            
-            // إخفاء الكارت بتأثير حركي
             const card = document.getElementById(`card-${id}`);
-            card.style.transform = 'scale(0)';
-            card.style.opacity = '0';
-            
-            setTimeout(() => {
-                card.remove();
-                // لو القائمة بقت فاضية نعرض الشاشة الفارغة
-                if(wishlist.length === 0) showEmptyState();
-            }, 300);
+            card.style.transform = 'scale(0)'; card.style.opacity = '0';
+            setTimeout(() => { card.remove(); if(wishlist.length === 0) showEmptyState(); }, 300);
         }
-
-        // تشغيل الدالة عند تحميل الصفحة
         window.onload = loadFavorites;
     </script>
     <script src="main.js"></script>

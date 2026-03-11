@@ -4,52 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BARAH ESTATE | المعرض</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; --danger: #ff4444; --info: #33b5e5; }
-        body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
-        .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); box-sizing: border-box; }
-        .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
-        .logo span { color: #fff; }
-        .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .nav-links a.active, .nav-links a:hover { color: var(--gold); }
-        
-        .search-container { background: #15181e; padding: 30px; border-bottom: 1px solid #333; }
-        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
-        .input-group { background: #222; border: 1px solid #444; border-radius: 10px; padding: 10px; display: flex; align-items: center; }
-        .input-group i { color: var(--gold); margin-left: 10px; }
-        select { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-family: 'Tajawal'; font-size: 1rem; }
-        select option { background: #222; }
-        .btn-search { background: var(--gold); color: #000; border: none; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-search:hover { background: #b5952f; transform: scale(1.02); }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; padding: 50px; max-width: 1400px; margin: 0 auto; }
-        .card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; text-decoration: none; color: inherit; display: block; position: relative; }
-        .card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .img-wrap { height: 250px; overflow: hidden; position: relative; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .card:hover .card-img { transform: scale(1.1); }
-        
-        /* علامات الحالة والمفضلة */
-        .badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: var(--gold); padding: 5px 12px; border-radius: 50px; font-weight: bold; border: 1px solid var(--gold); font-size: 0.8rem; z-index: 2; }
-        .status-badge { position: absolute; top: 15px; left: 15px; padding: 5px 12px; border-radius: 50px; font-weight: bold; font-size: 0.8rem; z-index: 2; border: 1px solid #fff; }
-        .sold-badge { background: var(--danger); color: #fff; }
-        .rented-badge { background: var(--info); color: #fff; }
-        
-        .wishlist-btn { position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.6); border: 1px solid #fff; color: #fff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: 0.3s; z-index: 10; }
-        .wishlist-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); transform: scale(1.1); }
-        .wishlist-btn.active { color: var(--danger); border-color: var(--danger); background: rgba(255, 68, 68, 0.1); }
-
-        .card-body { padding: 20px; }
-        .price { color: var(--gold); font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
-        .title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .details { color: #888; display: flex; gap: 15px; font-size: 0.9rem; border-top: 1px solid #333; padding-top: 15px; margin-top: 10px; }
-        .details span { display: flex; align-items: center; gap: 5px; }
-        .details i { color: var(--gold); }
-
-        @media (max-width: 768px) { .navbar { padding: 15px 20px; } .grid { padding: 20px; } }
-    </style>
+    <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
@@ -80,7 +36,6 @@
         const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        
         let allData = [];
         let wishlist = JSON.parse(localStorage.getItem('barah_wishlist')) || [];
 
@@ -98,19 +53,11 @@
             render(allData);
         });
 
-        // دالة إضافة وحذف العقار من المفضلة وحفظه في الجهاز
         function toggleWishlist(e, id) {
-            e.preventDefault(); // منع فتح صفحة التفاصيل
+            e.preventDefault(); 
             const index = wishlist.indexOf(id);
-            if(index > -1) { 
-                wishlist.splice(index, 1); 
-                e.currentTarget.classList.remove('active'); 
-                e.currentTarget.innerHTML = '<i class="far fa-heart"></i>'; 
-            } else { 
-                wishlist.push(id); 
-                e.currentTarget.classList.add('active'); 
-                e.currentTarget.innerHTML = '<i class="fas fa-heart"></i>'; 
-            }
+            if(index > -1) { wishlist.splice(index, 1); e.currentTarget.classList.remove('active'); e.currentTarget.innerHTML = '<i class="far fa-heart"></i>'; }
+            else { wishlist.push(id); e.currentTarget.classList.add('active'); e.currentTarget.innerHTML = '<i class="fas fa-heart"></i>'; }
             localStorage.setItem('barah_wishlist', JSON.stringify(wishlist));
         }
 
@@ -125,9 +72,7 @@
                 if(u.unitType === 'فيلا' || u.unitType === 'توين هاوس') icon = 'fas fa-home';
                 if(u.unitType === 'أرض') icon = 'fas fa-vector-square';
                 
-                // حالة العقار
-                let statusHtml = '';
-                let opacityStyle = '';
+                let statusHtml = ''; let opacityStyle = '';
                 if(u.status === 'sold') { statusHtml = '<span class="status-badge sold-badge">تم البيع 🔴</span>'; opacityStyle = 'opacity: 0.7; filter: grayscale(50%);'; }
                 else if(u.status === 'rented') { statusHtml = '<span class="status-badge rented-badge">تم الإيجار 🔵</span>'; opacityStyle = 'opacity: 0.8;'; }
 
