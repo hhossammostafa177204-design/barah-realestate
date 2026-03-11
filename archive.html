@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARAH ADMIN | أرشيف الوحدات المطور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23;
+            --text: #fff; --danger: #ff4444; --success: #00C851; --info: #33b5e5;
+        }
+
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; min-height: 100vh; }
+
+        /* --- شاشة الدخول --- */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .login-box { background: var(--card); padding: 40px; border-radius: 15px; border: 1px solid var(--gold); text-align: center; }
+        .login-input { padding: 10px; width: 200px; margin-bottom: 10px; border-radius: 5px; border: none; text-align: center; font-family: 'Tajawal'; outline:none; }
+        .login-btn { padding: 10px 20px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-family: 'Tajawal'; }
+
+        /* --- الهيدر والبحث --- */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .search-box { flex: 1; max-width: 500px; position: relative; }
+        .search-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #222; color: #fff; padding-right: 50px; outline: none; font-family: 'Tajawal'; }
+        .search-icon { position: absolute; right: 20px; top: 15px; color: var(--gold); }
+        .nav-btn { background: #333; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; transition: 0.3s; display:inline-flex; align-items:center; gap:5px; }
+        .nav-btn:hover { background: var(--gold); color: #000; }
+
+        /* --- الإحصائيات (الجديد) --- */
+        .analytics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: var(--card); border: 1px solid #333; padding: 20px; border-radius: 15px; text-align: center; border-bottom: 3px solid var(--gold); }
+        .stat-box h3 { margin: 0 0 10px 0; color: #aaa; font-size: 1rem; }
+        .stat-box p { margin: 0; font-size: 1.5rem; font-weight: bold; color: var(--gold); }
+
+        /* --- شبكة الكروت --- */
+        .units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+        .unit-card { background: var(--card); border: 1px solid #333; border-radius: 15px; overflow: hidden; position: relative; transition: 0.3s; }
+        .unit-card:hover { transform: translateY(-5px); border-color: var(--gold); }
+        
+        .card-img-wrap { position: relative; }
+        .card-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 3px solid var(--gold); }
+        .status-badge { position: absolute; top: 10px; right: 10px; padding: 5px 15px; border-radius: 50px; font-weight: bold; font-size: 0.85rem; border: 1px solid #fff; }
+        .status-available { background: var(--success); color: #fff; }
+        .status-sold { background: var(--danger); color: #fff; }
+        .status-rented { background: var(--info); color: #fff; }
+
+        .card-body { padding: 20px; }
+        .price-tag { color: var(--gold); font-size: 1.4rem; font-weight: 900; margin-bottom: 5px; }
+        .unit-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; line-height: 1.4; height: 50px; overflow: hidden; }
+        
+        .details-row { display: flex; justify-content: space-between; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 8px; font-size: 0.9rem; color: #ccc; }
+        .private-info { background: rgba(212, 175, 55, 0.1); border: 1px dashed var(--gold); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .private-label { color: var(--gold); font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; display: block; }
+        
+        .action-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-family: 'Tajawal'; display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; font-size: 0.9rem; }
+        .btn-edit { background: #444; color: #fff; }
+        .btn-status { background: var(--gold); color: #000; }
+        .btn:hover { opacity: 0.9; }
+
+        /* --- شاشة التعديل (Modal) --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; border: 1px solid var(--gold); }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; color: var(--gold); margin-bottom: 5px; font-size: 0.9rem; }
+
+        @media (max-width: 768px) { .header { flex-direction: column; align-items: stretch; } .units-grid { grid-template-columns: 1fr; } }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="color:var(--gold)">BARAH ARCHIVE</h2>
+            <input type="password" id="adminPass" class="login-input" placeholder="كلمة المرور">
+            <button class="login-btn" onclick="checkLogin()">دخول آمن</button>
+        </div>
+    </div>
+
+    <div id="mainContent" style="display:none;">
+        <div class="header">
+            <h2 style="color:var(--gold); margin:0;"><i class="fas fa-chart-pie"></i> لوحة التحكم والأرشيف</h2>
+            <div style="display:flex; gap:10px;">
+                <a href="admin.html" class="nav-btn"><i class="fas fa-plus"></i> إضافة وحدة</a>
+                <a href="index.html" class="nav-btn" target="_blank"><i class="fas fa-globe"></i> الموقع</a>
+            </div>
+        </div>
+
+        <div class="analytics-grid">
+            <div class="stat-box"><h3>إجمالي الوحدات</h3><p id="statTotal">0</p></div>
+            <div class="stat-box"><h3>الوحدات المتاحة</h3><p id="statAvailable" style="color:var(--success)">0</p></div>
+            <div class="stat-box"><h3>مباع / تم الإيجار</h3><p id="statSold" style="color:var(--danger)">0</p></div>
+            <div class="stat-box"><h3>إجمالي قيمة المعروض</h3><p id="statValue">0 EGP</p></div>
+        </div>
+
+        <div class="search-box" style="max-width:100%; margin-bottom:20px;">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالمنطقة، السعر، أو الكود..." onkeyup="filterUnits()">
+        </div>
+
+        <div id="unitsContainer" class="units-grid">
+            <p style="text-align:center; grid-column: 1/-1;">جاري تحميل البيانات...</p>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:var(--gold); margin-top:0;"><i class="fas fa-edit"></i> تعديل بيانات الوحدة</h3>
+            <input type="hidden" id="editId">
+            <div class="input-group">
+                <label>العنوان</label>
+                <input type="text" id="editTitle" class="search-input" style="border-radius:8px;">
+            </div>
+            <div class="input-group">
+                <label>السعر (جنية)</label>
+                <input type="number" id="editPrice" class="search-input" style="border-radius:8px;">
+            </div>
+            <div class="input-group">
+                <label>رقم المالك (سري)</label>
+                <input type="text" id="editOwnerPhone" class="search-input" style="border-radius:8px;">
+            </div>
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button onclick="saveEdit()" class="btn btn-status" style="flex:1;">حفظ التعديلات</button>
+                <button onclick="closeEditModal()" class="btn btn-edit" style="flex:1;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let allUnits = [];
+
+        function checkLogin() {
+            const pass = document.getElementById('adminPass').value;
+            if(pass === 'AHE123') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                loadUnits();
+            } else { alert("كلمة المرور غير صحيحة!"); }
+        }
+
+        function loadUnits() {
+            db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
+                allUnits = [];
+                snap.forEach(doc => { allUnits.push({ id: doc.id, ...doc.data() }); });
+                updateAnalytics();
+                renderUnits(allUnits);
+            });
+        }
+
+        function updateAnalytics() {
+            let total = allUnits.length, available = 0, sold = 0, totalValue = 0;
+            
+            allUnits.forEach(u => {
+                const stat = u.status || 'available';
+                if(stat === 'available') {
+                    available++;
+                    if(u.type === 'sale') totalValue += Number(u.price) || 0;
+                } else { sold++; }
+            });
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statAvailable').innerText = available;
+            document.getElementById('statSold').innerText = sold;
+            document.getElementById('statValue').innerText = totalValue.toLocaleString() + ' EGP';
+        }
+
+        function renderUnits(units) {
+            const container = document.getElementById("unitsContainer");
+            container.innerHTML = "";
+
+            if(units.length === 0) { container.innerHTML = "<p style='text-align:center; width:100%;'>لا توجد وحدات مطابقة.</p>"; return; }
+
+            units.forEach(unit => {
+                const img = (unit.images && unit.images.length) ? unit.images[0] : 'https://via.placeholder.com/300';
+                const marketerPhone = unit.marketerPhone || 'غير مسجل';
+                const ownerPhone = unit.ownerPhone || 'غير مسجل';
+
+                // معالجة حالة الوحدة
+                let statusRaw = unit.status || 'available';
+                let statusData = { text: 'متاح 🟢', class: 'status-available', next: 'sold' };
+                if(statusRaw === 'sold') { statusData = { text: 'مباع 🔴', class: 'status-sold', next: 'rented' }; }
+                else if(statusRaw === 'rented') { statusData = { text: 'تم الإيجار 🔵', class: 'status-rented', next: 'available' }; }
+
+                container.innerHTML += `
+                    <div class="unit-card">
+                        <div class="card-img-wrap">
+                            <span class="status-badge ${statusData.class}">${statusData.text}</span>
+                            <img src="${img}" class="card-img">
+                        </div>
+                        <div class="card-body">
+                            <div class="price-tag">${Number(unit.price).toLocaleString()} EGP</div>
+                            <div class="unit-title">${unit.title}</div>
+                            
+                            <div class="details-row">
+                                <span><i class="fas fa-ruler-combined"></i> ${unit.area} م²</span>
+                                <span><i class="fas fa-bed"></i> ${unit.rooms} غرف</span>
+                            </div>
+
+                            <div class="private-info">
+                                <span class="private-label"><i class="fas fa-user-secret"></i> بيانات خاصة:</span>
+                                <div><i class="fas fa-user-tie"></i> المالك: ${ownerPhone}</div>
+                                <div><i class="fas fa-headset"></i> المسوق: ${marketerPhone}</div>
+                            </div>
+
+                            <div class="action-btns">
+                                <button onclick="openEditModal('${unit.id}')" class="btn btn-edit">
+                                    <i class="fas fa-edit"></i> تعديل
+                                </button>
+                                <button onclick="toggleStatus('${unit.id}', '${statusRaw}', '${statusData.next}')" class="btn btn-status">
+                                    <i class="fas fa-exchange-alt"></i> ${statusRaw === 'available' ? 'تحديد كمباع' : 'تغيير الحالة'}
+                                </button>
+                                <button onclick="copyDetails('${unit.title}', '${unit.price}', '${unit.area}')" class="btn" style="background:#333; color:#fff; grid-column: span 2;">
+                                    <i class="fas fa-copy"></i> نسخ التفاصيل
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- وظائف التعديل وتغيير الحالة ---
+        function openEditModal(id) {
+            const unit = allUnits.find(u => u.id === id);
+            if(!unit) return;
+            document.getElementById('editId').value = unit.id;
+            document.getElementById('editTitle').value = unit.title;
+            document.getElementById('editPrice').value = unit.price;
+            document.getElementById('editOwnerPhone').value = unit.ownerPhone || '';
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        function saveEdit() {
+            const id = document.getElementById('editId').value;
+            db.collection("apartments").doc(id).update({
+                title: document.getElementById('editTitle').value,
+                price: Number(document.getElementById('editPrice').value),
+                ownerPhone: document.getElementById('editOwnerPhone').value
+            }).then(() => {
+                alert("✅ تم حفظ التعديلات!");
+                closeEditModal();
+            }).catch(e => alert("خطأ: " + e));
+        }
+
+        function toggleStatus(id, current, nextStatus) {
+            if(confirm("هل تريد تأكيد تغيير حالة هذه الوحدة؟")) {
+                db.collection("apartments").doc(id).update({ status: nextStatus })
+                .catch(e => alert("خطأ في تغيير الحالة: " + e));
+            }
+        }
+
+        function filterUnits() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allUnits.filter(u => u.title.toLowerCase().includes(term) || u.district.toLowerCase().includes(term));
+            renderUnits(filtered);
+        }
+
+        function copyDetails(title, price, area) {
+            const text = `تفاصيل الوحدة:\n${title}\nالمساحة: ${area} متر\nالسعر: ${parseInt(price).toLocaleString()} جنيه\n\nللمعاينة: 0110557821`;
+            navigator.clipboard.writeText(text).then(() => alert("تم النسخ بنجاح!"));
+        }
+    </script>
+</body>
+</html>

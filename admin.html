@@ -111,7 +111,7 @@
         }
         .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
 
-        /* --- قائمة إدارة الوحدات (الجديد) --- */
+        /* --- قائمة إدارة الوحدات --- */
         .manage-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;
         }
@@ -241,7 +241,11 @@
 
             <div class="input-group" style="margin-top:15px;"><input type="text" id="youtube" placeholder="رابط يوتيوب (اختياري)"></div>
             <div class="input-group"><input type="text" id="locationLink" placeholder="رابط GPS (سري)"></div>
-            <div class="input-group"><input type="text" id="phone" placeholder="رقم الهاتف"></div>
+            
+            <div class="row-2" style="margin-top:15px;">
+                <div class="input-group"><input type="text" id="ownerPhone" placeholder="رقم المالك/العميل (سري للإدارة)"></div>
+                <div class="input-group"><input type="text" id="marketerPhone" placeholder="رقم المسوق (يظهر للجمهور)"></div>
+            </div>
 
             <button class="submit-btn" onclick="upload()"><i class="fas fa-paper-plane"></i> نشر الوحدة</button>
             <p id="status" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
@@ -265,11 +269,10 @@
 
         let selectedAmenities = [];
 
-        // ✅ 1. تسجيل الدخول بالباسورد الجديد
         function checkLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            if(user === 'admin' && pass === 'AHE123') { // تم التعديل
+            if(user === 'admin' && pass === 'AHE123') { 
                 sessionStorage.setItem('isLoggedIn', 'true');
                 showDashboard();
             } else { document.getElementById('loginError').style.display = 'block'; }
@@ -282,12 +285,11 @@
         function showDashboard() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
-            loadUnits(); // تحميل الوحدات فور الدخول
+            loadUnits();
         }
 
         function logout() { sessionStorage.removeItem('isLoggedIn'); location.reload(); }
 
-        // ✅ 2. تحميل وعرض الوحدات للحذف
         function loadUnits() {
             db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
                 const container = document.getElementById("unitsContainer");
@@ -316,7 +318,6 @@
             });
         }
 
-        // ✅ 3. وظيفة الحذف
         function deleteUnit(id) {
             if(confirm("⚠️ هل أنت متأكد من حذف هذا الإعلان نهائياً؟ لا يمكن التراجع!")) {
                 db.collection("apartments").doc(id).delete()
@@ -325,7 +326,6 @@
             }
         }
 
-        // ✅ 4. وظائف الرفع
         function toggleAm(el) {
             el.classList.toggle('active');
             const val = el.getAttribute('data-val');
@@ -378,7 +378,8 @@
                     images: imageUrls,
                     youtube: document.getElementById('youtube').value,
                     locationPrivate: document.getElementById('locationLink').value,
-                    marketerPhone: document.getElementById('phone').value || "20110557821",
+                    marketerPhone: document.getElementById('marketerPhone').value || "20110557821",
+                    ownerPhone: document.getElementById('ownerPhone').value || "غير مسجل",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 

@@ -7,30 +7,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; }
+        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; --danger: #ff4444; }
         body { font-family: 'Tajawal'; background: var(--bg); color: var(--text); margin: 0; padding-top: 80px; }
         .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(15, 18, 21, 0.95); padding: 15px 50px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
         .logo { font-size: 1.5rem; font-weight: 900; color: var(--gold); text-decoration: none; }
         .nav-links a { text-decoration: none; color: #aaa; margin-left: 20px; font-weight: bold; }
-        .container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+        
+        .container { max-width: 1000px; margin: 20px auto 100px auto; padding: 20px; }
         .slider { height: 50vh; background: #000; border-radius: 20px; overflow: hidden; position: relative; border: 1px solid #333; }
         .slide-img { width: 100%; height: 100%; object-fit: contain; display: none; }
         .slide-img.active { display: block; animation: fade 0.5s; }
-        .arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2rem; color: var(--gold); cursor: pointer; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px; }
+        .arrow { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2rem; color: var(--gold); cursor: pointer; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px; z-index: 5;}
         .left { left: 10px; } .right { right: 10px; }
         @keyframes fade { from{opacity:0.5} to{opacity:1} }
-        .header-info { margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+        
+        /* علامة الحالة والمشاركة */
+        .top-badges { display:flex; justify-content:space-between; align-items:center; margin-top: 20px; }
+        .status-alert { padding: 10px 20px; border-radius: 10px; font-weight: bold; font-size: 1.2rem; text-align: center; }
+        .sold-alert { background: rgba(255, 68, 68, 0.2); border: 1px solid var(--danger); color: var(--danger); }
+        .rented-alert { background: rgba(51, 181, 229, 0.2); border: 1px solid #33b5e5; color: #33b5e5; }
+        
+        .share-btns { display: flex; gap: 10px; }
+        .share-btn { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #fff; cursor: pointer; text-decoration: none; transition: 0.3s; border: none; }
+        .share-wa { background: #25D366; } .share-fb { background: #1877F2; } .share-copy { background: #333; border: 1px solid var(--gold); color: var(--gold); }
+        .share-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
+
+        .header-info { margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 20px; }
         .price-tag { color: var(--gold); font-size: 2.5rem; font-weight: 900; }
         .main-title { font-size: 1.8rem; margin: 10px 0; }
+        
         .specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 30px 0; text-align: center; }
         .spec-box { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #333; }
         .spec-box i { font-size: 1.5rem; color: var(--gold); margin-bottom: 10px; display: block; }
-        .desc { line-height: 1.8; color: #ccc; background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        
+        .desc { line-height: 1.8; color: #ccc; background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; white-space: pre-wrap; }
         .amenities { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
         .am-tag { background: #222; padding: 10px 25px; border-radius: 50px; border: 1px solid var(--gold); color: #fff; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        .actions { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--gold); }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-align: center; text-decoration: none; color: #fff; }
+        
+        /* قسم عقارات مشابهة */
+        .similar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
+        .sim-card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #333; text-decoration: none; color: #fff; transition: 0.3s; display: block; }
+        .sim-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        .sim-img { width: 100%; height: 150px; object-fit: cover; }
+        .sim-body { padding: 15px; }
+        .sim-price { color: var(--gold); font-weight: bold; font-size: 1.1rem; }
+
+        .actions { position: fixed; bottom: 0; left: 0; width: 100%; background: #111; padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--gold); z-index: 100; box-sizing: border-box; }
+        .btn { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-align: center; text-decoration: none; color: #fff; display:flex; align-items:center; justify-content:center; gap:10px; }
         .wa { background: #25D366; } .call { background: var(--gold); color: #000; }
+        
+        @media (max-width: 768px) { .specs { grid-template-columns: repeat(2, 1fr); } }
     </style>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
@@ -38,89 +64,136 @@
 <body>
     <nav class="navbar">
         <a href="index.html" class="logo">BARAH <span>ESTATE</span></a>
-        <div class="nav-links"><a href="listings.html">رجوع للمعرض</a></div>
+        <div class="nav-links"><a href="listings.html"><i class="fas fa-arrow-right"></i> رجوع للمعرض</a></div>
     </nav>
 
-    <div class="container" id="content"><p style="text-align:center;">جاري تحميل التفاصيل...</p></div>
+    <div class="container" id="content"><p style="text-align:center; font-size:1.5rem; color:var(--gold);">جاري تحميل التفاصيل <i class="fas fa-spinner fa-spin"></i></p></div>
 
     <div class="actions" id="actions" style="display:none;">
-        <a href="#" class="btn wa" id="btnWa"><i class="fab fa-whatsapp"></i> واتساب</a>
-        <a href="#" class="btn call" id="btnCall"><i class="fas fa-phone"></i> اتصال</a>
+        <a href="#" class="btn wa" id="btnWa"><i class="fab fa-whatsapp"></i> تواصل واتساب</a>
+        <a href="#" class="btn call" id="btnCall"><i class="fas fa-phone"></i> اتصال هاتفي</a>
     </div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const id = new URLSearchParams(window.location.search).get('id');
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
         let currentSlide = 0;
+        let currentDistrict = '';
 
         if(id){
             db.collection("apartments").doc(id).get().then(doc => {
                 if(doc.exists){
                     const d = doc.data();
+                    currentDistrict = d.district;
                     const imgs = d.images && d.images.length ? d.images : ['https://via.placeholder.com/800'];
                     let slidesHtml = '';
-                    imgs.forEach((src, i) => slidesHtml += `<img src="${src}" class="slide-img ${i===0?'active':''}">`);
+                    imgs.forEach((src, i) => slidesHtml += `<img src="${src}" class="slide-img ${i===0?'active':''}" loading="lazy">`);
                     
                     let amHtml = '<p style="color:#777">لا توجد مميزات إضافية مسجلة.</p>';
                     if (d.amenities && d.amenities.length > 0) {
                         amHtml = d.amenities.map(a => `<div class="am-tag"><i class="fas fa-check-circle"></i> ${a}</div>`).join('');
                     }
 
-                    // 🔥🔥🔥 كود استخراج وعرض فيديو اليوتيوب 🔥🔥🔥
-                    let videoHtml = '';
-                    if(d.youtube) {
-                        let videoId = '';
-                        if(d.youtube.includes('v=')) {
-                            videoId = d.youtube.split('v=')[1];
-                            const ampersandPosition = videoId.indexOf('&');
-                            if(ampersandPosition != -1) {
-                                videoId = videoId.substring(0, ampersandPosition);
-                            }
-                        } else if(d.youtube.includes('youtu.be/')) {
-                            videoId = d.youtube.split('youtu.be/')[1];
-                        }
+                    // معالجة حالة العقار
+                    let statusBox = '';
+                    if(d.status === 'sold') statusBox = `<div class="status-alert sold-alert"><i class="fas fa-times-circle"></i> عذراً، هذا العقار تم بيعه</div>`;
+                    else if(d.status === 'rented') statusBox = `<div class="status-alert rented-alert"><i class="fas fa-info-circle"></i> عذراً، هذا العقار تم تأجيره</div>`;
 
-                        if(videoId) {
-                            videoHtml = `
-                                <h3 style="color:var(--gold); margin-top:30px;">فيديو الوحدة</h3>
-                                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:15px; border:1px solid #333;">
-                                    <iframe style="position:absolute; top:0; left:0; width:100%; height:100%;" 
-                                        src="https://www.youtube.com/embed/${videoId}" 
-                                        frameborder="0" allowfullscreen>
-                                    </iframe>
-                                </div>
-                            `;
-                        }
-                    }
+                    // روابط المشاركة
+                    const currentUrl = encodeURIComponent(window.location.href);
+                    const shareText = encodeURIComponent(`شاهد هذا العقار الرائع من براح العقارية: ${d.title}`);
 
                     document.getElementById('content').innerHTML = `
                         <div class="slider">${slidesHtml}<div class="arrow left" onclick="move(-1)">❮</div><div class="arrow right" onclick="move(1)">❯</div></div>
-                        <div class="header-info"><div class="price-tag">${d.price.toLocaleString()} EGP</div><h1 class="main-title">${d.title}</h1><div style="color:#aaa"><i class="fas fa-map-marker-alt"></i> ${d.district}</div></div>
+                        
+                        <div class="top-badges">
+                            <div style="flex:1;">${statusBox}</div>
+                            <div class="share-btns">
+                                <a href="https://wa.me/?text=${shareText}%0A${currentUrl}" target="_blank" class="share-btn share-wa" title="مشاركة واتساب"><i class="fab fa-whatsapp"></i></a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=${currentUrl}" target="_blank" class="share-btn share-fb" title="مشاركة فيسبوك"><i class="fab fa-facebook-f"></i></a>
+                                <button onclick="copyLink()" class="share-btn share-copy" title="نسخ الرابط"><i class="fas fa-link"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="header-info">
+                            <div class="price-tag">${Number(d.price).toLocaleString()} EGP <span style="font-size:1rem; color:#aaa; font-weight:normal;">(${d.type==='sale'?'تمليك':'إيجار'})</span></div>
+                            <h1 class="main-title">${d.title}</h1>
+                            <div style="color:#aaa; font-size:1.1rem;"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> ${d.district}</div>
+                        </div>
+
                         <div class="specs">
                             <div class="spec-box"><i class="fas fa-bed"></i>${d.rooms} غرف</div>
                             <div class="spec-box"><i class="fas fa-bath"></i>${d.bathrooms} حمام</div>
                             <div class="spec-box"><i class="fas fa-ruler-combined"></i>${d.area} م²</div>
                             <div class="spec-box"><i class="fas fa-layer-group"></i>الدور ${d.floor}</div>
                         </div>
-                        <h3 style="color:var(--gold)">الوصف</h3><div class="desc">${d.description}</div>
-                        <h3 style="color:var(--gold)">المميزات والخدمات</h3><div class="amenities">${amHtml}</div>
-                        ${videoHtml}
-                        <div style="height:100px;"></div>`;
 
-                    document.getElementById('actions').style.display = 'flex';
-                    const phone = d.marketerPhone || '20110557821';
-                    document.getElementById('btnWa').href = `https://wa.me/${phone}?text=استفسار بخصوص: ${d.title}`;
-                    document.getElementById('btnCall').href = `tel:${phone}`;
+                        <h3 style="color:var(--gold)"><i class="fas fa-align-right"></i> وصف العقار</h3>
+                        <div class="desc">${d.description}</div>
+                        
+                        <h3 style="color:var(--gold)"><i class="fas fa-star"></i> المميزات والخدمات</h3>
+                        <div class="amenities">${amHtml}</div>
+
+                        <div id="similarSection" style="margin-top:50px;">
+                            <h3 style="color:var(--gold); border-bottom:1px solid #333; padding-bottom:10px;"><i class="fas fa-home"></i> عقارات مشابهة في ${d.district}</h3>
+                            <div class="similar-grid" id="similarGrid"><p style="color:#aaa;">جاري البحث...</p></div>
+                        </div>
+                    `;
+
+                    // إذا كان العقار متاح فقط نظهر أزرار الاتصال
+                    if(!d.status || d.status === 'available') {
+                        document.getElementById('actions').style.display = 'flex';
+                        const phone = d.marketerPhone || '20110557821';
+                        document.getElementById('btnWa').href = `https://wa.me/${phone}?text=مرحباً، أستفسر بخصوص الإعلان: ${d.title} %0Aالرابط: ${window.location.href}`;
+                        document.getElementById('btnCall').href = `tel:${phone}`;
+                    } else {
+                        // لو مباع نضيف مسافة من تحت عشان الفوتر
+                        document.getElementById('content').style.marginBottom = "20px";
+                    }
+
+                    loadSimilarProperties();
+                } else {
+                    document.getElementById('content').innerHTML = "<h2 style='text-align:center; color:red;'>عذراً، هذا الإعلان غير موجود أو تم حذفه.</h2>";
                 }
             });
         }
+
         function move(n) {
             const slides = document.querySelectorAll('.slide-img');
             slides[currentSlide].classList.remove('active');
             currentSlide = (currentSlide + n + slides.length) % slides.length;
             slides[currentSlide].classList.add('active');
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("تم نسخ رابط العقار بنجاح!");
+            });
+        }
+
+        function loadSimilarProperties() {
+            db.collection("apartments").where("district", "==", currentDistrict).limit(4).get().then(snap => {
+                let html = '';
+                snap.forEach(doc => {
+                    if(doc.id !== id) { // استثناء العقار الحالي
+                        const d = doc.data();
+                        const img = (d.images && d.images.length) ? d.images[0] : 'https://via.placeholder.com/250';
+                        html += `
+                            <a href="details.html?id=${doc.id}" class="sim-card">
+                                <img src="${img}" class="sim-img" loading="lazy">
+                                <div class="sim-body">
+                                    <div class="sim-price">${Number(d.price).toLocaleString()} EGP</div>
+                                    <div style="font-size:0.9rem; margin-top:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.title}</div>
+                                </div>
+                            </a>
+                        `;
+                    }
+                });
+                document.getElementById('similarGrid').innerHTML = html || '<p style="color:#aaa;">لا توجد عقارات أخرى في هذه المنطقة حالياً.</p>';
+            });
         }
     </script>
     <script src="main.js"></script>
