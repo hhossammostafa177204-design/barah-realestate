@@ -3,396 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARAH ADMIN | إدارة العقارات</title>
+    <title>BARAH ADMIN | الإدارة العليا</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --gold: #D4AF37;
-            --bg: #0f1215;
-            --card: #1a1d23;
-            --text: #fff;
-            --input-bg: #222;
-            --danger: #ff4444;
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg); color: var(--text);
-            margin: 0; padding: 0;
-            min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        /* --- شاشة تسجيل الدخول --- */
-        #loginSection {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .login-card {
-            background: var(--card); padding: 40px; border-radius: 20px;
-            border: 1px solid var(--gold); box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
-            text-align: center; width: 300px;
-        }
-        .login-logo { font-size: 2rem; color: var(--gold); font-weight: 800; margin-bottom: 20px; }
-
-        /* --- لوحة التحكم --- */
-        #dashboardSection {
-            display: none; width: 100%; max-width: 900px; padding: 40px 20px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px;
-        }
-        .logout-btn {
-            background: var(--danger); color: #fff; border: none; padding: 8px 15px;
-            border-radius: 5px; cursor: pointer; font-family: 'Tajawal'; font-weight: bold;
-        }
-
-        /* --- الكروت --- */
-        .form-card, .list-card {
-            background: var(--card); padding: 30px; border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px;
-        }
-
-        .section-title {
-            margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px;
-            color: var(--gold); display: flex; align-items: center; gap: 10px;
-        }
-
-        /* --- الحقول --- */
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; color: #aaa; font-size: 0.9rem; }
+        :root { --gold: #D4AF37; --bg: #0f1215; --card: #1a1d23; --text: #fff; --input-bg: #222; --danger: #ff4444; --info: #33b5e5; --success: #25D366;}
+        body { font-family: 'Tajawal', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 50px; }
         
-        input, select, textarea {
-            width: 100%; background: var(--input-bg); border: 1px solid #333;
-            color: #fff; padding: 15px; border-radius: 10px;
-            font-family: 'Tajawal'; outline: none; transition: 0.3s;
-            box-sizing: border-box; font-size: 1rem;
-        }
-        input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+        #loginSection { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .login-card { background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; width: 300px; }
+        .login-card input { width: 100%; background: #222; border: 1px solid #333; color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: center; outline: none; }
+        
+        #dashboardSection { display: none; width: 100%; max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: var(--card); border: 1px solid #333; padding: 20px; border-radius: 12px; text-align: center; border-bottom: 3px solid var(--gold); }
+        .stat-card .num { font-size: 2.2rem; color: var(--gold); font-weight: 900; margin: 0; }
 
-        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .form-card, .list-card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; }
+        .section-title { color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 
-        /* --- المميزات --- */
-        .amenities-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px; margin-top: 10px;
-        }
-        .amenity-box {
-            background: #222; border: 1px solid #333; border-radius: 8px;
-            padding: 15px 5px; text-align: center; cursor: pointer;
-            color: #777; transition: 0.3s; font-size: 0.85rem;
-            display: flex; flex-direction: column; align-items: center; gap: 5px;
-        }
-        .amenity-box i { font-size: 1.2rem; margin-bottom: 5px; }
-        .amenity-box.active {
-            border-color: var(--gold); color: #000;
-            background: var(--gold); transform: scale(1.05); font-weight: bold;
-        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #333; color: #fff; border-radius: 8px; box-sizing: border-box; font-family: 'Tajawal'; }
+        
+        .btn-add { background: var(--gold); color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; }
 
-        /* --- رفع الصور --- */
-        .upload-area {
-            border: 2px dashed #444; padding: 30px; text-align: center;
-            border-radius: 15px; cursor: pointer; transition: 0.3s;
-        }
-        .upload-area:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-
-        .submit-btn {
-            width: 100%; padding: 15px; background: linear-gradient(45deg, var(--gold), #b89628);
-            color: #000; border: none; border-radius: 10px;
-            font-weight: bold; font-size: 1.2rem; cursor: pointer;
-            margin-top: 20px; transition: 0.3s;
-        }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
-
-        /* --- قائمة إدارة الوحدات --- */
-        .manage-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;
-        }
-        .unit-item {
-            background: #111; border: 1px solid #333; border-radius: 10px; padding: 15px;
-            position: relative; overflow: hidden; transition: 0.3s;
-        }
-        .unit-item:hover { border-color: var(--gold); }
-        .unit-item img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
-        .unit-title { font-weight: bold; font-size: 1rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .unit-price { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
-        .delete-btn {
-            width: 100%; padding: 10px; background: rgba(255, 68, 68, 0.1); 
-            color: var(--danger); border: 1px solid var(--danger); border-radius: 8px;
-            cursor: pointer; font-weight: bold; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-        }
-        .delete-btn:hover { background: var(--danger); color: #fff; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .row-2, .row-3 { grid-template-columns: 1fr; } }
+        .manage-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+        .unit-item { background: #111; border: 1px solid #333; border-radius: 15px; padding: 15px; position: relative; }
+        .unit-item img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 20000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: var(--card); width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; border-radius: 20px; padding: 25px; border: 1px solid var(--gold); }
     </style>
-
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
 
     <div id="loginSection">
         <div class="login-card">
-            <div class="login-logo"><i class="fas fa-user-lock"></i> BARAH ADMIN</div>
-            <div class="input-group"><input type="text" id="username" placeholder="اسم المستخدم" style="text-align:center;"></div>
-            <div class="input-group"><input type="password" id="password" placeholder="كلمة المرور" style="text-align:center;"></div>
-            <button class="submit-btn" onclick="checkLogin()">تسجيل الدخول</button>
-            <p id="loginError" style="color:red; display:none; margin-top:10px;">بيانات غير صحيحة!</p>
+            <h2 style="color:var(--gold);">دخول المدير</h2>
+            <input type="text" id="username" placeholder="اسم المستخدم">
+            <input type="password" id="password" placeholder="كلمة المرور">
+            <button onclick="checkLogin()" style="width:100%; padding:15px; background:var(--gold); border:none; border-radius:8px; font-weight:bold; cursor:pointer;">دخول</button>
         </div>
     </div>
 
     <div id="dashboardSection">
         <div class="header">
-            <h2 style="color:var(--gold); margin:0;">لوحة التحكم</h2>
-            <button class="logout-btn" onclick="logout()">خروج <i class="fas fa-sign-out-alt"></i></button>
+            <h2>لوحة الإدارة العليا</h2>
+            <button onclick="location.reload()" class="del-btn" style="background:var(--danger); color:#fff; border:none; padding:8px 20px; border-radius:5px; cursor:pointer;">خروج</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><h3>إجمالي الوحدات</h3><p class="num" id="s-total">0</p></div>
+            <div class="stat-card"><h3>وحدات المسوقين</h3><p class="num" id="s-agent-units">0</p></div>
+            <div class="stat-card"><h3>عدد المسوقين</h3><p class="num" id="s-agents">0</p></div>
         </div>
 
         <div class="form-card">
-            <h3 class="section-title"><i class="fas fa-plus-circle"></i> إضافة وحدة جديدة</h3>
-
-            <div class="row-2">
-                <div class="input-group">
-                    <label>نوع العرض</label>
-                    <select id="type"><option value="sale">تمليك</option><option value="rent">إيجار</option></select>
-                </div>
-                <div class="input-group">
-                    <label>نوع العقار</label>
-                    <select id="unitType">
-                        <option value="شقة">شقة</option><option value="فيلا">فيلا</option>
-                        <option value="دوبلكس">دوبلكس</option><option value="بنتهاوس">بنتهاوس</option>
-                        <option value="مكتب">مكتب إداري</option><option value="محل">محل تجاري</option>
-                        <option value="أرض">أرض</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-group"><input type="text" id="title" placeholder="عنوان الإعلان الرئيسي"></div>
-            
-            <div class="row-2">
-                <div class="input-group"><input type="number" id="price" placeholder="السعر (جنية)"></div>
-                <div class="input-group">
-                    <select id="district">
-                        <option value="">اختر الحي</option>
-                        <option value="الحي التاسع">الحي التاسع (VIP)</option>
-                        <option value="جولف سيتي">جولف سيتي</option>
-                        <option value="جمعية عرابي">جمعية عرابي</option>
-                        <option value="الحي الأول">الحي الأول</option>
-                        <option value="الحي الثاني">الحي الثاني</option>
-                        <option value="الحي الثالث">الحي الثالث</option>
-                        <option value="الحي الرابع">الحي الرابع</option>
-                        <option value="الحي الخامس">الحي الخامس</option>
-                        <option value="الحي السادس">الحي السادس</option>
-                        <option value="الحي السابع">الحي السابع</option>
-                        <option value="الحي الثامن">الحي الثامن</option>
-                        <option value="العبور الجديدة">العبور الجديدة</option>
-                        <option value="بيت الوطن">بيت الوطن</option>
-                        <option value="المنطقة الترفيهية">المنطقة الترفيهية</option>
-                        <option value="إسكان عائلي">إسكان عائلي</option>
-                        <option value="إسكان الشباب">إسكان الشباب</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row-3">
-                <input type="number" id="rooms" placeholder="الغرف">
-                <input type="number" id="bathrooms" placeholder="الحمامات">
-                <input type="number" id="floor" placeholder="الدور">
-            </div>
-            <div class="row-2" style="margin-top:15px;">
-                <input type="number" id="area" placeholder="المساحة (م²)">
-                <select id="finishing">
-                    <option value="">نوع التشطيب</option>
-                    <option value="بدون تشطيب">طوب أحمر</option><option value="نص تشطيب">نص تشطيب</option>
-                    <option value="سوبر لوكس">سوبر لوكس</option><option value="الترا سوبر لوكس">💎 الترا سوبر لوكس</option>
+            <h3 class="section-title"><i class="fas fa-plus-circle"></i> إضافة وحدة جديدة (أدمن)</h3>
+            <div class="form-grid">
+                <select id="adType"><option>بيع</option><option>إيجار</option></select>
+                <select id="adDist">
+                    <option>الحي الأول</option><option>الحي الثاني</option><option>الحي الثالث</option>
+                    <option>إسكان الشباب</option><option>العبور الجديدة</option><option>جمعية أحمد عرابي</option>
                 </select>
+                <input type="number" id="adPrice" placeholder="السعر">
+                <input type="number" id="adArea" placeholder="المساحة">
+                <input type="number" id="adRooms" placeholder="الغرف">
+                <input type="number" id="adBaths" placeholder="الحمامات">
             </div>
-
-            <div class="input-group" style="margin-top:20px;">
-                <label>المميزات:</label>
-                <div class="amenities-grid">
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="أسانسير"><i class="fas fa-elevator"></i> أسانسير</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="جراج"><i class="fas fa-car"></i> جراج</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="حديقة"><i class="fas fa-tree"></i> حديقة</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="مسبح"><i class="fas fa-swimming-pool"></i> مسبح</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="غاز"><i class="fas fa-fire"></i> غاز</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="أمن"><i class="fas fa-user-shield"></i> أمن</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="تكييف"><i class="fas fa-snowflake"></i> تكييف</div>
-                    <div class="amenity-box" onclick="toggleAm(this)" data-val="عداد كهرباء"><i class="fas fa-bolt"></i> عداد</div>
-                </div>
-            </div>
-
-            <div class="input-group"><textarea id="desc" rows="3" placeholder="وصف تفصيلي..."></textarea></div>
-
-            <div class="upload-area" onclick="document.getElementById('images').click()">
-                <i class="fas fa-cloud-upload-alt" style="font-size:2rem; color:var(--gold);"></i>
-                <p style="margin:5px 0; color:#aaa;">اضغط لاختيار الصور</p>
-                <p id="filesCount" style="margin:0; color:var(--gold); font-size:0.8rem;"></p>
-                <input type="file" id="images" multiple accept="image/*" style="display:none" onchange="updateFilesCount()">
-            </div>
-
-            <div class="input-group" style="margin-top:15px;"><input type="text" id="youtube" placeholder="رابط يوتيوب (اختياري)"></div>
-            <div class="input-group"><input type="text" id="locationLink" placeholder="رابط GPS (سري)"></div>
-            
-            <div class="row-2" style="margin-top:15px;">
-                <div class="input-group"><input type="text" id="ownerPhone" placeholder="رقم المالك/العميل (سري للإدارة)"></div>
-                <div class="input-group"><input type="text" id="marketerPhone" placeholder="رقم المسوق (يظهر للجمهور)"></div>
-            </div>
-
-            <button class="submit-btn" onclick="upload()"><i class="fas fa-paper-plane"></i> نشر الوحدة</button>
-            <p id="status" style="text-align:center; margin-top:10px; font-weight:bold;"></p>
+            <input type="text" id="adLoc" placeholder="رابط لوكيشن جوجل ماب (Location)" style="margin-top:10px;">
+            <input type="text" id="adOwner" placeholder="رقم تليفون العميل (سري)" style="margin-top:10px;">
+            <textarea id="adImages" placeholder="روابط الصور (مفصولة بفاصلة ,)" style="margin-top:10px;" rows="2"></textarea>
+            <button class="btn-add" onclick="adminAddUnit()">نشر الوحدة كأدمن</button>
         </div>
 
         <div class="list-card">
-            <h3 class="section-title" style="color:#ff4444; border-color:#ff4444;"><i class="fas fa-trash-alt"></i> إدارة الوحدات الحالية</h3>
-            <p style="color:#aaa; font-size:0.9rem;">يمكنك من هنا حذف الوحدات المباعة أو منتهية الصلاحية.</p>
-            
-            <div id="unitsContainer" class="manage-grid">
-                <p style="text-align:center; width:100%;">جاري تحميل الوحدات...</p>
-            </div>
+            <h3 class="section-title"><i class="fas fa-user-tie"></i> إدارة المسوقين</h3>
+            <div id="agentsContainer" style="display:grid; gap:10px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));"></div>
         </div>
 
+        <div class="list-card">
+            <h3 class="section-title"><i class="fas fa-database"></i> كافة الوحدات المرفوعة</h3>
+            <div id="unitsContainer" class="manage-grid"></div>
+        </div>
     </div>
 
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <h2 id="m-title" style="color:var(--gold);"></h2>
+            <div id="m-details"></div>
+            <div id="m-images" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;"></div>
+            <button onclick="closeModal()" style="width:100%; margin-top:20px; padding:10px; background:var(--danger); border:none; color:#fff; border-radius:8px;">إغلاق</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", authDomain: "barah-realestate-c7095.firebaseapp.com", projectId: "barah-realestate-c7095", storageBucket: "barah-realestate-c7095.firebasestorage.app", messagingSenderId: "491079034147", appId: "1:491079034147:web:c7d985a6387dfa75a8d896" };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const firebaseConfig = { 
+            apiKey: "AIzaSyDBRcr-Np9SwYRR-cBqJDZ7FZmwk6VWLJU", 
+            authDomain: "barah-realestate-c7095.firebaseapp.com", 
+            projectId: "barah-realestate-c7095", 
+            storageBucket: "barah-realestate-c7095.firebasestorage.app", 
+            messagingSenderId: "491079034147", 
+            appId: "1:491079034147:web:c7d985a6387dfa75a8d896" 
+        };
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let selectedAmenities = [];
-
         function checkLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            if(user === 'admin' && pass === 'AHE123') { 
-                sessionStorage.setItem('isLoggedIn', 'true');
-                showDashboard();
-            } else { document.getElementById('loginError').style.display = 'block'; }
+            if(document.getElementById('username').value==='admin' && document.getElementById('password').value==='AHE123') {
+                document.getElementById('loginSection').style.display='none';
+                document.getElementById('dashboardSection').style.display='block';
+                loadAgents(); loadUnits();
+            }
         }
 
-        window.onload = function() {
-            if(sessionStorage.getItem('isLoggedIn') === 'true') showDashboard();
+        // إضافة وحدة بواسطة الأدمن
+        function adminAddUnit() {
+            const pCode = Math.floor(1000 + Math.random() * 9000);
+            const data = {
+                propertyCode: pCode,
+                type: document.getElementById('adType').value,
+                district: document.getElementById('adDist').value,
+                price: document.getElementById('adPrice').value,
+                area: document.getElementById('adArea').value,
+                rooms: document.getElementById('adRooms').value,
+                baths: document.getElementById('adBaths').value,
+                locationLink: document.getElementById('adLoc').value,
+                ownerPhone: document.getElementById('adOwner').value,
+                images: document.getElementById('adImages').value.split(','),
+                addedBy: 'Admin',
+                createdAt: new Date()
+            };
+            db.collection("apartments").add(data).then(() => {
+                alert("تم إضافة وحدتك بنجاح كود: #" + pCode);
+                location.reload();
+            });
         }
 
-        function showDashboard() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('dashboardSection').style.display = 'block';
-            loadUnits();
+        function loadAgents() {
+            db.collection("agents").onSnapshot(snap => {
+                document.getElementById('s-agents').innerText = snap.size;
+                const container = document.getElementById("agentsContainer");
+                container.innerHTML = "";
+                snap.forEach(doc => {
+                    const a = doc.data();
+                    container.innerHTML += `<div style="background:#222; padding:10px; border-radius:8px; border:1px solid #333;">
+                        <b>${a.username}</b><br><small>${a.phone || ''}</small>
+                        <button onclick="deleteAgent('${doc.id}')" style="background:none; border:none; color:red; cursor:pointer; float:left;">حذف</button>
+                    </div>`;
+                });
+            });
         }
-
-        function logout() { sessionStorage.removeItem('isLoggedIn'); location.reload(); }
 
         function loadUnits() {
             db.collection("apartments").orderBy("createdAt", "desc").onSnapshot(snap => {
                 const container = document.getElementById("unitsContainer");
                 container.innerHTML = "";
-                
-                if(snap.empty) {
-                    container.innerHTML = "<p>لا توجد وحدات حالياً.</p>";
-                    return;
-                }
-
+                let total = 0, agentU = 0;
                 snap.forEach(doc => {
+                    total++;
                     const d = doc.data();
-                    const img = (d.images && d.images.length) ? d.images[0] : 'https://via.placeholder.com/150';
-                    
+                    if(d.addedBy !== 'Admin') agentU++;
                     container.innerHTML += `
                         <div class="unit-item">
-                            <img src="${img}">
-                            <div class="unit-title">${d.title}</div>
-                            <div class="unit-price">${d.price.toLocaleString()} EGP</div>
-                            <button class="delete-btn" onclick="deleteUnit('${doc.id}')">
-                                <i class="fas fa-trash"></i> حذف نهائي
-                            </button>
-                        </div>
-                    `;
+                            <div style="position:absolute; top:5px; right:5px; background:var(--gold); color:#000; padding:2px 8px; border-radius:5px; font-size:0.7rem;">#${d.propertyCode}</div>
+                            <img src="${d.images[0]}">
+                            <div style="margin-top:10px; font-weight:bold;">${d.district} - ${d.type}</div>
+                            <div style="font-size:0.8rem; color:var(--info);">بواسطة: ${d.addedBy}</div>
+                            <div style="display:flex; gap:5px; margin-top:10px;">
+                                <button onclick="showFull('${doc.id}')" style="flex:1; padding:8px; background:var(--info); border:none; border-radius:5px; color:#fff; cursor:pointer;">تفاصيل</button>
+                                <button onclick="deleteUnit('${doc.id}')" style="padding:8px; background:none; border:1px solid red; color:red; border-radius:5px; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
                 });
+                document.getElementById('s-total').innerText = total;
+                document.getElementById('s-agent-units').innerText = agentU;
             });
         }
 
-        function deleteUnit(id) {
-            if(confirm("⚠️ هل أنت متأكد من حذف هذا الإعلان نهائياً؟ لا يمكن التراجع!")) {
-                db.collection("apartments").doc(id).delete()
-                .then(() => alert("✅ تم حذف الوحدة بنجاح"))
-                .catch(e => alert("❌ حدث خطأ: " + e));
-            }
+        async function showFull(id) {
+            const doc = await db.collection("apartments").doc(id).get();
+            const d = doc.data();
+            document.getElementById('m-title').innerText = `وحدة كود #${d.propertyCode}`;
+            document.getElementById('m-details').innerHTML = `
+                <p><b>السعر:</b> ${d.price} EGP</p>
+                <p><b>المساحة:</b> ${d.area} م</p>
+                <p><b>الغرف:</b> ${d.rooms} | <b>الحمامات:</b> ${d.baths}</p>
+                <p><b>رقم المالك:</b> <span style="color:var(--danger)">${d.ownerPhone}</span></p>
+                ${d.locationLink ? `<a href="${d.locationLink}" target="_blank" style="color:var(--success); text-decoration:none;"><i class="fas fa-map-marker-alt"></i> عرض الموقع على الخريطة</a>` : '<p>لا يوجد موقع محدد</p>'}
+            `;
+            document.getElementById('m-images').innerHTML = d.images.map(img => `<img src="${img}" style="width:100%; height:100px; object-fit:cover; border-radius:8px;">`).join('');
+            document.getElementById('detailsModal').style.display = 'flex';
         }
 
-        function toggleAm(el) {
-            el.classList.toggle('active');
-            const val = el.getAttribute('data-val');
-            if(selectedAmenities.includes(val)) selectedAmenities = selectedAmenities.filter(x => x !== val);
-            else selectedAmenities.push(val);
-        }
-
-        function updateFilesCount() {
-            const count = document.getElementById('images').files.length;
-            document.getElementById('filesCount').innerText = count > 0 ? `تم اختيار ${count} صور` : '';
-        }
-
-        async function upload() {
-            const status = document.getElementById('status');
-            const files = document.getElementById('images').files;
-            
-            if(files.length === 0) { alert("⚠️ اختر صور للعقار!"); return; }
-            if(!document.getElementById('title').value) { alert("⚠️ اكتب العنوان!"); return; }
-
-            status.innerText = "⏳ جاري الرفع...";
-            status.style.color = "#D4AF37";
-
-            const apiKey = "2b382d98a074d27c5304c08340d339ac";
-            let imageUrls = [];
-
-            try {
-                for(let i=0; i<files.length; i++) {
-                    const formData = new FormData();
-                    formData.append("image", files[i]);
-                    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, { method: "POST", body: formData });
-                    const data = await response.json();
-                    if(data.success) imageUrls.push(data.data.url);
-                }
-
-                status.innerText = "💾 جاري الحفظ...";
-
-                await db.collection("apartments").add({
-                    type: document.getElementById('type').value,
-                    unitType: document.getElementById('unitType').value,
-                    title: document.getElementById('title').value,
-                    price: Number(document.getElementById('price').value),
-                    district: document.getElementById('district').value,
-                    rooms: document.getElementById('rooms').value,
-                    bathrooms: document.getElementById('bathrooms').value,
-                    area: document.getElementById('area').value,
-                    floor: document.getElementById('floor').value,
-                    finishing: document.getElementById('finishing').value,
-                    amenities: selectedAmenities,
-                    description: document.getElementById('desc').value,
-                    images: imageUrls,
-                    youtube: document.getElementById('youtube').value,
-                    locationPrivate: document.getElementById('locationLink').value,
-                    marketerPhone: document.getElementById('marketerPhone').value || "20110557821",
-                    ownerPhone: document.getElementById('ownerPhone').value || "غير مسجل",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                status.innerText = "✅ تم النشر!";
-                status.style.color = "#25D366";
-                setTimeout(() => location.reload(), 2000);
-
-            } catch (error) {
-                console.error(error);
-                status.innerText = "❌ خطأ في الرفع";
-                status.style.color = "red";
-            }
-        }
+        function closeModal() { document.getElementById('detailsModal').style.display = 'none'; }
+        function deleteUnit(id) { if(confirm("حذف؟")) db.collection("apartments").doc(id).delete(); }
+        function deleteAgent(id) { if(confirm("حذف المسوق؟")) db.collection("agents").doc(id).delete(); }
     </script>
 </body>
 </html>
